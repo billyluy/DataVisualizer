@@ -1,10 +1,20 @@
 package actions;
 
+import dataprocessors.AppData;
+import javafx.application.Platform;
+
+import ui.AppUI;
 import vilij.components.ActionComponent;
+import vilij.components.ConfirmationDialog;
+import vilij.components.Dialog;
+import vilij.propertymanager.PropertyManager;
 import vilij.templates.ApplicationTemplate;
 
 import java.io.IOException;
 import java.nio.file.Path;
+
+import static settings.AppPropertyTypes.SAVE_UNSAVED_WORK_TITLE;
+import static settings.AppPropertyTypes.SAVE_UNSAVED_WORK;
 
 /**
  * This is the concrete implementation of the action handlers required by the application.
@@ -26,6 +36,14 @@ public final class AppActions implements ActionComponent {
     @Override
     public void handleNewRequest() {
         // TODO for homework 1
+        PropertyManager manager = applicationTemplate.manager;
+
+        this.applicationTemplate.getDialog(Dialog.DialogType.CONFIRMATION).show(manager.getPropertyValue(SAVE_UNSAVED_WORK_TITLE.name()), manager.getPropertyValue(SAVE_UNSAVED_WORK.name()));
+
+
+        ((AppUI) applicationTemplate.getUIComponent()).getChart().getData().clear();
+        applicationTemplate.getUIComponent().clear();
+
     }
 
     @Override
@@ -41,6 +59,7 @@ public final class AppActions implements ActionComponent {
     @Override
     public void handleExitRequest() {
         // TODO for homework 1
+        Platform.exit();
     }
 
     @Override
@@ -67,6 +86,9 @@ public final class AppActions implements ActionComponent {
     private boolean promptToSave() throws IOException {
         // TODO for homework 1
         // TODO remove the placeholder line below after you have implemented this method
+
+        PropertyManager manager = applicationTemplate.manager;
+
         return false;
     }
 }
