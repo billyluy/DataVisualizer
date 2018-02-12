@@ -133,6 +133,7 @@ public class UITemplate implements UIComponent {
         appPane = new VBox();
         appPane.getChildren().add(toolBar);
 
+
         primaryScene = windowWidth < 1 || windowHeight < 1 ? new Scene(appPane)
                                                            : new Scene(appPane, windowWidth, windowHeight);
         primaryStage.getIcons().add(logo);
