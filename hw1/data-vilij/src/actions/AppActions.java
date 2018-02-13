@@ -1,8 +1,8 @@
 package actions;
 
-import dataprocessors.AppData;
 import javafx.application.Platform;
 
+import javafx.stage.FileChooser;
 import ui.AppUI;
 import vilij.components.ActionComponent;
 import vilij.components.ConfirmationDialog;
@@ -36,11 +36,14 @@ public final class AppActions implements ActionComponent {
     @Override
     public void handleNewRequest() {
         // TODO for homework 1
-        PropertyManager manager = applicationTemplate.manager;
+        //PropertyManager manager = applicationTemplate.manager;
+        //this.applicationTemplate.getDialog(Dialog.DialogType.CONFIRMATION).show(manager.getPropertyValue(SAVE_UNSAVED_WORK_TITLE.name()), manager.getPropertyValue(SAVE_UNSAVED_WORK.name()));
 
-        this.applicationTemplate.getDialog(Dialog.DialogType.CONFIRMATION).show(manager.getPropertyValue(SAVE_UNSAVED_WORK_TITLE.name()), manager.getPropertyValue(SAVE_UNSAVED_WORK.name()));
-
-
+        try {
+            promptToSave();
+        } catch (IOException e) {
+            System.out.println("error");
+        }
         ((AppUI) applicationTemplate.getUIComponent()).getChart().getData().clear();
         applicationTemplate.getUIComponent().clear();
 
@@ -88,7 +91,16 @@ public final class AppActions implements ActionComponent {
         // TODO remove the placeholder line below after you have implemented this method
 
         PropertyManager manager = applicationTemplate.manager;
-
+        this.applicationTemplate.getDialog(Dialog.DialogType.CONFIRMATION).show(manager.getPropertyValue(SAVE_UNSAVED_WORK_TITLE.name()), manager.getPropertyValue(SAVE_UNSAVED_WORK.name()));
+        ConfirmationDialog.Option x = ConfirmationDialog.getDialog().getSelectedOption();
+        if(x == ConfirmationDialog.Option.YES){
+            System.out.println("yes was selected");
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Open Resource File");
+            return true;
+        }else{
+            System.out.println("no was selected");
+        }
         return false;
     }
 }

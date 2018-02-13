@@ -3,7 +3,6 @@ package ui;
 import actions.AppActions;
 import dataprocessors.AppData;
 import dataprocessors.TSDProcessor;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
