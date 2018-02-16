@@ -105,16 +105,17 @@ public final class AppActions implements ActionComponent {
 
                 fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(manager.getPropertyValue(DATA_FILE_EXT.name()), manager.getPropertyValue(DATA_FILE_EXT_DESC.name())));
 
-                File file = fileChooser.showSaveDialog(applicationTemplate.getUIComponent().getPrimaryWindow()); 
+                File file = fileChooser.showSaveDialog(applicationTemplate.getUIComponent().getPrimaryWindow());
                 if(file != null) {
                     FileWriter writing = new FileWriter(file);
                     writing.write(((AppUI) applicationTemplate.getUIComponent()).getTextArea());
+                    dataFilePath = fileChooser.getInitialDirectory().toPath();
                     writing.close();
                 }else{
                     this.applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(SPECIFIED_FILE.name()), manager.getPropertyValue(RESOURCE_SUBDIR_NOT_FOUND.name()));
                 }
                 return true;
-            } else if (x == ConfirmationDialog.Option.NO) {
+            } if (x == ConfirmationDialog.Option.NO) {
                 //System.out.println("no was selected");
                 return true;
             }
