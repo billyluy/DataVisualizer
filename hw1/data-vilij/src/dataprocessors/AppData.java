@@ -41,6 +41,8 @@ public class AppData implements DataComponent {
             PropertyManager manager = applicationTemplate.manager;
             this.applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(DISPLAY_ERROR_TITLE.name()), manager.getPropertyValue(DISPLAY_ERROR_MSG.name()));
         }
+
+        ((AppUI)applicationTemplate.getUIComponent()).getChart().getData().clear();
         this.displayData();
     }
 

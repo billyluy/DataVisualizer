@@ -10,11 +10,12 @@ import vilij.components.Dialog;
 import vilij.propertymanager.PropertyManager;
 import vilij.templates.ApplicationTemplate;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import static settings.AppPropertyTypes.SAVE_UNSAVED_WORK_TITLE;
-import static settings.AppPropertyTypes.SAVE_UNSAVED_WORK;
+import static settings.AppPropertyTypes.*;
 
 /**
  * This is the concrete implementation of the action handlers required by the application.
@@ -36,17 +37,17 @@ public final class AppActions implements ActionComponent {
     @Override
     public void handleNewRequest() {
         // TODO for homework 1
-        //PropertyManager manager = applicationTemplate.manager;
+        PropertyManager manager = applicationTemplate.manager;
         //this.applicationTemplate.getDialog(Dialog.DialogType.CONFIRMATION).show(manager.getPropertyValue(SAVE_UNSAVED_WORK_TITLE.name()), manager.getPropertyValue(SAVE_UNSAVED_WORK.name()));
 
-        try {
-            promptToSave();
+        try{
+            if(promptToSave()){
+                applicationTemplate.getUIComponent().clear();
+                ((AppUI) applicationTemplate.getUIComponent()).getChart().getData().clear();
+            }
         } catch (IOException e) {
-            System.out.println("error");
+            this.applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(ERROR_TITLE.name()), manager.getPropertyValue(ERROR_MSG.name()));
         }
-        ((AppUI) applicationTemplate.getUIComponent()).getChart().getData().clear();
-        applicationTemplate.getUIComponent().clear();
-
     }
 
     @Override
@@ -93,14 +94,31 @@ public final class AppActions implements ActionComponent {
         PropertyManager manager = applicationTemplate.manager;
         this.applicationTemplate.getDialog(Dialog.DialogType.CONFIRMATION).show(manager.getPropertyValue(SAVE_UNSAVED_WORK_TITLE.name()), manager.getPropertyValue(SAVE_UNSAVED_WORK.name()));
         ConfirmationDialog.Option x = ConfirmationDialog.getDialog().getSelectedOption();
-        if(x == ConfirmationDialog.Option.YES){
-            System.out.println("yes was selected");
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Open Resource File");
-            return true;
-        }else{
-            System.out.println("no was selected");
-        }
+
+            if (x == ConfirmationDialog.Option.YES) {
+                //            System.out.println("yes was selected");
+
+                FileChooser fileChooser = new FileChooser();
+                //          fileChooser.setTitle("Open Resource File");
+                fileChooser.setInitialDirectory(new File(manager.getPropertyValue(DATA_RESOURCE_PATH.name())));
+                //          fileChooser.setInitialDirectory(new File("/Users/Kristy/IdeaProjects/cse219homework/hw1/data-vilij/resources/data"));
+
+                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(manager.getPropertyValue(DATA_FILE_EXT.name()), manager.getPropertyValue(DATA_FILE_EXT_DESC.name())));
+
+                File file = fileChooser.showSaveDialog(applicationTemplate.getUIComponent().getPrimaryWindow()); ''
+                if(file != null) {
+                    FileWriter writing = new FileWriter(file);
+                    writing.write(((AppUI) applicationTemplate.getUIComponent()).getTextArea());
+                    writing.close();
+                }else{
+                    this.applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(SPECIFIED_FILE.name()), manager.getPropertyValue(RESOURCE_SUBDIR_NOT_FOUND.name()));
+                }
+                return true;
+            } else if (x == ConfirmationDialog.Option.NO) {
+                //System.out.println("no was selected");
+                return true;
+            }
+
         return false;
     }
 }

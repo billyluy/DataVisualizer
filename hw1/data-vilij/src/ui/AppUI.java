@@ -2,14 +2,12 @@ package ui;
 
 import actions.AppActions;
 import dataprocessors.AppData;
-import dataprocessors.TSDProcessor;
+
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
-import javafx.scene.chart.XYChart;
+
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.*;
@@ -20,13 +18,9 @@ import vilij.templates.ApplicationTemplate;
 import vilij.templates.UITemplate;
 
 
+import static settings.AppPropertyTypes.*;
 import static vilij.settings.PropertyTypes.GUI_RESOURCE_PATH;
 import static vilij.settings.PropertyTypes.ICONS_RESOURCE_PATH;
-import static settings.AppPropertyTypes.SCREENSHOT_TOOLTIP;
-import static settings.AppPropertyTypes.SCREENSHOT_ICON;
-import static settings.AppPropertyTypes.TEXT_INPUT_TITLE;
-import static settings.AppPropertyTypes.CHART_TITLE;
-import static settings.AppPropertyTypes.DISPLAY_BUTTON_NAME;
 
 /**
  * This is the application's user interface implementation.
@@ -106,7 +100,7 @@ public final class AppUI extends UITemplate {
         HBox textPane = new HBox(500);
 
         Text text1 = new Text();
-        text1.setText(manager.getPropertyValue(TEXT_INPUT_TITLE.name()));
+        text1.setText(manager.getPropertyValue(TEXT_AREA.name()));
 
         textPane.getChildren().add(text1);
 
@@ -127,6 +121,9 @@ public final class AppUI extends UITemplate {
         layoutPane.getChildren().addAll(textArea, chart);
 
         appPane.getChildren().addAll(textPane, layoutPane, displayButton);
+
+        hasNewText = false;
+
     }
 
     private void setWorkspaceActions() {
@@ -134,22 +131,12 @@ public final class AppUI extends UITemplate {
 
         displayButton.setOnAction(e -> ((AppData) applicationTemplate.getDataComponent()).loadData(textArea.getText()));
 
-
-        //had this initially but changed it since there is warning to replace with lambda
-//        textArea.textProperty().addListener(new ChangeListener<String>() {
-//            @Override
-//            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-//                if(!textArea.getText().isEmpty()){
-//                    newButton.setDisable(false);
-//                    saveButton.setDisable(false);
-//                }else{
-//                    newButton.setDisable(true);
-//                    saveButton.setDisable(true);
-//                }
-//            }
-//        });
-
+        String oldText = textArea.getText();
         textArea.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            if(!oldText.equals(textArea.getText()) && !hasNewText){
+                hasNewText = true;
+            }
+
             if(!textArea.getText().isEmpty()){
                 newButton.setDisable(false);
                 saveButton.setDisable(false);
@@ -158,5 +145,9 @@ public final class AppUI extends UITemplate {
                 saveButton.setDisable(true);
             }
         });
+    }
+
+    public String getTextArea(){
+        return textArea.getText();
     }
 }

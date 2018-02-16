@@ -5,7 +5,7 @@ functionality within the main workspace. -->
 <properties>
     <property_list>
         <!-- RESOURCE FILES AND FOLDERS -->
-        <property name="DATA_RESOURCE_PATH" value="data"/>
+        <property name="DATA_RESOURCE_PATH" value = "hw1//data-vilij//resources//data"/>
 
         <!-- USER INTERFACE ICON FILES -->
         <property name="SCREENSHOT_ICON" value="screenshot.png"/>
@@ -27,17 +27,20 @@ functionality within the main workspace. -->
         <property name="SAVE_UNSAVED_WORK" value="Would you like to save current work?"/>
 
         <!-- APPLICATION-SPECIFIC PARAMETERS -->
-        <property name="DATA_FILE_EXT" value=".tsd"/>
+        <property name="DATA_FILE_EXT" value = "*.tsd"/>
         <property name="DATA_FILE_EXT_DESC" value="Tab-Separated Data File"/>
-        <property name="TEXT_AREA" value="text area"/>
+        <property name="TEXT_AREA" value="Data File"/>
         <property name="SPECIFIED_FILE" value=" specified file"/>
 
         <!-- created by self -->
         <property name = "DISPLAY_ERROR_TITLE" value = "Error" />
-        <property name = "DISPLAY_ERROR_MSG" value = "Data is invalid." />
-        <property name = "TEXT_INPUT_TITLE" value = "Data File" />
+        <property name = "DISPLAY_ERROR_MSG" value = "Data is invalid. Please enter in data with the format: @a label1  x,y" />
         <property name = "CHART_TITLE" value = "Data Visualizer" />
         <property name = "DISPLAY_BUTTON_NAME" value = "Display" />
+
+        <property name = "ERROR_TITLE" value = "Error Message" />
+        <property name = "ERROR_MSG" value = "ERROR" />
+
     </property_list>
     <property_options_list/>
 </properties>
