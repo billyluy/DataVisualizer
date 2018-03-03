@@ -3,11 +3,13 @@ package ui;
 import actions.AppActions;
 import dataprocessors.AppData;
 
+import dataprocessors.TSDProcessor;
 import javafx.beans.value.ObservableValue;
 
 import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.ScatterChart;
+import javafx.scene.chart.LineChart;
 
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.*;
@@ -22,6 +24,8 @@ import static settings.AppPropertyTypes.*;
 import static vilij.settings.PropertyTypes.GUI_RESOURCE_PATH;
 import static vilij.settings.PropertyTypes.ICONS_RESOURCE_PATH;
 
+import javafx.scene.control.Tooltip;
+
 /**
  * This is the application's user interface implementation.
  *
@@ -34,7 +38,7 @@ public final class AppUI extends UITemplate {
 
     @SuppressWarnings("FieldCanBeLocal")
     private Button                       scrnshotButton; // toolbar button to take a screenshot of the data
-    private ScatterChart<Number, Number> chart;          // the chart where data will be displayed
+    private LineChart<Number, Number>    chart;          // the chart where data will be displayed
     private Button                       displayButton;  // workspace button to display data on the chart
     private TextArea                     textArea;       // text area for new data input
     private boolean                      hasNewText;     // whether or not the text area has any new data since last display
@@ -42,7 +46,7 @@ public final class AppUI extends UITemplate {
     private static final String SEPARATOR = "/";
     private String screenshotPath;
 
-    public ScatterChart<Number, Number> getChart() { return chart; }
+    public LineChart<Number, Number> getChart() { return chart; }
 
     public AppUI(Stage primaryStage, ApplicationTemplate applicationTemplate) {
         super(primaryStage, applicationTemplate);
@@ -90,6 +94,7 @@ public final class AppUI extends UITemplate {
     public void clear() {
         // TODO for homework 1
         textArea.clear();
+     //   chart.getData().clear();
     }
 
     private void layout() {
@@ -109,9 +114,11 @@ public final class AppUI extends UITemplate {
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
 
-        chart = new ScatterChart<>(xAxis, yAxis);
+
+        chart = new LineChart<>(xAxis, yAxis);
 
         chart.setTitle(manager.getPropertyValue(CHART_TITLE.name()));
+
 
         textArea = new TextArea();
         displayButton = new Button();
@@ -121,6 +128,13 @@ public final class AppUI extends UITemplate {
         layoutPane.getChildren().addAll(textArea, chart);
 
         appPane.getChildren().addAll(textPane, layoutPane, displayButton);
+
+        chart.setHorizontalGridLinesVisible(false);
+        chart.setVerticalGridLinesVisible(false);
+        chart.setHorizontalZeroLineVisible(false);
+        chart.setVerticalZeroLineVisible(false);
+
+        appPane.getStylesheets().add("gui.css/Chart.css");
 
         hasNewText = false;
 
@@ -139,15 +153,38 @@ public final class AppUI extends UITemplate {
 
             if(!textArea.getText().isEmpty()){
                 newButton.setDisable(false);
-                saveButton.setDisable(false);
+            //    saveButton.setDisable(false);
             }else{
                 newButton.setDisable(true);
                 saveButton.setDisable(true);
             }
+
+            if(hasNewText){
+//                TSDProcessor processor2 = new TSDProcessor();
+//                try {
+//                    processor2.processString(textArea.getText());
+//                    saveButton.setDisable(false);
+//                } catch (Exception e) {
+//                    saveButton.setDisable(true);
+//                }
+                //   applicationTemplate.getActionComponent().handleSaveRequest();
+             //   saveButton.setDisable(false);
+                saveButton.setDisable(false);
+                hasNewText = false;
+            }
+
         });
+
+
+
+
     }
 
     public String getTextArea(){
         return textArea.getText();
+    }
+
+    public Button getSaveButton(){
+        return saveButton;
     }
 }

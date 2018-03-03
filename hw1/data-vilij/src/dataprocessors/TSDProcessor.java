@@ -81,6 +81,7 @@ public final class TSDProcessor {
             });
             chart.getData().add(series);
         }
+
     }
 
     void clear() {
@@ -93,4 +94,9 @@ public final class TSDProcessor {
             throw new InvalidDataNameException(name);
         return name;
     }
+
+    public Map<String, Point2D> getMap(){
+        return dataPoints;
+    }
+
 }

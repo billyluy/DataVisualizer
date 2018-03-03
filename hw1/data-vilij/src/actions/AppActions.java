@@ -1,5 +1,6 @@
 package actions;
 
+import dataprocessors.TSDProcessor;
 import javafx.application.Platform;
 
 import javafx.stage.FileChooser;
@@ -30,6 +31,8 @@ public final class AppActions implements ActionComponent {
     /** Path to the data file currently active. */
     Path dataFilePath;
 
+    ConfirmationDialog.Option selectedOption;
+
     public AppActions(ApplicationTemplate applicationTemplate) {
         this.applicationTemplate = applicationTemplate;
     }
@@ -53,6 +56,24 @@ public final class AppActions implements ActionComponent {
     @Override
     public void handleSaveRequest() {
         // TODO: NOT A PART OF HW 1
+        PropertyManager manager = applicationTemplate.manager;
+        String input1 = ((AppUI)applicationTemplate.getUIComponent()).getTextArea();
+        TSDProcessor processor1 = new TSDProcessor();
+
+        try {
+            processor1.processString(input1);
+         //   ((AppUI)applicationTemplate.getUIComponent()).getSaveButton().setDisable(false);
+            if(promptToSave() && selectedOption == ConfirmationDialog.Option.YES){
+                ((AppUI)applicationTemplate.getUIComponent()).getSaveButton().setDisable(true);
+            }
+        } catch (Exception e) {
+         //   ((AppUI)applicationTemplate.getUIComponent()).getSaveButton().setDisable(true);
+         //   System.out.println("error");
+         //       this.applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue());
+
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -73,6 +94,7 @@ public final class AppActions implements ActionComponent {
 
     public void handleScreenshotRequest() throws IOException {
         // TODO: NOT A PART OF HW 1
+
     }
 
     /**
@@ -88,16 +110,13 @@ public final class AppActions implements ActionComponent {
      * @return <code>false</code> if the user presses the <i>cancel</i>, and <code>true</code> otherwise.
      */
     private boolean promptToSave() throws IOException {
-        // TODO for homework 1
-        // TODO remove the placeholder line below after you have implemented this method
 
         PropertyManager manager = applicationTemplate.manager;
         this.applicationTemplate.getDialog(Dialog.DialogType.CONFIRMATION).show(manager.getPropertyValue(SAVE_UNSAVED_WORK_TITLE.name()), manager.getPropertyValue(SAVE_UNSAVED_WORK.name()));
         ConfirmationDialog.Option x = ConfirmationDialog.getDialog().getSelectedOption();
+        selectedOption = x;
 
             if (x == ConfirmationDialog.Option.YES) {
-                //            System.out.println("yes was selected");
-
                 FileChooser fileChooser = new FileChooser();
                 //          fileChooser.setTitle("Open Resource File");
                 fileChooser.setInitialDirectory(new File(manager.getPropertyValue(DATA_RESOURCE_PATH.name())));
@@ -116,7 +135,6 @@ public final class AppActions implements ActionComponent {
                 }
                 return true;
             } if (x == ConfirmationDialog.Option.NO) {
-                //System.out.println("no was selected");
                 return true;
             }
 

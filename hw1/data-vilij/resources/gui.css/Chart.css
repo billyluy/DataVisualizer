@@ -1,0 +1,27 @@
+.chart-plot-background {
+    -fx-border-color: pink;
+    -fx-border-style: solid;
+    -fx-border-width: 7px;
+}
+
+.axis {
+    -fx-tick-length: 18;
+    -fx-minor-tick-length: 9;
+}
+
+.axis-tick-mark {
+    -fx-stroke: blue;
+    -fx-stroke-width: 3;
+}
+
+
+
+.chart-series-line {
+    -fx-stroke: transparent;
+}
+
+#lineseries {
+    -fx-stroke: blue;
+}
+
+
