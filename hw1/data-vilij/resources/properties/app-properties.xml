@@ -41,6 +41,13 @@ functionality within the main workspace. -->
         <property name = "ERROR_TITLE" value = "Error Message" />
         <property name = "ERROR_MSG" value = "ERROR" />
 
+        <property name = "SNAPSHOT_ERROR_TITLE" value = "Snapshot Error Message" />
+        <property name = "SNAPSHOT_ERROR_MSG" value = "Unable to take a screenshot." />
+        <property name="SCREENSHOT_FILE_EXT" value = "*.png"/>
+        <property name="SCREENSHOT_FILE_EXT_DESC" value="Image Files"/>
+
+        <property name="READ_ONLY_TITLE" value= "Read Only"/>
+
     </property_list>
     <property_options_list/>
 </properties>

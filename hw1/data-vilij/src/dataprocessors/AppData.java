@@ -9,10 +9,8 @@ import vilij.components.Dialog;
 import vilij.propertymanager.PropertyManager;
 import vilij.templates.ApplicationTemplate;
 
-import java.awt.geom.Point2D;
 import java.nio.file.Path;
 import java.util.Map;
-import javafx.scene.chart.LineChart;
 
 import static settings.AppPropertyTypes.DISPLAY_ERROR_MSG;
 import static settings.AppPropertyTypes.DISPLAY_ERROR_TITLE;
@@ -80,8 +78,8 @@ public class AppData implements DataComponent {
                 Tooltip.install(((XYChart.Data)data1).getNode(), tip1);
 
 
-                ((XYChart.Data)data1).getNode().setOnMouseEntered(event -> ((XYChart.Data)data1).getNode().getStyleClass().add("onHover"));
-                ((XYChart.Data)data1).getNode().setOnMouseExited(event -> ((XYChart.Data)data1).getNode().getStyleClass().remove("onHover"));
+                ((XYChart.Data)data1).getNode().setOnMouseEntered(event -> ((XYChart.Data) data1).getNode().getStyleClass().add("onHover"));
+                ((XYChart.Data)data1).getNode().setOnMouseExited(event -> ((XYChart.Data) data1).getNode().getStyleClass().remove("onHover"));
 
             }
         }

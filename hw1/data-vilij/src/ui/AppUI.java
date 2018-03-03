@@ -3,14 +3,17 @@ package ui;
 import actions.AppActions;
 import dataprocessors.AppData;
 
-import dataprocessors.TSDProcessor;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.LineChart;
 
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
@@ -24,7 +27,7 @@ import static settings.AppPropertyTypes.*;
 import static vilij.settings.PropertyTypes.GUI_RESOURCE_PATH;
 import static vilij.settings.PropertyTypes.ICONS_RESOURCE_PATH;
 
-import javafx.scene.control.Tooltip;
+import java.io.IOException;
 
 /**
  * This is the application's user interface implementation.
@@ -42,6 +45,7 @@ public final class AppUI extends UITemplate {
     private Button                       displayButton;  // workspace button to display data on the chart
     private TextArea                     textArea;       // text area for new data input
     private boolean                      hasNewText;     // whether or not the text area has any new data since last display
+    private CheckBox                     readOnly;
 
     private static final String SEPARATOR = "/";
     private String screenshotPath;
@@ -82,6 +86,15 @@ public final class AppUI extends UITemplate {
         loadButton.setOnAction(e -> applicationTemplate.getActionComponent().handleLoadRequest());
         exitButton.setOnAction(e -> applicationTemplate.getActionComponent().handleExitRequest());
         printButton.setOnAction(e -> applicationTemplate.getActionComponent().handlePrintRequest());
+        scrnshotButton.setOnAction(e -> {
+            try {
+                ((AppActions)applicationTemplate.getActionComponent()).handleScreenshotRequest();
+            } catch (IOException e1) {
+                if(chart.getData().isEmpty()){
+                    scrnshotButton.setDisable(true);
+                };
+            }
+        });
     }
 
     @Override
@@ -127,7 +140,10 @@ public final class AppUI extends UITemplate {
 
         layoutPane.getChildren().addAll(textArea, chart);
 
-        appPane.getChildren().addAll(textPane, layoutPane, displayButton);
+        readOnly = new CheckBox(applicationTemplate.manager.getPropertyValue(READ_ONLY_TITLE.name()));
+        readOnly.setSelected(false);
+
+        appPane.getChildren().addAll(textPane, layoutPane, displayButton, readOnly);
 
         chart.setHorizontalGridLinesVisible(false);
         chart.setVerticalGridLinesVisible(false);
@@ -141,7 +157,6 @@ public final class AppUI extends UITemplate {
     }
 
     private void setWorkspaceActions() {
-        // TODO for homework 1
 
         displayButton.setOnAction(e -> ((AppData) applicationTemplate.getDataComponent()).loadData(textArea.getText()));
 
@@ -160,24 +175,36 @@ public final class AppUI extends UITemplate {
             }
 
             if(hasNewText){
-//                TSDProcessor processor2 = new TSDProcessor();
-//                try {
-//                    processor2.processString(textArea.getText());
-//                    saveButton.setDisable(false);
-//                } catch (Exception e) {
-//                    saveButton.setDisable(true);
-//                }
-                //   applicationTemplate.getActionComponent().handleSaveRequest();
-             //   saveButton.setDisable(false);
                 saveButton.setDisable(false);
                 hasNewText = false;
             }
 
         });
 
+        chart.getData().addListener(new ListChangeListener<XYChart.Series<Number, Number>>() {
+            @Override
+            public void onChanged(Change<? extends XYChart.Series<Number, Number>> c) {
+                if(chart.getData().isEmpty()){
+                //    System.out.println("empty");
+                    scrnshotButton.setDisable(true);
+                }else{
+                //    System.out.println("filled");
+                    scrnshotButton.setDisable(false);
+                }
+            }
+        });
 
+        readOnly.setOnMouseClicked(event -> checkingBox());
 
+    }
 
+    public void checkingBox(){
+        if(readOnly.isSelected()) {
+            textArea.setDisable(true);
+        }
+        else{
+            textArea.setDisable(false);
+        }
     }
 
     public String getTextArea(){

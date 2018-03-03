@@ -3,6 +3,9 @@ package actions;
 import dataprocessors.TSDProcessor;
 import javafx.application.Platform;
 
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.image.WritableImage;
 import javafx.stage.FileChooser;
 import ui.AppUI;
 import vilij.components.ActionComponent;
@@ -11,6 +14,7 @@ import vilij.components.Dialog;
 import vilij.propertymanager.PropertyManager;
 import vilij.templates.ApplicationTemplate;
 
+import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -67,13 +71,13 @@ public final class AppActions implements ActionComponent {
                 ((AppUI)applicationTemplate.getUIComponent()).getSaveButton().setDisable(true);
             }
         } catch (Exception e) {
-         //   ((AppUI)applicationTemplate.getUIComponent()).getSaveButton().setDisable(true);
+            this.applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(DISPLAY_ERROR_TITLE.name()), manager.getPropertyValue(DISPLAY_ERROR_MSG.name()));
+
+            //   ((AppUI)applicationTemplate.getUIComponent()).getSaveButton().setDisable(true);
          //   System.out.println("error");
          //       this.applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue());
 
-            e.printStackTrace();
         }
-
     }
 
     @Override
@@ -94,6 +98,31 @@ public final class AppActions implements ActionComponent {
 
     public void handleScreenshotRequest() throws IOException {
         // TODO: NOT A PART OF HW 1
+        PropertyManager manager = applicationTemplate.manager;
+
+        try {
+            WritableImage image1 = ((AppUI) applicationTemplate.getUIComponent()).getChart().snapshot(new SnapshotParameters(), null);
+
+            FileChooser fileChooser1 = new FileChooser();
+
+            fileChooser1.getExtensionFilters().add(new FileChooser.ExtensionFilter(manager.getPropertyValue(SCREENSHOT_FILE_EXT_DESC.name()), manager.getPropertyValue(SCREENSHOT_FILE_EXT.name())));
+
+            File file = fileChooser1.showSaveDialog(applicationTemplate.getUIComponent().getPrimaryWindow());
+
+            if(file != null){
+                ImageIO.write(SwingFXUtils.fromFXImage(image1, null), "png", file);
+            }else{
+                //error dialog
+                this.applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(SNAPSHOT_ERROR_TITLE.name()), manager.getPropertyValue(SNAPSHOT_ERROR_MSG.name()));
+
+            }
+        }
+        catch(IOException  e){
+            this.applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(SPECIFIED_FILE.name()), manager.getPropertyValue(RESOURCE_SUBDIR_NOT_FOUND.name()));
+
+        }
+
+
 
     }
 
