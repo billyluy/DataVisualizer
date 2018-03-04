@@ -32,7 +32,7 @@ public class AppData implements DataComponent {
     private TSDProcessor        processor;
     private ApplicationTemplate applicationTemplate;
 
-    public ArrayList<String> linesLeft;
+    public ArrayList<String> linesLeft = new ArrayList<String>();
 
     public AppData(ApplicationTemplate applicationTemplate) {
         this.processor = new TSDProcessor();
@@ -50,7 +50,6 @@ public class AppData implements DataComponent {
                 int totalLines = 0;
                 String y = "";
 
-                linesLeft = new ArrayList<String>();
 
                 while (sc.hasNextLine()) {
                     if (lineCount < Integer.parseInt(applicationTemplate.manager.getPropertyValue(MAX_LINES.name()))) {
@@ -103,7 +102,11 @@ public class AppData implements DataComponent {
        PropertyManager manager = applicationTemplate.manager;
        String text = ((AppUI) applicationTemplate.getUIComponent()).getTextArea();
        try(FileWriter x = new FileWriter(dataFilePath.toString())){
-           x.write(text);
+            String a =  "";
+            for(int i = 0; i < ((AppData) applicationTemplate.getDataComponent()).getLinesLeft().size(); i++){
+                a += ((AppData) applicationTemplate.getDataComponent()).getLinesLeft().get(i);
+            }
+           x.write(text + a);
        }
        catch(Exception e){
            applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(SPECIFIED_FILE.name()), manager.getPropertyValue(RESOURCE_SUBDIR_NOT_FOUND.name()));

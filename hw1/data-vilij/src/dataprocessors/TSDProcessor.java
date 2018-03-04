@@ -31,6 +31,9 @@ public final class TSDProcessor {
     private Map<String, String>  dataLabels;
     private Map<String, Point2D> dataPoints;
 
+    private int lineofError = 0;
+    private ArrayList<Integer> errors = new ArrayList<Integer>();
+
     public TSDProcessor() {
         dataLabels = new HashMap<>();
         dataPoints = new HashMap<>();
@@ -59,6 +62,10 @@ public final class TSDProcessor {
                       errorMessage.setLength(0);
                       errorMessage.append(e.getClass().getSimpleName()).append(": ").append(e.getMessage());
                       hadAnError.set(true);
+                      errors.add(dataLabels.size() + 1);
+//                      for(int i = 0; i < errors.size(); i++){
+//                          System.out.println(errors.get(i).toString());
+//                      }
                   }
               });
         if (errorMessage.length() > 0)
@@ -99,4 +106,8 @@ public final class TSDProcessor {
         return dataPoints;
     }
 
+    public int getlineOfError(){
+        System.out.println("line of error = " + errors.get(0));
+        return errors.get(0);
+    }
 }

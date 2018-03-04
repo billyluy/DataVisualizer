@@ -63,6 +63,11 @@ functionality within the main workspace. -->
         <property name = "LOAD_ERROR_TITLE" value = "Could not load." />
         <property name = "LOAD_ERROR_MSG" value = "Unable to load file." />
 
+        <property name = "SAVE_ERROR_MSG" value = "Unable to Save due to a formatting error in line " />
+        <property name = "SAVE_ERROR_TITLE" value = "Save Error" />
+
+        <property name = "SAVE_REGULAR_MSG" value = "Unable to save" />
+
     </property_list>
     <property_options_list/>
 </properties>

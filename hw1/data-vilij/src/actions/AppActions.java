@@ -36,7 +36,6 @@ public final class AppActions implements ActionComponent {
 
     /** Path to the data file currently active. */
     Path dataFilePath = null;
-//    ArrayList<String> linesLeft;
     Boolean check = false;
 
     ConfirmationDialog.Option selectedOption;
@@ -68,29 +67,47 @@ public final class AppActions implements ActionComponent {
     public void handleSaveRequest() {
         // TODO: NOT A PART OF HW 1
         PropertyManager manager = applicationTemplate.manager;
-//        String input1 = ((AppUI)applicationTemplate.getUIComponent()).getTextArea();
-//        TSDProcessor processor1 = new TSDProcessor();
+        String input1 = ((AppUI)applicationTemplate.getUIComponent()).getTextArea();
+        TSDProcessor processor1 = new TSDProcessor();
 
         try {
-          //  processor1.processString(input1);
-
-            if(dataFilePath == null){
-                FileChooser fileChooser = new FileChooser();
-                fileChooser.setInitialDirectory(new File(manager.getPropertyValue(DATA_RESOURCE_PATH.name())));
-                fileChooser.getInitialDirectory();
-                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(manager.getPropertyValue(DATA_FILE_EXT.name()), manager.getPropertyValue(DATA_FILE_EXT_DESC.name())));
-
-                File file = fileChooser.showSaveDialog(applicationTemplate.getUIComponent().getPrimaryWindow());
-                dataFilePath = file.toPath();
-                applicationTemplate.getDataComponent().saveData(dataFilePath);
-                ((AppUI) applicationTemplate.getUIComponent()).getSaveButton().setDisable(true);
+            String a = "";
+            System.out.println("here");
+            System.out.println(((AppData)applicationTemplate.getDataComponent()).getLinesLeft().size());
+            for (int i = 0; i < ((AppData) applicationTemplate.getDataComponent()).getLinesLeft().size(); i++) {
+                a += ((AppData) applicationTemplate.getDataComponent()).getLinesLeft().get(i);
             }
-            else{
-                applicationTemplate.getDataComponent().saveData(dataFilePath);
-                ((AppUI) applicationTemplate.getUIComponent()).getSaveButton().setDisable(true);
-            }
+
+            System.out.println("a = " + a);
+
+            processor1.processString(input1 + a);
+
+                if(dataFilePath == null){
+                    FileChooser fileChooser = new FileChooser();
+                    fileChooser.setInitialDirectory(new File(manager.getPropertyValue(DATA_RESOURCE_PATH.name())));
+                    fileChooser.getInitialDirectory();
+                    fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(manager.getPropertyValue(DATA_FILE_EXT.name()), manager.getPropertyValue(DATA_FILE_EXT_DESC.name())));
+
+                    File file = fileChooser.showSaveDialog(applicationTemplate.getUIComponent().getPrimaryWindow());
+                    dataFilePath = file.toPath();
+                    applicationTemplate.getDataComponent().saveData(dataFilePath);
+                    ((AppUI) applicationTemplate.getUIComponent()).getSaveButton().setDisable(true);
+                }
+                else{
+                    applicationTemplate.getDataComponent().saveData(dataFilePath);
+                    ((AppUI) applicationTemplate.getUIComponent()).getSaveButton().setDisable(true);
+                }
         } catch (Exception e) {
-            this.applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(DISPLAY_ERROR_TITLE.name()), manager.getPropertyValue(DISPLAY_ERROR_MSG.name()));
+            System.out.println("hi");
+          //  this.applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(DISPLAY_ERROR_TITLE.name()), manager.getPropertyValue(DISPLAY_ERROR_MSG.name()));
+            if(processor1.getlineOfError() > 0){
+                String msg = manager.getPropertyValue(SAVE_ERROR_MSG.name()) + processor1.getlineOfError();
+                System.out.println("msg = " + msg );
+                applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(SAVE_ERROR_TITLE.name()), manager.getPropertyValue(SAVE_ERROR_MSG.name()) + processor1.getlineOfError());
+            }else{
+                applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(SAVE_REGULAR_MSG.name()), manager.getPropertyValue(SAVE_REGULAR_MSG.name()));
+
+            }
         }
     }
 

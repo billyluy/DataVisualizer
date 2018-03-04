@@ -59,6 +59,10 @@ public enum AppPropertyTypes {
     TOTAL_LINES_ERROR,
 
     LOAD_ERROR_TITLE,
-    LOAD_ERROR_MSG
+    LOAD_ERROR_MSG,
+
+    SAVE_ERROR_MSG,
+    SAVE_ERROR_TITLE,
+    SAVE_REGULAR_MSG
 
 }

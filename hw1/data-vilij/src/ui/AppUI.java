@@ -166,7 +166,7 @@ public final class AppUI extends UITemplate {
 
         String oldText = textArea.getText();
 
-  //      loadButton.setOnMouseClicked(event -> setClicked());
+        loadButton.setOnMouseClicked(event -> setClicked());
 
         textArea.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
 
@@ -230,6 +230,9 @@ public final class AppUI extends UITemplate {
         click = false;
     }
 
+    public Boolean getClicked(){
+        return click;
+    }
     public void checkingBox(){
         if(readOnly.isSelected()) {
             textArea.setDisable(true);
