@@ -41,12 +41,27 @@ functionality within the main workspace. -->
         <property name = "ERROR_TITLE" value = "Error Message" />
         <property name = "ERROR_MSG" value = "ERROR" />
 
+        <property name = "AVERAGE_Y_VALUE" value = "Average Y Value" />
+        <property name = "LINE_SERIES" value = "lineseries" />
+
+        <property name ="STYLE_SHEET_PATH" value = "gui.css/Chart.css" />
+
         <property name = "SNAPSHOT_ERROR_TITLE" value = "Snapshot Error Message" />
         <property name = "SNAPSHOT_ERROR_MSG" value = "Unable to take a screenshot." />
         <property name="SCREENSHOT_FILE_EXT" value = "*.png"/>
         <property name="SCREENSHOT_FILE_EXT_DESC" value="Image Files"/>
 
         <property name="READ_ONLY_TITLE" value= "Read Only"/>
+        <property name = "OPEN_FILE_TITLE" value = "Open File" />
+
+        <property name = "MAX_LINES" value = "10" />
+        <property name = "LINE_COUNTER" value= "0" />
+        <property name = "LINE_FILLED" value = "Loaded data consists of " />
+        <property name = "LINES_DISPLAY" value = " lines. Showing only the first 10 in the text area." />
+
+        <property name = "TOTAL_LINES_ERROR" value = "Display Only 10 Lines" />
+        <property name = "LOAD_ERROR_TITLE" value = "Could not load." />
+        <property name = "LOAD_ERROR_MSG" value = "Unable to load file." />
 
     </property_list>
     <property_options_list/>

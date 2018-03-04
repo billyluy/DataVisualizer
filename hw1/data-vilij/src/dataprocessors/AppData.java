@@ -1,5 +1,6 @@
 package dataprocessors;
 
+import actions.AppActions;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Tooltip;
 import javafx.scene.paint.Color;
@@ -9,11 +10,15 @@ import vilij.components.Dialog;
 import vilij.propertymanager.PropertyManager;
 import vilij.templates.ApplicationTemplate;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Map;
+import java.util.Scanner;
 
-import static settings.AppPropertyTypes.DISPLAY_ERROR_MSG;
-import static settings.AppPropertyTypes.DISPLAY_ERROR_TITLE;
+import static settings.AppPropertyTypes.*;
+import static settings.AppPropertyTypes.TOTAL_LINES_ERROR;
 
 /**
  * This is the concrete application-specific implementation of the data component defined by the Vilij framework.
@@ -26,6 +31,8 @@ public class AppData implements DataComponent {
     private TSDProcessor        processor;
     private ApplicationTemplate applicationTemplate;
 
+    public ArrayList<String> linesLeft;
+
     public AppData(ApplicationTemplate applicationTemplate) {
         this.processor = new TSDProcessor();
         this.applicationTemplate = applicationTemplate;
@@ -34,6 +41,40 @@ public class AppData implements DataComponent {
     @Override
     public void loadData(Path dataFilePath) {
         // TODO: NOT A PART OF HW 1
+        PropertyManager manager = applicationTemplate.manager;
+        try{
+            if(dataFilePath != null) {
+                Scanner sc = new Scanner(dataFilePath);
+                int lineCount = Integer.parseInt(applicationTemplate.manager.getPropertyValue(LINE_COUNTER.name()));
+                int totalLines = 0;
+                String y = "";
+
+                linesLeft = new ArrayList<String>();
+
+                while (sc.hasNextLine()) {
+                    if (lineCount < Integer.parseInt(applicationTemplate.manager.getPropertyValue(MAX_LINES.name()))) {
+                        y += sc.nextLine() + "\n";
+                        lineCount++;
+                        totalLines++;
+                    }else {
+                        linesLeft.add(sc.nextLine() + "\n");
+                        totalLines++;
+                    }
+                }
+                ((AppUI) applicationTemplate.getUIComponent()).setTextArea(y);
+                if (totalLines > 10) {
+                    String x = manager.getPropertyValue(LINE_FILLED.name()) + totalLines + manager.getPropertyValue(LINES_DISPLAY.name());
+                    applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(TOTAL_LINES_ERROR.name(), x);
+                }
+            }
+
+        } catch (IOException e) {
+            applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(LOAD_ERROR_TITLE.name()), manager.getPropertyValue(LOAD_ERROR_MSG.name()));
+        }
+    }
+
+    public ArrayList<String> getLinesLeft(){
+        return linesLeft;
     }
 
     public void loadData(String dataString) {
@@ -67,9 +108,11 @@ public class AppData implements DataComponent {
 
     public void displayData() {
 
-        averageYValues();
 
         processor.toChartData(((AppUI) applicationTemplate.getUIComponent()).getChart());
+        if(!((AppUI) applicationTemplate.getUIComponent()).getChart().getData().isEmpty()){
+            averageYValues();
+        }
 
         for (XYChart.Series<Number, Number> series : ((AppUI) applicationTemplate.getUIComponent()).getChart().getData()) {
             for (Object data1: series.getData()) {
@@ -77,10 +120,8 @@ public class AppData implements DataComponent {
                 tip1.setText(series.getName());
                 Tooltip.install(((XYChart.Data)data1).getNode(), tip1);
 
-
                 ((XYChart.Data)data1).getNode().setOnMouseEntered(event -> ((XYChart.Data) data1).getNode().getStyleClass().add("onHover"));
                 ((XYChart.Data)data1).getNode().setOnMouseExited(event -> ((XYChart.Data) data1).getNode().getStyleClass().remove("onHover"));
-
             }
         }
 
@@ -102,7 +143,7 @@ public class AppData implements DataComponent {
         }
 
         XYChart.Series lineseries = new XYChart.Series();
-        lineseries.setName("Average Y Value");
+        lineseries.setName(applicationTemplate.manager.getPropertyValue(AVERAGE_Y_VALUE.name()));
 
         lineseries.getData().add(new XYChart.Data<>(minXvalue, sum/processor.getMap().size()));
         lineseries.getData().add(new XYChart.Data<>(maxXValue, sum/processor.getMap().size()));
@@ -114,9 +155,7 @@ public class AppData implements DataComponent {
             ((XYChart.Data)data1).getNode().setVisible(false);
         }
 
-        lineseries.getNode().setId("lineseries");
-
-        System.out.println(sum/processor.getMap().size());
+        lineseries.getNode().setId(applicationTemplate.manager.getPropertyValue(LINE_SERIES.name()));
     }
 
 }

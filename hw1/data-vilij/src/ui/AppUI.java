@@ -3,11 +3,10 @@ package ui;
 import actions.AppActions;
 import dataprocessors.AppData;
 
-import javafx.beans.value.ChangeListener;
+import dataprocessors.TSDProcessor;
 import javafx.beans.value.ObservableValue;
 
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.LineChart;
 
@@ -28,6 +27,9 @@ import static vilij.settings.PropertyTypes.GUI_RESOURCE_PATH;
 import static vilij.settings.PropertyTypes.ICONS_RESOURCE_PATH;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * This is the application's user interface implementation.
@@ -49,6 +51,7 @@ public final class AppUI extends UITemplate {
 
     private static final String SEPARATOR = "/";
     private String screenshotPath;
+    private Boolean click;
 
     public LineChart<Number, Number> getChart() { return chart; }
 
@@ -122,6 +125,7 @@ public final class AppUI extends UITemplate {
 
         textPane.getChildren().add(text1);
 
+
         HBox layoutPane = new HBox();
 
         NumberAxis xAxis = new NumberAxis();
@@ -150,7 +154,7 @@ public final class AppUI extends UITemplate {
         chart.setHorizontalZeroLineVisible(false);
         chart.setVerticalZeroLineVisible(false);
 
-        appPane.getStylesheets().add("gui.css/Chart.css");
+        appPane.getStylesheets().add(applicationTemplate.manager.getPropertyValue(STYLE_SHEET_PATH.name()));
 
         hasNewText = false;
 
@@ -161,7 +165,32 @@ public final class AppUI extends UITemplate {
         displayButton.setOnAction(e -> ((AppData) applicationTemplate.getDataComponent()).loadData(textArea.getText()));
 
         String oldText = textArea.getText();
+
+  //      loadButton.setOnMouseClicked(event -> setClicked());
+
         textArea.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+
+            if(((AppActions) applicationTemplate.getActionComponent()).getCheck()) {
+                String a = "";
+                //       ArrayList<String> notDisplayed = ((AppActions)applicationTemplate.getActionComponent()).getLinesLeft();
+                ArrayList<String> notDisplayed = ((AppData) applicationTemplate.getDataComponent()).getLinesLeft();
+
+                int deletedAmount = 10 - newValue.split("\n").length;
+//            System.out.println("amount = " + deletedAmount);
+//            System.out.println("size of notdisplayed = " + notDisplayed.size());
+                if (deletedAmount > 0 && notDisplayed.size() > 0) {
+                    while (deletedAmount > 0) {
+                        if (notDisplayed.size() > 0) {
+                            a += notDisplayed.remove(0);
+                        }
+                        deletedAmount--;
+                    }
+
+
+                }
+                textArea.setText(textArea.getText() + a);
+            }
+
             if(!oldText.equals(textArea.getText()) && !hasNewText){
                 hasNewText = true;
             }
@@ -195,7 +224,10 @@ public final class AppUI extends UITemplate {
         });
 
         readOnly.setOnMouseClicked(event -> checkingBox());
+    }
 
+    public void setClicked(){
+        click = false;
     }
 
     public void checkingBox(){
@@ -209,6 +241,10 @@ public final class AppUI extends UITemplate {
 
     public String getTextArea(){
         return textArea.getText();
+    }
+
+    public void setTextArea(String text){
+        textArea.setText(text);
     }
 
     public Button getSaveButton(){

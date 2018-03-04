@@ -1,8 +1,10 @@
 package actions;
 
+import dataprocessors.AppData;
 import dataprocessors.TSDProcessor;
 import javafx.application.Platform;
 
+import javafx.beans.property.Property;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.WritableImage;
@@ -15,10 +17,10 @@ import vilij.propertymanager.PropertyManager;
 import vilij.templates.ApplicationTemplate;
 
 import javax.imageio.ImageIO;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 import static settings.AppPropertyTypes.*;
 
@@ -34,6 +36,8 @@ public final class AppActions implements ActionComponent {
 
     /** Path to the data file currently active. */
     Path dataFilePath;
+//    ArrayList<String> linesLeft;
+    Boolean check = false;
 
     ConfirmationDialog.Option selectedOption;
 
@@ -49,7 +53,9 @@ public final class AppActions implements ActionComponent {
 
         try{
             if(promptToSave()){
-                applicationTemplate.getUIComponent().clear();
+                while(!((AppUI) applicationTemplate.getUIComponent()).getTextArea().isEmpty()) {
+                    applicationTemplate.getUIComponent().clear();
+                }
                 ((AppUI) applicationTemplate.getUIComponent()).getChart().getData().clear();
             }
         } catch (IOException e) {
@@ -66,23 +72,72 @@ public final class AppActions implements ActionComponent {
 
         try {
             processor1.processString(input1);
-         //   ((AppUI)applicationTemplate.getUIComponent()).getSaveButton().setDisable(false);
             if(promptToSave() && selectedOption == ConfirmationDialog.Option.YES){
                 ((AppUI)applicationTemplate.getUIComponent()).getSaveButton().setDisable(true);
             }
         } catch (Exception e) {
             this.applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(DISPLAY_ERROR_TITLE.name()), manager.getPropertyValue(DISPLAY_ERROR_MSG.name()));
-
-            //   ((AppUI)applicationTemplate.getUIComponent()).getSaveButton().setDisable(true);
-         //   System.out.println("error");
-         //       this.applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue());
-
         }
     }
 
     @Override
     public void handleLoadRequest() {
         // TODO: NOT A PART OF HW 1
+
+        PropertyManager manager = applicationTemplate.manager;
+        FileChooser chooser1 = new FileChooser();
+        chooser1.setTitle(applicationTemplate.manager.getPropertyValue(OPEN_FILE_TITLE.name()));
+        chooser1.getExtensionFilters().add(new FileChooser.ExtensionFilter(manager.getPropertyValue(DATA_FILE_EXT.name()), manager.getPropertyValue(DATA_FILE_EXT_DESC.name())));
+
+        dataFilePath = null;
+        File file = chooser1.showOpenDialog(applicationTemplate.getUIComponent().getPrimaryWindow());
+
+        try {
+            if(file!= null) {
+                dataFilePath = file.toPath();
+                applicationTemplate.getDataComponent().loadData(dataFilePath);
+                check = true;
+            }
+
+        }catch (NullPointerException e){
+
+            applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(LOAD_ERROR_TITLE.name()), manager.getPropertyValue(LOAD_ERROR_MSG.name()));
+        }
+//        PropertyManager manager = applicationTemplate.manager;
+//        FileChooser chooser1 = new FileChooser();
+//        chooser1.setTitle(applicationTemplate.manager.getPropertyValue(OPEN_FILE_TITLE.name()));
+//
+//        try{
+//            File file = chooser1.showOpenDialog(applicationTemplate.getUIComponent().getPrimaryWindow());
+//            if(file != null) {
+//                Scanner sc = new Scanner(file);
+//                int lineCount = Integer.parseInt(applicationTemplate.manager.getPropertyValue(LINE_COUNTER.name()));
+//                int totalLines = 0;
+//                String y = "";
+//
+//                linesLeft = new ArrayList<String>();
+//
+//                while (sc.hasNextLine()) {
+//                    if (lineCount < Integer.parseInt(applicationTemplate.manager.getPropertyValue(MAX_LINES.name()))) {
+//                        y += sc.nextLine() + "\n";
+//                        lineCount++;
+//                        totalLines++;
+//                    }else {
+//                        linesLeft.add(sc.nextLine() + "\n");
+//                        totalLines++;
+//                    }
+//                }
+//                ((AppUI) applicationTemplate.getUIComponent()).setTextArea(y);
+//                if (totalLines > 10) {
+//                    String x = manager.getPropertyValue(LINE_FILLED.name()) + totalLines + manager.getPropertyValue(LINES_DISPLAY.name());
+//                    applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(TOTAL_LINES_ERROR.name(), x);
+//                }
+//            }
+//
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//            System.out.println("File Not Found Exception");
+//        }
     }
 
     @Override
@@ -121,9 +176,6 @@ public final class AppActions implements ActionComponent {
             this.applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(SPECIFIED_FILE.name()), manager.getPropertyValue(RESOURCE_SUBDIR_NOT_FOUND.name()));
 
         }
-
-
-
     }
 
     /**
@@ -169,4 +221,13 @@ public final class AppActions implements ActionComponent {
 
         return false;
     }
+
+//    public ArrayList<String> getLinesLeft(){
+//        return linesLeft;
+//    }
+
+    public Boolean getCheck(){
+        return check;
+    }
+
 }
