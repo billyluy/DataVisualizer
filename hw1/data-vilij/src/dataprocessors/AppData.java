@@ -11,6 +11,7 @@ import vilij.propertymanager.PropertyManager;
 import vilij.templates.ApplicationTemplate;
 
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -99,6 +100,14 @@ public class AppData implements DataComponent {
     @Override
     public void saveData(Path dataFilePath) {
         // TODO: NOT A PART OF HW 1
+       PropertyManager manager = applicationTemplate.manager;
+       String text = ((AppUI) applicationTemplate.getUIComponent()).getTextArea();
+       try(FileWriter x = new FileWriter(dataFilePath.toString())){
+           x.write(text);
+       }
+       catch(Exception e){
+           applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(SPECIFIED_FILE.name()), manager.getPropertyValue(RESOURCE_SUBDIR_NOT_FOUND.name()));
+       }
     }
 
     @Override

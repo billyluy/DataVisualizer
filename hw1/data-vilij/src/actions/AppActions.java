@@ -35,7 +35,7 @@ public final class AppActions implements ActionComponent {
     private ApplicationTemplate applicationTemplate;
 
     /** Path to the data file currently active. */
-    Path dataFilePath;
+    Path dataFilePath = null;
 //    ArrayList<String> linesLeft;
     Boolean check = false;
 
@@ -57,6 +57,7 @@ public final class AppActions implements ActionComponent {
                     applicationTemplate.getUIComponent().clear();
                 }
                 ((AppUI) applicationTemplate.getUIComponent()).getChart().getData().clear();
+                dataFilePath = null;
             }
         } catch (IOException e) {
             this.applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(ERROR_TITLE.name()), manager.getPropertyValue(ERROR_MSG.name()));
@@ -67,13 +68,26 @@ public final class AppActions implements ActionComponent {
     public void handleSaveRequest() {
         // TODO: NOT A PART OF HW 1
         PropertyManager manager = applicationTemplate.manager;
-        String input1 = ((AppUI)applicationTemplate.getUIComponent()).getTextArea();
-        TSDProcessor processor1 = new TSDProcessor();
+//        String input1 = ((AppUI)applicationTemplate.getUIComponent()).getTextArea();
+//        TSDProcessor processor1 = new TSDProcessor();
 
         try {
-            processor1.processString(input1);
-            if(promptToSave() && selectedOption == ConfirmationDialog.Option.YES){
-                ((AppUI)applicationTemplate.getUIComponent()).getSaveButton().setDisable(true);
+          //  processor1.processString(input1);
+
+            if(dataFilePath == null){
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.setInitialDirectory(new File(manager.getPropertyValue(DATA_RESOURCE_PATH.name())));
+                fileChooser.getInitialDirectory();
+                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(manager.getPropertyValue(DATA_FILE_EXT.name()), manager.getPropertyValue(DATA_FILE_EXT_DESC.name())));
+
+                File file = fileChooser.showSaveDialog(applicationTemplate.getUIComponent().getPrimaryWindow());
+                dataFilePath = file.toPath();
+                applicationTemplate.getDataComponent().saveData(dataFilePath);
+                ((AppUI) applicationTemplate.getUIComponent()).getSaveButton().setDisable(true);
+            }
+            else{
+                applicationTemplate.getDataComponent().saveData(dataFilePath);
+                ((AppUI) applicationTemplate.getUIComponent()).getSaveButton().setDisable(true);
             }
         } catch (Exception e) {
             this.applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(DISPLAY_ERROR_TITLE.name()), manager.getPropertyValue(DISPLAY_ERROR_MSG.name()));
@@ -98,6 +112,8 @@ public final class AppActions implements ActionComponent {
                 applicationTemplate.getDataComponent().loadData(dataFilePath);
                 check = true;
             }
+            ((AppUI) applicationTemplate.getUIComponent()).getSaveButton().setDisable(true);
+
 
         }catch (NullPointerException e){
 
