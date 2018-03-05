@@ -33,8 +33,8 @@ public final class TSDProcessor {
 
     private ArrayList<Integer> errors = new ArrayList<Integer>();
     private Boolean duplicates = false;
-    private ArrayList<String> nameOfDuplicate = new ArrayList<String>();
-    private ArrayList<String> keysNames = new ArrayList<String>();
+    private ArrayList<String> nameOfDuplicate = new ArrayList<>();
+    private ArrayList<String> keysNames = new ArrayList<>();
 
     public TSDProcessor() {
         dataLabels = new HashMap<>();
@@ -66,9 +66,6 @@ public final class TSDProcessor {
                       errorMessage.append(e.getClass().getSimpleName()).append(": ").append(e.getMessage());
                       hadAnError.set(true);
                       errors.add(dataLabels.size() + 1);
-//                      for(int i = 0; i < errors.size(); i++){
-//                          System.out.println(errors.get(i).toString());
-//                      }
                   }
               });
         if (errorMessage.length() > 0)
@@ -122,10 +119,11 @@ public final class TSDProcessor {
         return errors.get(0);
     }
 
-    public void checkForDuplicates(String input){
+    public void checkForDuplicates(String s){
+
         for(int i = 0; i < keysNames.size(); i++){
  //           System.out.println("i:"+keysNames.get(i));
-            for(int j = i+1; j < keysNames.size(); j++){
+            for(int j = i+1; j < keysNames.size() -1; j++){
    //             System.out.println("j:"+keysNames.get(j));
                 if(keysNames.get(i).equals(keysNames.get(j))){
                     duplicates = true;
@@ -133,7 +131,7 @@ public final class TSDProcessor {
                 }
             }
         }
-     //   System.out.println(duplicates);
+  //      System.out.println(duplicates);
 
     }
 

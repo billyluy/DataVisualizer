@@ -91,7 +91,7 @@ public final class AppUI extends UITemplate {
             } catch (IOException e1) {
                 if(chart.getData().isEmpty()){
                     scrnshotButton.setDisable(true);
-                };
+                }
             }
         });
     }
@@ -205,16 +205,13 @@ public final class AppUI extends UITemplate {
 
         });
 
-        chart.getData().addListener(new ListChangeListener<XYChart.Series<Number, Number>>() {
-            @Override
-            public void onChanged(Change<? extends XYChart.Series<Number, Number>> c) {
-                if(chart.getData().isEmpty()){
-                //    System.out.println("empty");
-                    scrnshotButton.setDisable(true);
-                }else{
-                //    System.out.println("filled");
-                    scrnshotButton.setDisable(false);
-                }
+        chart.getData().addListener((ListChangeListener<XYChart.Series<Number, Number>>) c -> {
+            if(chart.getData().isEmpty()){
+            //    System.out.println("empty");
+                scrnshotButton.setDisable(true);
+            }else{
+            //    System.out.println("filled");
+                scrnshotButton.setDisable(false);
             }
         });
 

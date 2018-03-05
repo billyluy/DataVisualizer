@@ -66,29 +66,24 @@ public final class AppActions implements ActionComponent {
         String input1 = ((AppUI)applicationTemplate.getUIComponent()).getTextArea();
         TSDProcessor processor1 = new TSDProcessor();
 
-        String input2 = new String();
+        String input2 = "";
 
         try {
-            String a = new String();
-     //       System.out.println("here");
-     //       System.out.println(((AppData)applicationTemplate.getDataComponent()).getLinesLeft().size());
+            String a = "";
             for (int i = 0; i < ((AppData) applicationTemplate.getDataComponent()).getLinesLeft().size(); i++) {
                 a += ((AppData) applicationTemplate.getDataComponent()).getLinesLeft().get(i);
             }
 
- //           System.out.println("a = " + a);
             input2 = input1 + a;
 
             processor1.processString(input1 + a);
             processor1.checkForDuplicates(input1 + a);
 
-    //      System.out.println(processor1.getDuplicates());
-
-            if(processor1.getDuplicates() == true){
+            if(processor1.getDuplicates()){
                 applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(UNABLE_TO_SAVE_DUPLICATE_TITLE.name()), manager.getPropertyValue(LINE_DUPLICATE.name()) + processor1.getNameOfDuplicate().get(0));
             }
 
-            if(dataFilePath == null && processor1.getDuplicates() == false){
+            if(dataFilePath == null && !processor1.getDuplicates()){
                 FileChooser fileChooser = new FileChooser();
                 fileChooser.setInitialDirectory(new File(manager.getPropertyValue(DATA_RESOURCE_PATH.name())));
                 fileChooser.getInitialDirectory();
@@ -99,18 +94,17 @@ public final class AppActions implements ActionComponent {
                 applicationTemplate.getDataComponent().saveData(dataFilePath);
                 ((AppUI) applicationTemplate.getUIComponent()).getSaveButton().setDisable(true);
             }
-            else if(processor1.getDuplicates() == false){
+            else if(!processor1.getDuplicates()){
                 applicationTemplate.getDataComponent().saveData(dataFilePath);
                 ((AppUI) applicationTemplate.getUIComponent()).getSaveButton().setDisable(true);
             }
         } catch (Exception e) {
 
             processor1.checkForDuplicates(input2);
-            if(processor1.getDuplicates() == true){
+            if(processor1.getDuplicates()){
                 applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(UNABLE_TO_SAVE_DUPLICATE_TITLE.name()), manager.getPropertyValue(LINE_DUPLICATE.name()) + processor1.getNameOfDuplicate().get(0));
             }
             else if(processor1.getlineOfError() > 0){
-                String msg = manager.getPropertyValue(SAVE_ERROR_MSG.name()) + processor1.getlineOfError();
                 applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(SAVE_ERROR_TITLE.name()), manager.getPropertyValue(SAVE_ERROR_MSG.name()) + processor1.getlineOfError());
             }else{
                 applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(SAVE_REGULAR_MSG.name()), manager.getPropertyValue(SAVE_REGULAR_MSG.name()));
@@ -204,7 +198,7 @@ public final class AppActions implements ActionComponent {
         try {
             processor.processString(((AppUI) applicationTemplate.getUIComponent()).getTextArea());
             processor.checkForDuplicates(((AppUI) applicationTemplate.getUIComponent()).getTextArea());
-            if(processor.getDuplicates() == true){
+            if(processor.getDuplicates()){
                 applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(UNABLE_TO_SAVE_DUPLICATE_TITLE.name()), manager.getPropertyValue(UNABLE_TO_SAVE_DUPLICATE.name()));
             }else{
                 this.applicationTemplate.getDialog(Dialog.DialogType.CONFIRMATION).show(manager.getPropertyValue(SAVE_UNSAVED_WORK_TITLE.name()), manager.getPropertyValue(SAVE_UNSAVED_WORK.name()));
