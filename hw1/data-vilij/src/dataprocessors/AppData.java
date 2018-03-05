@@ -1,16 +1,13 @@
 package dataprocessors;
 
-import actions.AppActions;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Tooltip;
-import javafx.scene.paint.Color;
 import ui.AppUI;
 import vilij.components.DataComponent;
 import vilij.components.Dialog;
 import vilij.propertymanager.PropertyManager;
 import vilij.templates.ApplicationTemplate;
 
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -43,12 +40,15 @@ public class AppData implements DataComponent {
     public void loadData(Path dataFilePath) {
         // TODO: NOT A PART OF HW 1
         PropertyManager manager = applicationTemplate.manager;
+        TSDProcessor processor = new TSDProcessor();
+
         try{
+            processor.clear();
             if(dataFilePath != null) {
                 Scanner sc = new Scanner(dataFilePath);
                 int lineCount = Integer.parseInt(applicationTemplate.manager.getPropertyValue(LINE_COUNTER.name()));
                 int totalLines = 0;
-                String y = "";
+                String y = new String();
 
 
                 while (sc.hasNextLine()) {
@@ -61,15 +61,45 @@ public class AppData implements DataComponent {
                         totalLines++;
                     }
                 }
-                ((AppUI) applicationTemplate.getUIComponent()).setTextArea(y);
-                if (totalLines > 10) {
-                    String x = manager.getPropertyValue(LINE_FILLED.name()) + totalLines + manager.getPropertyValue(LINES_DISPLAY.name());
-                    applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(TOTAL_LINES_ERROR.name(), x);
-                }
-            }
 
-        } catch (IOException e) {
-            applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(LOAD_ERROR_TITLE.name()), manager.getPropertyValue(LOAD_ERROR_MSG.name()));
+                    String t = new String();
+                    for(int i = 0; i < linesLeft.size(); i++){
+                        t += linesLeft.get(i);
+                    }
+                    String s = y + t;
+                    processor.processString(s);
+  //                  System.out.println("CHECK------------------");
+                    processor.checkForDuplicates(s);
+
+                    if(processor.getDuplicates() == true){
+    //                    System.out.println("dup true");
+                        applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(UNABLE_TO_LOAD_DUPLICATE_TITLE.name()), manager.getPropertyValue(UNABLE_TO_LOAD_DUPLICATE.name()) + processor.getNameOfDuplicate().get(0));
+
+                    }
+                    else{
+                        if (totalLines > 10) {
+                            String x = manager.getPropertyValue(LINE_FILLED.name()) + totalLines + manager.getPropertyValue(LINES_DISPLAY.name());
+                            applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(TOTAL_LINES_ERROR.name(), x);
+                        }
+                        ((AppUI) applicationTemplate.getUIComponent()).setTextArea(y);
+                    }
+
+            }
+        } catch (Exception e) {
+ //           System.out.println("catch--------------");
+            if(processor.getlineOfError() > 0){
+ //               System.out.println("1");
+                String msg = manager.getPropertyValue(UNABLE_TO_LOAD_DUPLICATE.name()) + processor.getlineOfError();
+//                        System.out.println("msg = " +  msg);
+                applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(UNABLE_TO_LOAD_DUPLICATE_TITLE.name()), manager.getPropertyValue(UNABLE_TO_LOAD_DUPLICATE.name()) + msg);
+            }else if(processor.getDuplicates() == true){
+  //              System.out.println("2");
+                applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(UNABLE_TO_LOAD_DUPLICATE_TITLE.name()), manager.getPropertyValue(UNABLE_TO_LOAD_DUPLICATE.name()) + processor.getNameOfDuplicate().get(0));
+
+            } else {
+    //            System.out.println("3");
+                applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(LOAD_ERROR_TITLE.name()), manager.getPropertyValue(LOAD_ERROR_MSG.name()));
+            }
         }
     }
 
@@ -102,7 +132,7 @@ public class AppData implements DataComponent {
        PropertyManager manager = applicationTemplate.manager;
        String text = ((AppUI) applicationTemplate.getUIComponent()).getTextArea();
        try(FileWriter x = new FileWriter(dataFilePath.toString())){
-            String a =  "";
+            String a =  new String();
             for(int i = 0; i < ((AppData) applicationTemplate.getDataComponent()).getLinesLeft().size(); i++){
                 a += ((AppData) applicationTemplate.getDataComponent()).getLinesLeft().get(i);
             }
@@ -119,7 +149,7 @@ public class AppData implements DataComponent {
     }
 
     public void displayData() {
-
+        PropertyManager manager = applicationTemplate.manager;
 
         processor.toChartData(((AppUI) applicationTemplate.getUIComponent()).getChart());
         if(!((AppUI) applicationTemplate.getUIComponent()).getChart().getData().isEmpty()){
@@ -132,8 +162,8 @@ public class AppData implements DataComponent {
                 tip1.setText(series.getName());
                 Tooltip.install(((XYChart.Data)data1).getNode(), tip1);
 
-                ((XYChart.Data)data1).getNode().setOnMouseEntered(event -> ((XYChart.Data) data1).getNode().getStyleClass().add("onHover"));
-                ((XYChart.Data)data1).getNode().setOnMouseExited(event -> ((XYChart.Data) data1).getNode().getStyleClass().remove("onHover"));
+                ((XYChart.Data)data1).getNode().setOnMouseEntered(event -> ((XYChart.Data) data1).getNode().getStyleClass().add(manager.getPropertyValue(HOVER_NAME.name())));
+                ((XYChart.Data)data1).getNode().setOnMouseExited(event -> ((XYChart.Data) data1).getNode().getStyleClass().remove(manager.getPropertyValue(HOVER_NAME.name())));
             }
         }
 

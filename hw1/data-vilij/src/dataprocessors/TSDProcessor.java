@@ -31,8 +31,10 @@ public final class TSDProcessor {
     private Map<String, String>  dataLabels;
     private Map<String, Point2D> dataPoints;
 
-    private int lineofError = 0;
     private ArrayList<Integer> errors = new ArrayList<Integer>();
+    private Boolean duplicates = false;
+    private ArrayList<String> nameOfDuplicate = new ArrayList<String>();
+    private ArrayList<String> keysNames = new ArrayList<String>();
 
     public TSDProcessor() {
         dataLabels = new HashMap<>();
@@ -58,6 +60,7 @@ public final class TSDProcessor {
                       Point2D  point = new Point2D(Double.parseDouble(pair[0]), Double.parseDouble(pair[1]));
                       dataLabels.put(name, label);
                       dataPoints.put(name, point);
+                      keysNames.add(name);
                   } catch (Exception e) {
                       errorMessage.setLength(0);
                       errorMessage.append(e.getClass().getSimpleName()).append(": ").append(e.getMessage());
@@ -94,6 +97,11 @@ public final class TSDProcessor {
     void clear() {
         dataPoints.clear();
         dataLabels.clear();
+
+        duplicates = false;
+        keysNames.clear();
+        nameOfDuplicate.clear();
+        errors.clear();
     }
 
     private String checkedname(String name) throws InvalidDataNameException {
@@ -107,7 +115,33 @@ public final class TSDProcessor {
     }
 
     public int getlineOfError(){
-        System.out.println("line of error = " + errors.get(0));
+    //    System.out.println("line of error = " + errors.get(0));
+        if(errors.isEmpty()){
+            return -1;
+        }
         return errors.get(0);
+    }
+
+    public void checkForDuplicates(String input){
+        for(int i = 0; i < keysNames.size(); i++){
+ //           System.out.println("i:"+keysNames.get(i));
+            for(int j = i+1; j < keysNames.size(); j++){
+   //             System.out.println("j:"+keysNames.get(j));
+                if(keysNames.get(i).equals(keysNames.get(j))){
+                    duplicates = true;
+                    nameOfDuplicate.add(keysNames.get(i));
+                }
+            }
+        }
+     //   System.out.println(duplicates);
+
+    }
+
+    public Boolean getDuplicates(){
+        return duplicates;
+    }
+
+    public ArrayList<String> getNameOfDuplicate(){
+        return nameOfDuplicate;
     }
 }

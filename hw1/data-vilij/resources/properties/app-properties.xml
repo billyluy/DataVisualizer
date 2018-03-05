@@ -67,6 +67,14 @@ functionality within the main workspace. -->
         <property name = "SAVE_ERROR_TITLE" value = "Save Error" />
 
         <property name = "SAVE_REGULAR_MSG" value = "Unable to save" />
+        <property name = "UNABLE_TO_SAVE_DUPLICATE" value = "Cannot Save Due to Duplicate or Error. "/>
+        <property name = "UNABLE_TO_SAVE_DUPLICATE_TITLE" value = "Cannot save" />
+        <property name = "LINE_DUPLICATE" value = "Cannot Save. Duplicate Instance " />
+
+        <property name = "HOVER_NAME" value = "onhover" />
+        <property name = "UNABLE_TO_LOAD_DUPLICATE" value = "Cannot Load Due to Duplicate or Format Error "/>
+        <property name = "UNABLE_TO_LOAD_DUPLICATE_TITLE" value = "Cannot load" />
+
 
     </property_list>
     <property_options_list/>

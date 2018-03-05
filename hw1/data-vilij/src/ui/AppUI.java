@@ -3,7 +3,6 @@ package ui;
 import actions.AppActions;
 import dataprocessors.AppData;
 
-import dataprocessors.TSDProcessor;
 import javafx.beans.value.ObservableValue;
 
 import javafx.collections.ListChangeListener;
@@ -27,9 +26,7 @@ import static vilij.settings.PropertyTypes.GUI_RESOURCE_PATH;
 import static vilij.settings.PropertyTypes.ICONS_RESOURCE_PATH;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * This is the application's user interface implementation.
@@ -51,7 +48,6 @@ public final class AppUI extends UITemplate {
 
     private static final String SEPARATOR = "/";
     private String screenshotPath;
-    private Boolean click;
 
     public LineChart<Number, Number> getChart() { return chart; }
 
@@ -166,7 +162,6 @@ public final class AppUI extends UITemplate {
 
         String oldText = textArea.getText();
 
-        loadButton.setOnMouseClicked(event -> setClicked());
 
         textArea.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
 
@@ -226,13 +221,7 @@ public final class AppUI extends UITemplate {
         readOnly.setOnMouseClicked(event -> checkingBox());
     }
 
-    public void setClicked(){
-        click = false;
-    }
 
-    public Boolean getClicked(){
-        return click;
-    }
     public void checkingBox(){
         if(readOnly.isSelected()) {
             textArea.setDisable(true);

@@ -4,7 +4,6 @@ import dataprocessors.AppData;
 import dataprocessors.TSDProcessor;
 import javafx.application.Platform;
 
-import javafx.beans.property.Property;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.WritableImage;
@@ -19,8 +18,6 @@ import vilij.templates.ApplicationTemplate;
 import javax.imageio.ImageIO;
 import java.io.*;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Scanner;
 
 import static settings.AppPropertyTypes.*;
 
@@ -48,7 +45,6 @@ public final class AppActions implements ActionComponent {
     public void handleNewRequest() {
         // TODO for homework 1
         PropertyManager manager = applicationTemplate.manager;
-        //this.applicationTemplate.getDialog(Dialog.DialogType.CONFIRMATION).show(manager.getPropertyValue(SAVE_UNSAVED_WORK_TITLE.name()), manager.getPropertyValue(SAVE_UNSAVED_WORK.name()));
 
         try{
             if(promptToSave()){
@@ -70,39 +66,51 @@ public final class AppActions implements ActionComponent {
         String input1 = ((AppUI)applicationTemplate.getUIComponent()).getTextArea();
         TSDProcessor processor1 = new TSDProcessor();
 
+        String input2 = new String();
+
         try {
-            String a = "";
-            System.out.println("here");
-            System.out.println(((AppData)applicationTemplate.getDataComponent()).getLinesLeft().size());
+            String a = new String();
+     //       System.out.println("here");
+     //       System.out.println(((AppData)applicationTemplate.getDataComponent()).getLinesLeft().size());
             for (int i = 0; i < ((AppData) applicationTemplate.getDataComponent()).getLinesLeft().size(); i++) {
                 a += ((AppData) applicationTemplate.getDataComponent()).getLinesLeft().get(i);
             }
 
-            System.out.println("a = " + a);
+ //           System.out.println("a = " + a);
+            input2 = input1 + a;
 
             processor1.processString(input1 + a);
+            processor1.checkForDuplicates(input1 + a);
 
-                if(dataFilePath == null){
-                    FileChooser fileChooser = new FileChooser();
-                    fileChooser.setInitialDirectory(new File(manager.getPropertyValue(DATA_RESOURCE_PATH.name())));
-                    fileChooser.getInitialDirectory();
-                    fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(manager.getPropertyValue(DATA_FILE_EXT.name()), manager.getPropertyValue(DATA_FILE_EXT_DESC.name())));
+    //      System.out.println(processor1.getDuplicates());
 
-                    File file = fileChooser.showSaveDialog(applicationTemplate.getUIComponent().getPrimaryWindow());
-                    dataFilePath = file.toPath();
-                    applicationTemplate.getDataComponent().saveData(dataFilePath);
-                    ((AppUI) applicationTemplate.getUIComponent()).getSaveButton().setDisable(true);
-                }
-                else{
-                    applicationTemplate.getDataComponent().saveData(dataFilePath);
-                    ((AppUI) applicationTemplate.getUIComponent()).getSaveButton().setDisable(true);
-                }
+            if(processor1.getDuplicates() == true){
+                applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(UNABLE_TO_SAVE_DUPLICATE_TITLE.name()), manager.getPropertyValue(LINE_DUPLICATE.name()) + processor1.getNameOfDuplicate().get(0));
+            }
+
+            if(dataFilePath == null && processor1.getDuplicates() == false){
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.setInitialDirectory(new File(manager.getPropertyValue(DATA_RESOURCE_PATH.name())));
+                fileChooser.getInitialDirectory();
+                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(manager.getPropertyValue(DATA_FILE_EXT.name()), manager.getPropertyValue(DATA_FILE_EXT_DESC.name())));
+
+                File file = fileChooser.showSaveDialog(applicationTemplate.getUIComponent().getPrimaryWindow());
+                dataFilePath = file.toPath();
+                applicationTemplate.getDataComponent().saveData(dataFilePath);
+                ((AppUI) applicationTemplate.getUIComponent()).getSaveButton().setDisable(true);
+            }
+            else if(processor1.getDuplicates() == false){
+                applicationTemplate.getDataComponent().saveData(dataFilePath);
+                ((AppUI) applicationTemplate.getUIComponent()).getSaveButton().setDisable(true);
+            }
         } catch (Exception e) {
-            System.out.println("hi");
-          //  this.applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(DISPLAY_ERROR_TITLE.name()), manager.getPropertyValue(DISPLAY_ERROR_MSG.name()));
-            if(processor1.getlineOfError() > 0){
+
+            processor1.checkForDuplicates(input2);
+            if(processor1.getDuplicates() == true){
+                applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(UNABLE_TO_SAVE_DUPLICATE_TITLE.name()), manager.getPropertyValue(LINE_DUPLICATE.name()) + processor1.getNameOfDuplicate().get(0));
+            }
+            else if(processor1.getlineOfError() > 0){
                 String msg = manager.getPropertyValue(SAVE_ERROR_MSG.name()) + processor1.getlineOfError();
-                System.out.println("msg = " + msg );
                 applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(SAVE_ERROR_TITLE.name()), manager.getPropertyValue(SAVE_ERROR_MSG.name()) + processor1.getlineOfError());
             }else{
                 applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(SAVE_REGULAR_MSG.name()), manager.getPropertyValue(SAVE_REGULAR_MSG.name()));
@@ -131,46 +139,10 @@ public final class AppActions implements ActionComponent {
             }
             ((AppUI) applicationTemplate.getUIComponent()).getSaveButton().setDisable(true);
 
-
         }catch (NullPointerException e){
-
             applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(LOAD_ERROR_TITLE.name()), manager.getPropertyValue(LOAD_ERROR_MSG.name()));
         }
-//        PropertyManager manager = applicationTemplate.manager;
-//        FileChooser chooser1 = new FileChooser();
-//        chooser1.setTitle(applicationTemplate.manager.getPropertyValue(OPEN_FILE_TITLE.name()));
-//
-//        try{
-//            File file = chooser1.showOpenDialog(applicationTemplate.getUIComponent().getPrimaryWindow());
-//            if(file != null) {
-//                Scanner sc = new Scanner(file);
-//                int lineCount = Integer.parseInt(applicationTemplate.manager.getPropertyValue(LINE_COUNTER.name()));
-//                int totalLines = 0;
-//                String y = "";
-//
-//                linesLeft = new ArrayList<String>();
-//
-//                while (sc.hasNextLine()) {
-//                    if (lineCount < Integer.parseInt(applicationTemplate.manager.getPropertyValue(MAX_LINES.name()))) {
-//                        y += sc.nextLine() + "\n";
-//                        lineCount++;
-//                        totalLines++;
-//                    }else {
-//                        linesLeft.add(sc.nextLine() + "\n");
-//                        totalLines++;
-//                    }
-//                }
-//                ((AppUI) applicationTemplate.getUIComponent()).setTextArea(y);
-//                if (totalLines > 10) {
-//                    String x = manager.getPropertyValue(LINE_FILLED.name()) + totalLines + manager.getPropertyValue(LINES_DISPLAY.name());
-//                    applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(TOTAL_LINES_ERROR.name(), x);
-//                }
-//            }
-//
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//            System.out.println("File Not Found Exception");
-//        }
+
     }
 
     @Override
@@ -200,7 +172,6 @@ public final class AppActions implements ActionComponent {
             if(file != null){
                 ImageIO.write(SwingFXUtils.fromFXImage(image1, null), "png", file);
             }else{
-                //error dialog
                 this.applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(SNAPSHOT_ERROR_TITLE.name()), manager.getPropertyValue(SNAPSHOT_ERROR_MSG.name()));
 
             }
@@ -226,38 +197,45 @@ public final class AppActions implements ActionComponent {
     private boolean promptToSave() throws IOException {
 
         PropertyManager manager = applicationTemplate.manager;
-        this.applicationTemplate.getDialog(Dialog.DialogType.CONFIRMATION).show(manager.getPropertyValue(SAVE_UNSAVED_WORK_TITLE.name()), manager.getPropertyValue(SAVE_UNSAVED_WORK.name()));
         ConfirmationDialog.Option x = ConfirmationDialog.getDialog().getSelectedOption();
         selectedOption = x;
 
-            if (x == ConfirmationDialog.Option.YES) {
-                FileChooser fileChooser = new FileChooser();
-                //          fileChooser.setTitle("Open Resource File");
-                fileChooser.setInitialDirectory(new File(manager.getPropertyValue(DATA_RESOURCE_PATH.name())));
-                //          fileChooser.setInitialDirectory(new File("/Users/Kristy/IdeaProjects/cse219homework/hw1/data-vilij/resources/data"));
+        TSDProcessor processor = new TSDProcessor();
+        try {
+            processor.processString(((AppUI) applicationTemplate.getUIComponent()).getTextArea());
+            processor.checkForDuplicates(((AppUI) applicationTemplate.getUIComponent()).getTextArea());
+            if(processor.getDuplicates() == true){
+                applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(UNABLE_TO_SAVE_DUPLICATE_TITLE.name()), manager.getPropertyValue(UNABLE_TO_SAVE_DUPLICATE.name()));
+            }else{
+                this.applicationTemplate.getDialog(Dialog.DialogType.CONFIRMATION).show(manager.getPropertyValue(SAVE_UNSAVED_WORK_TITLE.name()), manager.getPropertyValue(SAVE_UNSAVED_WORK.name()));
 
-                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(manager.getPropertyValue(DATA_FILE_EXT.name()), manager.getPropertyValue(DATA_FILE_EXT_DESC.name())));
+                if (x == ConfirmationDialog.Option.YES) {
+                    FileChooser fileChooser = new FileChooser();
+                    fileChooser.setInitialDirectory(new File(manager.getPropertyValue(DATA_RESOURCE_PATH.name())));
 
-                File file = fileChooser.showSaveDialog(applicationTemplate.getUIComponent().getPrimaryWindow());
-                if(file != null) {
-                    FileWriter writing = new FileWriter(file);
-                    writing.write(((AppUI) applicationTemplate.getUIComponent()).getTextArea());
-                    dataFilePath = fileChooser.getInitialDirectory().toPath();
-                    writing.close();
-                }else{
-                    this.applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(SPECIFIED_FILE.name()), manager.getPropertyValue(RESOURCE_SUBDIR_NOT_FOUND.name()));
+                    fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(manager.getPropertyValue(DATA_FILE_EXT.name()), manager.getPropertyValue(DATA_FILE_EXT_DESC.name())));
+
+                    File file = fileChooser.showSaveDialog(applicationTemplate.getUIComponent().getPrimaryWindow());
+                    if(file != null) {
+                        FileWriter writing = new FileWriter(file);
+                        writing.write(((AppUI) applicationTemplate.getUIComponent()).getTextArea());
+                        dataFilePath = fileChooser.getInitialDirectory().toPath();
+                        writing.close();
+                    }else{
+                        this.applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(SPECIFIED_FILE.name()), manager.getPropertyValue(RESOURCE_SUBDIR_NOT_FOUND.name()));
+                    }
+                    return true;
+                } if (x == ConfirmationDialog.Option.NO) {
+                    return true;
                 }
-                return true;
-            } if (x == ConfirmationDialog.Option.NO) {
-                return true;
             }
+        } catch (Exception e) {
+            this.applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(SPECIFIED_FILE.name()), manager.getPropertyValue(RESOURCE_SUBDIR_NOT_FOUND.name()));
 
+        }
         return false;
     }
 
-//    public ArrayList<String> getLinesLeft(){
-//        return linesLeft;
-//    }
 
     public Boolean getCheck(){
         return check;
