@@ -45,18 +45,39 @@ public final class AppActions implements ActionComponent {
     public void handleNewRequest() {
         // TODO for homework 1
         PropertyManager manager = applicationTemplate.manager;
-
+//
+//        try{
+//            if(promptToSave()){
+//                System.out.println("hi");
+//                while(!((AppUI) applicationTemplate.getUIComponent()).getTextArea().isEmpty()) {
+//                applicationTemplate.getUIComponent().clear();
+//                }
+//                ((AppUI) applicationTemplate.getUIComponent()).getChart().getData().clear();
+//                dataFilePath = null;
+//
+//                ((AppUI) applicationTemplate.getUIComponent()).clearInfoandButton();
+//            }
+//        } catch (IOException e) {
+//            this.applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(ERROR_TITLE.name()), manager.getPropertyValue(ERROR_MSG.name()));
+//        }
+//
         try{
             if(promptToSave()){
-                while(!((AppUI) applicationTemplate.getUIComponent()).getTextArea().isEmpty()) {
+
                     applicationTemplate.getUIComponent().clear();
-                }
                 ((AppUI) applicationTemplate.getUIComponent()).getChart().getData().clear();
-                dataFilePath = null;
+//                dataFilePath = null;
+//
+                ((AppUI) applicationTemplate.getUIComponent()).clearInfoandButton();
+
             }
         } catch (IOException e) {
             this.applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(ERROR_TITLE.name()), manager.getPropertyValue(ERROR_MSG.name()));
         }
+
+
+
+
     }
 
     @Override
@@ -131,11 +152,14 @@ public final class AppActions implements ActionComponent {
                 applicationTemplate.getDataComponent().loadData(dataFilePath);
                 check = true;
             }
-            ((AppUI) applicationTemplate.getUIComponent()).getSaveButton().setDisable(true);
+
+//            ((AppUI) applicationTemplate.getUIComponent()).getSaveButton().setDisable(true);
+//            ((AppUI) applicationTemplate.getUIComponent()).textAreaVisibility();
 
         }catch (NullPointerException e){
             applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(LOAD_ERROR_TITLE.name()), manager.getPropertyValue(LOAD_ERROR_MSG.name()));
         }
+
 
     }
 
@@ -202,8 +226,10 @@ public final class AppActions implements ActionComponent {
                 applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(UNABLE_TO_SAVE_DUPLICATE_TITLE.name()), manager.getPropertyValue(UNABLE_TO_SAVE_DUPLICATE.name()));
             }else{
                 this.applicationTemplate.getDialog(Dialog.DialogType.CONFIRMATION).show(manager.getPropertyValue(SAVE_UNSAVED_WORK_TITLE.name()), manager.getPropertyValue(SAVE_UNSAVED_WORK.name()));
-
+                x = ConfirmationDialog.getDialog().getSelectedOption();
+             //   System.out.println(x);
                 if (x == ConfirmationDialog.Option.YES) {
+                 //   System.out.println("yes");
                     FileChooser fileChooser = new FileChooser();
                     fileChooser.setInitialDirectory(new File(manager.getPropertyValue(DATA_RESOURCE_PATH.name())));
 
@@ -219,7 +245,9 @@ public final class AppActions implements ActionComponent {
                         this.applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(SPECIFIED_FILE.name()), manager.getPropertyValue(RESOURCE_SUBDIR_NOT_FOUND.name()));
                     }
                     return true;
-                } if (x == ConfirmationDialog.Option.NO) {
+                }
+                else if (x == ConfirmationDialog.Option.NO){
+                  //  System.out.println("true");
                     return true;
                 }
             }

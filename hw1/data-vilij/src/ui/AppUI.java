@@ -3,6 +3,7 @@ package ui;
 import actions.AppActions;
 import dataprocessors.AppData;
 
+import dataprocessors.TSDProcessor;
 import javafx.beans.value.ObservableValue;
 
 import javafx.collections.ListChangeListener;
@@ -10,9 +11,7 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.LineChart;
 
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -48,6 +47,10 @@ public final class AppUI extends UITemplate {
 
     private static final String SEPARATOR = "/";
     private String screenshotPath;
+
+    private Text text2;
+    private RadioButton typeAlgorithm1;
+    private RadioButton typeAlgorithm2;
 
     public LineChart<Number, Number> getChart() { return chart; }
 
@@ -143,6 +146,8 @@ public final class AppUI extends UITemplate {
         readOnly = new CheckBox(applicationTemplate.manager.getPropertyValue(READ_ONLY_TITLE.name()));
         readOnly.setSelected(false);
 
+        text2 = new Text();
+
         appPane.getChildren().addAll(textPane, layoutPane, displayButton, readOnly);
 
         chart.setHorizontalGridLinesVisible(false);
@@ -153,6 +158,10 @@ public final class AppUI extends UITemplate {
         appPane.getStylesheets().add(applicationTemplate.manager.getPropertyValue(STYLE_SHEET_PATH.name()));
 
         hasNewText = false;
+        textArea.setVisible(false);
+        displayButton.setVisible(false);
+        readOnly.setVisible(false);
+        text1.setVisible(false);
 
     }
 
@@ -238,5 +247,45 @@ public final class AppUI extends UITemplate {
 
     public Button getSaveButton(){
         return saveButton;
+    }
+
+    public void textAreaVisibility(){
+        textArea.setVisible(true);
+        displayButton.setVisible(true);
+        readOnly.setVisible(true);
+        readOnly.setSelected(true);
+        checkingBox();
+
+        if(((AppData)applicationTemplate.getDataComponent()).returnNumofLabels() > 1){
+            typeAlgorithm1 = new RadioButton(applicationTemplate.manager.getPropertyValue(ALGO_TYPE_1.name()));
+            typeAlgorithm2 = new RadioButton(applicationTemplate.manager.getPropertyValue(ALGO_TYPE_2.name()));
+
+            ToggleGroup selectingAlgorithmType = new ToggleGroup();
+            typeAlgorithm1.setToggleGroup(selectingAlgorithmType);
+            typeAlgorithm2.setToggleGroup(selectingAlgorithmType);
+
+            appPane.getChildren().addAll(text2, typeAlgorithm1, typeAlgorithm2);
+        }else{
+            typeAlgorithm2 = new RadioButton(applicationTemplate.manager.getPropertyValue(ALGO_TYPE_2.name()));
+            ToggleGroup selectingAlgorithmType = new ToggleGroup();
+            typeAlgorithm2.setToggleGroup(selectingAlgorithmType);
+            appPane.getChildren().addAll(text2, typeAlgorithm2);
+        }
+
+    }
+
+    public void clearInfoandButton(){
+//        textArea.setVisible(false);
+//        displayButton.setVisible(false);
+//        readOnly.setVisible(false);
+        readOnly.setSelected(false);
+        appPane.getChildren().remove(typeAlgorithm1);
+        appPane.getChildren().remove(typeAlgorithm2);
+        appPane.getChildren().remove(text2);
+
+    }
+
+    public void setTextInfo(String infoText){
+       text2.setText(infoText);
     }
 }

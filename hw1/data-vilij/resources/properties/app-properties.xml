@@ -75,6 +75,13 @@ functionality within the main workspace. -->
         <property name = "UNABLE_TO_LOAD_DUPLICATE" value = "Cannot Load Due to Duplicate or Format Error "/>
         <property name = "UNABLE_TO_LOAD_DUPLICATE_TITLE" value = "Cannot load" />
 
+        <property name = "ALGO_TYPE_1" value="Classification" />
+        <property name = "ALGO_TYPE_2" value="Clustering" />
+
+        <property name = "SOURCE_NAME" value = "The source is from " />
+        <property name = "INSTANCES_NAME" value = "instances with " />
+        <property name = "LABELS_NAME" value = " labels. The labels are " />
+        <property name = "NULL_VALUE" value = "null" />
 
     </property_list>
     <property_options_list/>

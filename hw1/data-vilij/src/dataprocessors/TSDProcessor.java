@@ -2,6 +2,9 @@ package dataprocessors;
 
 import javafx.geometry.Point2D;
 import javafx.scene.chart.XYChart;
+import javafx.scene.text.Text;
+import vilij.propertymanager.PropertyManager;
+import vilij.templates.ApplicationTemplate;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -35,6 +38,12 @@ public final class TSDProcessor {
     private Boolean duplicates = false;
     private ArrayList<String> nameOfDuplicate = new ArrayList<>();
     private ArrayList<String> keysNames = new ArrayList<>();
+
+    private ArrayList<String> uniqueLabelNames = new ArrayList<String>();
+    private int numOfInstances;
+    private int numOfLabels;
+
+    private String info = new String();
 
     public TSDProcessor() {
         dataLabels = new HashMap<>();
@@ -141,5 +150,43 @@ public final class TSDProcessor {
 
     public ArrayList<String> getNameOfDuplicate(){
         return nameOfDuplicate;
+    }
+
+    public void countingInstances(){
+        numOfInstances = dataPoints.size();
+
+
+
+        for (Map.Entry labelName: dataLabels.entrySet()) {
+            if (!uniqueLabelNames.contains(labelName.getValue())) {
+                uniqueLabelNames.add(labelName.getValue().toString());
+            }
+        }
+
+        numOfLabels = uniqueLabelNames.size();
+        String allUniqueLabels = new String();
+
+        for(int i = 0; i < uniqueLabelNames.size(); i++){
+            if(uniqueLabelNames.get(i).isEmpty()){
+                uniqueLabelNames.set(i, "null");
+            }
+            allUniqueLabels += uniqueLabelNames.get(i) + "\n";
+        }
+
+        info = numOfInstances + " instances with " + numOfLabels + " labels. The labels are " + "\n" + allUniqueLabels;
+    }
+
+    public int numOfNonNullLabels(){
+        int numNonNullLabels = 0;
+        for(int i = 0; i < uniqueLabelNames.size(); i++){
+            if(!uniqueLabelNames.get(i).equals("null")){
+                numNonNullLabels++;
+            }
+        }
+        return numNonNullLabels;
+    }
+
+    public String getInfo(){
+        return info;
     }
 }

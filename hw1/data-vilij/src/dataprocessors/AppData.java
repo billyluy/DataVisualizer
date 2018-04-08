@@ -85,8 +85,13 @@ public class AppData implements DataComponent {
                         applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(TOTAL_LINES_ERROR.name(), x);
                     }
                     ((AppUI) applicationTemplate.getUIComponent()).setTextArea(y);
+                    processor.countingInstances();
+                    ((AppUI) applicationTemplate.getUIComponent()).setTextInfo(manager.getPropertyValue(SOURCE_NAME.name()) + dataFilePath + "\n" + processor.getInfo());
+                    ((AppUI) applicationTemplate.getUIComponent()).getSaveButton().setDisable(true);
+                    ((AppUI) applicationTemplate.getUIComponent()).textAreaVisibility();
                 }
             }
+
         } catch (Exception e) {
             //           System.out.println("catch--------------");
             if(processor.getlineOfError() > 0){
@@ -202,4 +207,8 @@ public class AppData implements DataComponent {
         lineseries.getNode().setId(applicationTemplate.manager.getPropertyValue(LINE_SERIES.name()));
     }
 
+    public int returnNumofLabels(){
+        int nonNullCount = processor.numOfNonNullLabels();
+        return nonNullCount;
+    }
 }
