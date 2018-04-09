@@ -37,6 +37,7 @@ public final class AppActions implements ActionComponent {
 
     ConfirmationDialog.Option selectedOption;
 
+
     public AppActions(ApplicationTemplate applicationTemplate) {
         this.applicationTemplate = applicationTemplate;
     }
@@ -61,23 +62,11 @@ public final class AppActions implements ActionComponent {
 //            this.applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(ERROR_TITLE.name()), manager.getPropertyValue(ERROR_MSG.name()));
 //        }
 //
-        try{
-            if(promptToSave()){
 
-                    applicationTemplate.getUIComponent().clear();
-                ((AppUI) applicationTemplate.getUIComponent()).getChart().getData().clear();
-//                dataFilePath = null;
-//
-                ((AppUI) applicationTemplate.getUIComponent()).clearInfoandButton();
-
-            }
-        } catch (IOException e) {
-            this.applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(ERROR_TITLE.name()), manager.getPropertyValue(ERROR_MSG.name()));
-        }
-
-
-
-
+        applicationTemplate.getUIComponent().clear();
+        ((AppUI) applicationTemplate.getUIComponent()).getChart().getData().clear();
+        ((AppUI) applicationTemplate.getUIComponent()).clearInfoandButton();
+        ((AppUI) applicationTemplate.getUIComponent()).setToggleButton();
     }
 
     @Override

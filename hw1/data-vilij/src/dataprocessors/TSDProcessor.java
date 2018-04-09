@@ -154,9 +154,8 @@ public final class TSDProcessor {
 
     public void countingInstances(){
         numOfInstances = dataPoints.size();
-
-
-
+        
+        uniqueLabelNames.clear();
         for (Map.Entry labelName: dataLabels.entrySet()) {
             if (!uniqueLabelNames.contains(labelName.getValue())) {
                 uniqueLabelNames.add(labelName.getValue().toString());

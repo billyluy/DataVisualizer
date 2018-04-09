@@ -29,6 +29,8 @@ public class AppData implements DataComponent {
     private ApplicationTemplate applicationTemplate;
 
     public ArrayList<String> linesLeft = new ArrayList<String>();
+    private Path dataPath;
+    Boolean validity = false;
 
     public AppData(ApplicationTemplate applicationTemplate) {
         this.processor = new TSDProcessor();
@@ -86,6 +88,7 @@ public class AppData implements DataComponent {
                     }
                     ((AppUI) applicationTemplate.getUIComponent()).setTextArea(y);
                     processor.countingInstances();
+                    dataPath = dataFilePath;
                     ((AppUI) applicationTemplate.getUIComponent()).setTextInfo(manager.getPropertyValue(SOURCE_NAME.name()) + dataFilePath + "\n" + processor.getInfo());
                     ((AppUI) applicationTemplate.getUIComponent()).getSaveButton().setDisable(true);
                     ((AppUI) applicationTemplate.getUIComponent()).textAreaVisibility();
@@ -116,15 +119,17 @@ public class AppData implements DataComponent {
 
     public void loadData(String dataString) {
         // TODO for homework 1
+        PropertyManager manager = applicationTemplate.manager;
         try {
             ((AppUI)applicationTemplate.getUIComponent()).getChart().getData().clear();
             processor.clear();
             processor.processString(dataString);
-
-            this.displayData();
+            validity = true;
+            ((AppUI) applicationTemplate.getUIComponent()).setTextInfo("\n" + processor.getInfo());
+        //    this.displayData();
         } catch (Exception e) {
             //invalid input pop-up dialog box
-            PropertyManager manager = applicationTemplate.manager;
+            validity = false;
             this.applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(DISPLAY_ERROR_TITLE.name()), manager.getPropertyValue(DISPLAY_ERROR_MSG.name()));
             ((AppUI)applicationTemplate.getUIComponent()).getChart().getData().clear();
         }
@@ -210,5 +215,17 @@ public class AppData implements DataComponent {
     public int returnNumofLabels(){
         int nonNullCount = processor.numOfNonNullLabels();
         return nonNullCount;
+    }
+
+    public void getInfoForNew(){
+        PropertyManager manager = applicationTemplate.manager;
+        processor.countingInstances();
+        ((AppUI) applicationTemplate.getUIComponent()).setTextInfo("\n" + processor.getInfo());
+        ((AppUI) applicationTemplate.getUIComponent()).getSaveButton().setDisable(true);
+        ((AppUI) applicationTemplate.getUIComponent()).textAreaVisibility();
+    }
+
+    public Boolean getValidity(){
+        return validity;
     }
 }

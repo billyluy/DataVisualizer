@@ -40,7 +40,7 @@ public final class AppUI extends UITemplate {
     @SuppressWarnings("FieldCanBeLocal")
     private Button                       scrnshotButton; // toolbar button to take a screenshot of the data
     private LineChart<Number, Number>    chart;          // the chart where data will be displayed
-    private Button                       displayButton;  // workspace button to display data on the chart
+//    private Button                       displayButton;  // workspace button to display data on the chart
     private TextArea                     textArea;       // text area for new data input
     private boolean                      hasNewText;     // whether or not the text area has any new data since last display
     private CheckBox                     readOnly;
@@ -51,6 +51,8 @@ public final class AppUI extends UITemplate {
     private Text text2;
     private RadioButton typeAlgorithm1;
     private RadioButton typeAlgorithm2;
+    private ToggleButton doneButton;
+    private ToggleButton editButton;
 
     public LineChart<Number, Number> getChart() { return chart; }
 
@@ -115,6 +117,9 @@ public final class AppUI extends UITemplate {
     private void layout() {
         // TODO for homework 1
 
+        newButton.setDisable(false);
+
+
         PropertyManager manager = applicationTemplate.manager;
 
         HBox textPane = new HBox(500);
@@ -137,8 +142,8 @@ public final class AppUI extends UITemplate {
 
 
         textArea = new TextArea();
-        displayButton = new Button();
-        displayButton.setText(manager.getPropertyValue(DISPLAY_BUTTON_NAME.name()));
+//        displayButton = new Button();
+//        displayButton.setText(manager.getPropertyValue(DISPLAY_BUTTON_NAME.name()));
 
 
         layoutPane.getChildren().addAll(textArea, chart);
@@ -148,7 +153,10 @@ public final class AppUI extends UITemplate {
 
         text2 = new Text();
 
-        appPane.getChildren().addAll(textPane, layoutPane, displayButton, readOnly);
+//        appPane.getChildren().addAll(textPane, layoutPane, displayButton, readOnly);
+
+        appPane.getChildren().addAll(textPane, layoutPane, readOnly);
+
 
         chart.setHorizontalGridLinesVisible(false);
         chart.setVerticalGridLinesVisible(false);
@@ -159,15 +167,33 @@ public final class AppUI extends UITemplate {
 
         hasNewText = false;
         textArea.setVisible(false);
-        displayButton.setVisible(false);
+//        displayButton.setVisible(false);
         readOnly.setVisible(false);
         text1.setVisible(false);
+
+        typeAlgorithm1 = new RadioButton(applicationTemplate.manager.getPropertyValue(ALGO_TYPE_1.name()));
+        typeAlgorithm2 = new RadioButton(applicationTemplate.manager.getPropertyValue(ALGO_TYPE_2.name()));
+
+        typeAlgorithm1.setVisible(false);
+        typeAlgorithm2.setVisible(false);
+
+
+        doneButton = new ToggleButton("Done");
+        editButton = new ToggleButton("Edit");
+        ToggleGroup group = new ToggleGroup();
+        doneButton.setToggleGroup(group);
+        editButton.setToggleGroup(group);
+
+        appPane.getChildren().addAll(doneButton, editButton, text2, typeAlgorithm1, typeAlgorithm2);
+
+        doneButton.setVisible(false);
+        editButton.setVisible(false);
 
     }
 
     private void setWorkspaceActions() {
 
-        displayButton.setOnAction(e -> ((AppData) applicationTemplate.getDataComponent()).loadData(textArea.getText()));
+ //       displayButton.setOnAction(e -> ((AppData) applicationTemplate.getDataComponent()).loadData(textArea.getText()));
 
         String oldText = textArea.getText();
 
@@ -199,9 +225,17 @@ public final class AppUI extends UITemplate {
                 hasNewText = true;
             }
 
+//            if(!textArea.getText().isEmpty()){
+//                newButton.setDisable(false);
+//            //    saveButton.setDisable(false);
+//            }else{
+//                newButton.setDisable(true);
+//                saveButton.setDisable(true);
+//            }
+
             if(!textArea.getText().isEmpty()){
                 newButton.setDisable(false);
-            //    saveButton.setDisable(false);
+                //    saveButton.setDisable(false);
             }else{
                 newButton.setDisable(true);
                 saveButton.setDisable(true);
@@ -225,6 +259,20 @@ public final class AppUI extends UITemplate {
         });
 
         readOnly.setOnMouseClicked(event -> checkingBox());
+
+        doneButton.setOnAction(e -> {
+            textArea.setDisable(true);
+            clearInfoandButton();
+            ((AppData) applicationTemplate.getDataComponent()).loadData(textArea.getText());
+            if(((AppData) applicationTemplate.getDataComponent()).getValidity()){
+                ((AppData)applicationTemplate.getDataComponent()).getInfoForNew();
+                validTypeOfAlgorithm();
+                text2.setVisible(true);
+            }
+
+        });
+
+        editButton.setOnMouseClicked(event -> textArea.setDisable(false));
     }
 
 
@@ -251,27 +299,29 @@ public final class AppUI extends UITemplate {
 
     public void textAreaVisibility(){
         textArea.setVisible(true);
-        displayButton.setVisible(true);
-        readOnly.setVisible(true);
+//        displayButton.setVisible(true);
+//        readOnly.setVisible(true);
         readOnly.setSelected(true);
         checkingBox();
+        validTypeOfAlgorithm();
+        text2.setVisible(true);
+    }
 
+    public void validTypeOfAlgorithm(){
         if(((AppData)applicationTemplate.getDataComponent()).returnNumofLabels() > 1){
-            typeAlgorithm1 = new RadioButton(applicationTemplate.manager.getPropertyValue(ALGO_TYPE_1.name()));
-            typeAlgorithm2 = new RadioButton(applicationTemplate.manager.getPropertyValue(ALGO_TYPE_2.name()));
-
             ToggleGroup selectingAlgorithmType = new ToggleGroup();
             typeAlgorithm1.setToggleGroup(selectingAlgorithmType);
             typeAlgorithm2.setToggleGroup(selectingAlgorithmType);
+            typeAlgorithm1.setVisible(true);
+            typeAlgorithm2.setVisible(true);
 
-            appPane.getChildren().addAll(text2, typeAlgorithm1, typeAlgorithm2);
+
         }else{
-            typeAlgorithm2 = new RadioButton(applicationTemplate.manager.getPropertyValue(ALGO_TYPE_2.name()));
             ToggleGroup selectingAlgorithmType = new ToggleGroup();
             typeAlgorithm2.setToggleGroup(selectingAlgorithmType);
-            appPane.getChildren().addAll(text2, typeAlgorithm2);
+            typeAlgorithm2.setVisible(true);
+            typeAlgorithm1.setVisible(false);
         }
-
     }
 
     public void clearInfoandButton(){
@@ -279,13 +329,25 @@ public final class AppUI extends UITemplate {
 //        displayButton.setVisible(false);
 //        readOnly.setVisible(false);
         readOnly.setSelected(false);
-        appPane.getChildren().remove(typeAlgorithm1);
-        appPane.getChildren().remove(typeAlgorithm2);
-        appPane.getChildren().remove(text2);
-
+        typeAlgorithm1.setVisible(false);
+        typeAlgorithm2.setVisible(false);
+        textArea.setVisible(true);
+        textArea.setDisable(false);
     }
 
     public void setTextInfo(String infoText){
        text2.setText(infoText);
+       text2.setVisible(true);
+    }
+
+    public TextArea getArea(){
+        return textArea;
+    }
+
+    public void setToggleButton(){
+        doneButton.setVisible(true);
+        editButton.setVisible(true);
+        editButton.setSelected(true);
+
     }
 }
