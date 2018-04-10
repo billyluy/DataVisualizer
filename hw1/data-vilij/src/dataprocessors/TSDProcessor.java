@@ -1,5 +1,6 @@
 package dataprocessors;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.geometry.Point2D;
 import javafx.scene.chart.XYChart;
 import javafx.scene.text.Text;
@@ -154,6 +155,8 @@ public final class TSDProcessor {
         numOfInstances = dataPoints.size();
 
         uniqueLabelNames.clear();
+
+        //for each label if the array of unique label names does not already contain that name, add it to the array
         for (Map.Entry labelName: dataLabels.entrySet()) {
             if (!uniqueLabelNames.contains(labelName.getValue())) {
                 uniqueLabelNames.add(labelName.getValue().toString());
@@ -162,21 +165,39 @@ public final class TSDProcessor {
 
         numOfLabels = uniqueLabelNames.size();
         String allUniqueLabels = new String();
+        int removeOnceCount = 0;
+        Boolean containsNullEmptySpace = false;
 
+        //if not null and empty, set the object to null else if empty and null and no more than 1 then label -1 and contains nulland space is true
         for(int i = 0; i < uniqueLabelNames.size(); i++){
-            if(uniqueLabelNames.get(i).isEmpty()){
+            if(uniqueLabelNames.get(i).isEmpty() && !uniqueLabelNames.contains("null")){
                 uniqueLabelNames.set(i, "null");
+            }else if(uniqueLabelNames.get(i).isEmpty() && uniqueLabelNames.contains("null") && removeOnceCount < 1){
+                numOfLabels--;
+                removeOnceCount++;
+                containsNullEmptySpace = true;
             }
             allUniqueLabels += uniqueLabelNames.get(i) + "\n";
+        }
+
+       // if contains null and empty space remove the empty space and break
+        if(containsNullEmptySpace){
+            for(int i = 0; i < uniqueLabelNames.size(); i++){
+                if(uniqueLabelNames.get(i).isEmpty()){
+                    uniqueLabelNames.remove(i);
+                    break;
+                }
+            }
         }
 
         info = numOfInstances + " instances with " + numOfLabels + " labels. The labels are " + "\n" + allUniqueLabels;
     }
 
+    //returns the number of unique non null labels
     public int numOfNonNullLabels(){
         int numNonNullLabels = 0;
         for(int i = 0; i < uniqueLabelNames.size(); i++){
-            if(!uniqueLabelNames.get(i).equals("null")){
+            if(!uniqueLabelNames.get(i).equals("null") && !uniqueLabelNames.get(i).isEmpty()){
                 numNonNullLabels++;
             }
         }
