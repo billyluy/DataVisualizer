@@ -83,6 +83,9 @@ functionality within the main workspace. -->
         <property name = "LABELS_NAME" value = " labels. The labels are " />
         <property name = "NULL_VALUE" value = "null" />
 
+        <property name = "DONE_BUTTON_NAME" value="Done" />
+        <property name = "EDIT_BUTTON_NAME" value="Edit" />
+
     </property_list>
     <property_options_list/>
 </properties>

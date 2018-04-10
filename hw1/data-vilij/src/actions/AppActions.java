@@ -63,6 +63,7 @@ public final class AppActions implements ActionComponent {
 //        }
 //
 
+        dataFilePath = null;
         applicationTemplate.getUIComponent().clear();
         ((AppUI) applicationTemplate.getUIComponent()).getChart().getData().clear();
         ((AppUI) applicationTemplate.getUIComponent()).clearInfoandButton();
@@ -216,9 +217,8 @@ public final class AppActions implements ActionComponent {
             }else{
                 this.applicationTemplate.getDialog(Dialog.DialogType.CONFIRMATION).show(manager.getPropertyValue(SAVE_UNSAVED_WORK_TITLE.name()), manager.getPropertyValue(SAVE_UNSAVED_WORK.name()));
                 x = ConfirmationDialog.getDialog().getSelectedOption();
-             //   System.out.println(x);
+
                 if (x == ConfirmationDialog.Option.YES) {
-                 //   System.out.println("yes");
                     FileChooser fileChooser = new FileChooser();
                     fileChooser.setInitialDirectory(new File(manager.getPropertyValue(DATA_RESOURCE_PATH.name())));
 
@@ -236,7 +236,6 @@ public final class AppActions implements ActionComponent {
                     return true;
                 }
                 else if (x == ConfirmationDialog.Option.NO){
-                  //  System.out.println("true");
                     return true;
                 }
             }

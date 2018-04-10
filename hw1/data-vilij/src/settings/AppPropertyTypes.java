@@ -81,4 +81,7 @@ public enum AppPropertyTypes {
     ALGO_TYPE_1,
     ALGO_TYPE_2,
 
+    DONE_BUTTON_NAME,
+    EDIT_BUTTON_NAME
+
 }

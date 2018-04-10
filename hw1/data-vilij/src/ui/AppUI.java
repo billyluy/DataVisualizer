@@ -178,8 +178,8 @@ public final class AppUI extends UITemplate {
         typeAlgorithm2.setVisible(false);
 
 
-        doneButton = new ToggleButton("Done");
-        editButton = new ToggleButton("Edit");
+        doneButton = new ToggleButton(applicationTemplate.manager.getPropertyValue(DONE_BUTTON_NAME.name()));
+        editButton = new ToggleButton(applicationTemplate.manager.getPropertyValue(EDIT_BUTTON_NAME.name()));
         ToggleGroup group = new ToggleGroup();
         doneButton.setToggleGroup(group);
         editButton.setToggleGroup(group);
@@ -250,16 +250,16 @@ public final class AppUI extends UITemplate {
 
         chart.getData().addListener((ListChangeListener<XYChart.Series<Number, Number>>) c -> {
             if(chart.getData().isEmpty()){
-            //    System.out.println("empty");
                 scrnshotButton.setDisable(true);
             }else{
-            //    System.out.println("filled");
                 scrnshotButton.setDisable(false);
             }
         });
 
         readOnly.setOnMouseClicked(event -> checkingBox());
 
+        //user is done editing -> textArea is disabled -> clears previous info -> loads data -> checks to see if user input is valid -> get info of instances and labels
+        //->checks for algorithms validity -> displays info
         doneButton.setOnAction(e -> {
             textArea.setDisable(true);
             clearInfoandButton();
@@ -276,6 +276,9 @@ public final class AppUI extends UITemplate {
     }
 
 
+    /**
+     * if the readOnly box is checked then textArea is disabled and no edits can be done
+     */
     public void checkingBox(){
         if(readOnly.isSelected()) {
             textArea.setDisable(true);
@@ -285,18 +288,34 @@ public final class AppUI extends UITemplate {
         }
     }
 
+    /**
+     *
+     * @return text in the textArea
+     */
     public String getTextArea(){
         return textArea.getText();
     }
 
+    /**
+     *
+     * @param text
+     * sets TextArea
+     */
     public void setTextArea(String text){
         textArea.setText(text);
     }
 
+    /**
+     *
+     * @return saveButton
+     */
     public Button getSaveButton(){
         return saveButton;
     }
 
+    /**
+     * textArea shows up and is disabled -> checks for which buttons to show based on algorithm validity -> text2 info is visible
+     */
     public void textAreaVisibility(){
         textArea.setVisible(true);
 //        displayButton.setVisible(true);
@@ -307,6 +326,9 @@ public final class AppUI extends UITemplate {
         text2.setVisible(true);
     }
 
+    /**
+     * checks to see if numOfLabels > 1 then both algorithms are valid else only clustering algorithm is valid
+     */
     public void validTypeOfAlgorithm(){
         if(((AppData)applicationTemplate.getDataComponent()).returnNumofLabels() > 1){
             ToggleGroup selectingAlgorithmType = new ToggleGroup();
@@ -324,10 +346,14 @@ public final class AppUI extends UITemplate {
         }
     }
 
+    /**
+     *  resets the text, textArea, and radio buttons
+     */
     public void clearInfoandButton(){
 //        textArea.setVisible(false);
 //        displayButton.setVisible(false);
 //        readOnly.setVisible(false);
+        text2.setText("");
         readOnly.setSelected(false);
         typeAlgorithm1.setVisible(false);
         typeAlgorithm2.setVisible(false);
@@ -335,19 +361,32 @@ public final class AppUI extends UITemplate {
         textArea.setDisable(false);
     }
 
+    /**
+     *
+     * @param infoText
+     *
+     * assigns # of instance, unique labels, and names to text2
+     */
     public void setTextInfo(String infoText){
        text2.setText(infoText);
        text2.setVisible(true);
     }
 
-    public TextArea getArea(){
-        return textArea;
-    }
-
+    /**
+     * toggle buttons become visible for when the "new button" is clicked
+     */
     public void setToggleButton(){
         doneButton.setVisible(true);
         editButton.setVisible(true);
         editButton.setSelected(true);
 
+    }
+
+    /**
+     * hides the toggle buttons when data is loaded so user cannot edit the data
+     */
+    public void loadDisableButtons(){
+        doneButton.setVisible(false);
+        editButton.setVisible(false);
     }
 }

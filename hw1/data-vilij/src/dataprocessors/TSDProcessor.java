@@ -97,7 +97,6 @@ public final class TSDProcessor {
             });
             chart.getData().add(series);
         }
-
     }
 
     void clear() {
@@ -140,7 +139,6 @@ public final class TSDProcessor {
                 }
             }
         }
-  //      System.out.println(duplicates);
 
     }
 
@@ -154,7 +152,7 @@ public final class TSDProcessor {
 
     public void countingInstances(){
         numOfInstances = dataPoints.size();
-        
+
         uniqueLabelNames.clear();
         for (Map.Entry labelName: dataLabels.entrySet()) {
             if (!uniqueLabelNames.contains(labelName.getValue())) {

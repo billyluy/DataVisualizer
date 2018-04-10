@@ -61,7 +61,6 @@ public class AppData implements DataComponent {
                         totalLines++;
                     }else {
                         linesLeft.add(sc.nextLine() + "\n");
-//                        t += sc.nextLine() + "\n";
                         totalLines++;
                     }
                 }
@@ -69,17 +68,13 @@ public class AppData implements DataComponent {
                 for(int i = 0; i < linesLeft.size(); i++){
                     t += linesLeft.get(i);
                 }
- //               System.out.println("t:"+t);
+
                 String s = y + t;
-  //              System.out.println("s =" + s);
                 processor.processString(s);
-                //                  System.out.println("CHECK------------------");
                 processor.checkForDuplicates(s);
 
                 if(processor.getDuplicates() == true){
-                    //                    System.out.println("dup true");
                     applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(UNABLE_TO_LOAD_DUPLICATE_TITLE.name()), manager.getPropertyValue(UNABLE_TO_LOAD_DUPLICATE.name()) + processor.getNameOfDuplicate().get(0));
-
                 }
                 else{
                     if (totalLines > 10) {
@@ -87,27 +82,25 @@ public class AppData implements DataComponent {
                         applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(TOTAL_LINES_ERROR.name(), x);
                     }
                     ((AppUI) applicationTemplate.getUIComponent()).setTextArea(y);
+
                     processor.countingInstances();
-                    dataPath = dataFilePath;
+//                    dataPath = dataFilePath;
                     ((AppUI) applicationTemplate.getUIComponent()).setTextInfo(manager.getPropertyValue(SOURCE_NAME.name()) + dataFilePath + "\n" + processor.getInfo());
                     ((AppUI) applicationTemplate.getUIComponent()).getSaveButton().setDisable(true);
                     ((AppUI) applicationTemplate.getUIComponent()).textAreaVisibility();
+                    ((AppUI) applicationTemplate.getUIComponent()).loadDisableButtons();
+                    dataFilePath = null;
                 }
             }
 
         } catch (Exception e) {
-            //           System.out.println("catch--------------");
             if(processor.getlineOfError() > 0){
-                //               System.out.println("1");
                 String msg = manager.getPropertyValue(UNABLE_TO_LOAD_DUPLICATE.name()) + processor.getlineOfError();
-//                        System.out.println("msg = " +  msg);
                 applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(UNABLE_TO_LOAD_DUPLICATE_TITLE.name()), manager.getPropertyValue(UNABLE_TO_LOAD_DUPLICATE.name()) + msg);
             }else if(processor.getDuplicates() == true){
-                //              System.out.println("2");
                 applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(UNABLE_TO_LOAD_DUPLICATE_TITLE.name()), manager.getPropertyValue(UNABLE_TO_LOAD_DUPLICATE.name()) + processor.getNameOfDuplicate().get(0));
 
             } else {
-                //            System.out.println("3");
                 applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(LOAD_ERROR_TITLE.name()), manager.getPropertyValue(LOAD_ERROR_MSG.name()));
             }
         }
