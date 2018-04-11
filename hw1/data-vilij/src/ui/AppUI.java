@@ -327,18 +327,16 @@ public final class AppUI extends UITemplate {
     }
 
     /**
-     * checks to see if numOfLabels > 1 then both algorithms are valid else only clustering algorithm is valid
+     * checks to see if numOfLabels == 2 then both algorithms are valid else only clustering algorithm is valid
      */
     public void validTypeOfAlgorithm(){
-        if(((AppData)applicationTemplate.getDataComponent()).returnNumofLabels() > 1){
+        if(((AppData)applicationTemplate.getDataComponent()).returnNumofLabels() == 2){
             ToggleGroup selectingAlgorithmType = new ToggleGroup();
             typeAlgorithm1.setToggleGroup(selectingAlgorithmType);
             typeAlgorithm2.setToggleGroup(selectingAlgorithmType);
             typeAlgorithm1.setVisible(true);
             typeAlgorithm2.setVisible(true);
-
-
-        }else{
+        }else if(((AppData)applicationTemplate.getDataComponent()).returnNumofLabels() == 1 || ((AppData)applicationTemplate.getDataComponent()).returnNumofLabels() > 2){
             ToggleGroup selectingAlgorithmType = new ToggleGroup();
             typeAlgorithm2.setToggleGroup(selectingAlgorithmType);
             typeAlgorithm2.setVisible(true);

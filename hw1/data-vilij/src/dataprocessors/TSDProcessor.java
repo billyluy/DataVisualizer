@@ -177,7 +177,9 @@ public final class TSDProcessor {
                 removeOnceCount++;
                 containsNullEmptySpace = true;
             }
-            allUniqueLabels += uniqueLabelNames.get(i) + "\n";
+            if(!uniqueLabelNames.get(i).isEmpty()) {
+                allUniqueLabels += uniqueLabelNames.get(i) + "\n";
+            }
         }
 
        // if contains null and empty space remove the empty space and break

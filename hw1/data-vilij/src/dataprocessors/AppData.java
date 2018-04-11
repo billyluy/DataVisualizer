@@ -205,6 +205,8 @@ public class AppData implements DataComponent {
         lineseries.getNode().setId(applicationTemplate.manager.getPropertyValue(LINE_SERIES.name()));
     }
 
+
+    //returns num of non null labels
     public int returnNumofLabels(){
         int nonNullCount = processor.numOfNonNullLabels();
         return nonNullCount;
@@ -218,6 +220,7 @@ public class AppData implements DataComponent {
         ((AppUI) applicationTemplate.getUIComponent()).textAreaVisibility();
     }
 
+    //data is valid format
     public Boolean getValidity(){
         return validity;
     }
