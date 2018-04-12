@@ -65,7 +65,7 @@ public final class TSDProcessor {
               .forEach(list -> {
                   try {
                       String   name  = checkedname(list.get(0));
-                      String   label = list.get(1);
+                      String   label = checkedlabel(list.get(1));
                       String[] pair  = list.get(2).split(",");
                       Point2D  point = new Point2D(Double.parseDouble(pair[0]), Double.parseDouble(pair[1]));
                       dataLabels.put(name, label);
@@ -116,12 +116,26 @@ public final class TSDProcessor {
         return name;
     }
 
+    /**
+     *
+     * @param label
+     * @return label
+     * @throws InvalidDataNameException
+     *
+     *
+     * checks to see if there is no data label. if none, throw exception
+     */
+    private String checkedlabel(String label) throws InvalidDataNameException {
+        if(label.isEmpty())
+            throw new InvalidDataNameException(label);
+        return label;
+    }
+
     public Map<String, Point2D> getMap(){
         return dataPoints;
     }
 
     public int getlineOfError(){
-    //    System.out.println("line of error = " + errors.get(0));
         if(errors.isEmpty()){
             return -1;
         }
@@ -131,9 +145,7 @@ public final class TSDProcessor {
     public void checkForDuplicates(String s){
 
         for(int i = 0; i < keysNames.size(); i++){
- //           System.out.println("i:"+keysNames.get(i));
             for(int j = i+1; j < keysNames.size() -1; j++){
-   //             System.out.println("j:"+keysNames.get(j));
                 if(keysNames.get(i).equals(keysNames.get(j))){
                     duplicates = true;
                     nameOfDuplicate.add(keysNames.get(i));
@@ -151,6 +163,9 @@ public final class TSDProcessor {
         return nameOfDuplicate;
     }
 
+    /**
+     * checking for unique label names & count num of instances
+     */
     public void countingInstances(){
         numOfInstances = dataPoints.size();
 
@@ -164,48 +179,68 @@ public final class TSDProcessor {
         }
 
         numOfLabels = uniqueLabelNames.size();
+
         String allUniqueLabels = new String();
-        int removeOnceCount = 0;
-        Boolean containsNullEmptySpace = false;
+
+        for(int i = 0; i < uniqueLabelNames.size(); i++){
+            allUniqueLabels += uniqueLabelNames.get(i) + "\n";
+        }
+//        int removeOnceCount = 0;
+//        Boolean containsNullEmptySpace = false;
 
         //if not null and empty, set the object to null else if empty and null and no more than 1 then label -1 and contains nulland space is true
-        for(int i = 0; i < uniqueLabelNames.size(); i++){
-            if(uniqueLabelNames.get(i).isEmpty() && !uniqueLabelNames.contains("null")){
-                uniqueLabelNames.set(i, "null");
-            }else if(uniqueLabelNames.get(i).isEmpty() && uniqueLabelNames.contains("null") && removeOnceCount < 1){
-                numOfLabels--;
-                removeOnceCount++;
-                containsNullEmptySpace = true;
-            }
-            if(!uniqueLabelNames.get(i).isEmpty()) {
-                allUniqueLabels += uniqueLabelNames.get(i) + "\n";
-            }
-        }
+//        for(int i = 0; i < uniqueLabelNames.size(); i++){
+//            if(uniqueLabelNames.get(i).isEmpty() && !uniqueLabelNames.contains("null")){
+//                uniqueLabelNames.set(i, "null");
+//            }else if(uniqueLabelNames.get(i).isEmpty() && uniqueLabelNames.contains("null") && removeOnceCount < 1){
+//                numOfLabels--;
+//                removeOnceCount++;
+//                containsNullEmptySpace = true;
+//            }
+//            if(!uniqueLabelNames.get(i).isEmpty()) {
+//                allUniqueLabels += uniqueLabelNames.get(i) + "\n";
+//            }
+//        }
 
        // if contains null and empty space remove the empty space and break
-        if(containsNullEmptySpace){
-            for(int i = 0; i < uniqueLabelNames.size(); i++){
-                if(uniqueLabelNames.get(i).isEmpty()){
-                    uniqueLabelNames.remove(i);
-                    break;
-                }
-            }
-        }
+//        if(containsNullEmptySpace){
+//            for(int i = 0; i < uniqueLabelNames.size(); i++){
+//                if(uniqueLabelNames.get(i).isEmpty()){
+//                    uniqueLabelNames.remove(i);
+//                    break;
+//                }
+//            }
+//        }
 
         info = numOfInstances + " instances with " + numOfLabels + " labels. The labels are " + "\n" + allUniqueLabels;
     }
 
-    //returns the number of unique non null labels
+    /**
+     *
+     * @return the number of unique non null labels
+     */
     public int numOfNonNullLabels(){
         int numNonNullLabels = 0;
         for(int i = 0; i < uniqueLabelNames.size(); i++){
-            if(!uniqueLabelNames.get(i).equals("null") && !uniqueLabelNames.get(i).isEmpty()){
+            if(!uniqueLabelNames.get(i).equals("null")){
                 numNonNullLabels++;
             }
         }
         return numNonNullLabels;
     }
 
+    /**
+     *
+     * @return 1 if there is a null label
+     */
+    public int nullLabel(){
+        return 1;
+    }
+
+    /**
+     *
+     * @return String with num of instances, unique label names, etc
+     */
     public String getInfo(){
         return info;
     }

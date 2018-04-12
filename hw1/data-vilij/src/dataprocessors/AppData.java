@@ -212,6 +212,11 @@ public class AppData implements DataComponent {
         return nonNullCount;
     }
 
+    public int returnNullLabel(){
+        int nullCount = processor.nullLabel();
+        return nullCount;
+    }
+
     public void getInfoForNew(){
         PropertyManager manager = applicationTemplate.manager;
         processor.countingInstances();

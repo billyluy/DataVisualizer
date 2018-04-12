@@ -336,7 +336,7 @@ public final class AppUI extends UITemplate {
             typeAlgorithm2.setToggleGroup(selectingAlgorithmType);
             typeAlgorithm1.setVisible(true);
             typeAlgorithm2.setVisible(true);
-        }else if(((AppData)applicationTemplate.getDataComponent()).returnNumofLabels() == 1 || ((AppData)applicationTemplate.getDataComponent()).returnNumofLabels() > 2){
+        }else if(((AppData)applicationTemplate.getDataComponent()).returnNumofLabels() == 1 || ((AppData)applicationTemplate.getDataComponent()).returnNumofLabels() > 2 || ((AppData)applicationTemplate.getDataComponent()).returnNullLabel() == 1){
             ToggleGroup selectingAlgorithmType = new ToggleGroup();
             typeAlgorithm2.setToggleGroup(selectingAlgorithmType);
             typeAlgorithm2.setVisible(true);
