@@ -86,6 +86,13 @@ functionality within the main workspace. -->
         <property name = "DONE_BUTTON_NAME" value="Done" />
         <property name = "EDIT_BUTTON_NAME" value="Edit" />
 
+        <property name = "ALGO_NAME" value= "Algorithm Type" />
+        <property name = "RANDO_CLASSIF" value="Random Classification" />
+        <property name = "RANDO_CLUST" value="Random Clustering" />
+        <property name = "CLASSIFICATION_TITLE" value="Classification" />
+        <property name = "CLUSTERING_TITLE" value="Clustering" />
+        <property name = "SETTINGS_TITLE" value="Settings" />
+
     </property_list>
     <property_options_list/>
 </properties>

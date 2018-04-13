@@ -43,6 +43,7 @@ public final class TSDProcessor {
     private ArrayList<String> uniqueLabelNames = new ArrayList<String>();
     private int numOfInstances;
     private int numOfLabels;
+    private String copyOfTSDString = new String();
 
     private String info = new String();
 
@@ -58,6 +59,7 @@ public final class TSDProcessor {
      * @throws Exception if the input string does not follow the <code>.tsd</code> data format
      */
     public void processString(String tsdString) throws Exception {
+        copyOfTSDString = tsdString;
         AtomicBoolean hadAnError   = new AtomicBoolean(false);
         StringBuilder errorMessage = new StringBuilder();
         Stream.of(tsdString.split("\n"))
@@ -152,7 +154,6 @@ public final class TSDProcessor {
                 }
             }
         }
-
     }
 
     public Boolean getDuplicates(){
@@ -243,5 +244,14 @@ public final class TSDProcessor {
      */
     public String getInfo(){
         return info;
+    }
+
+    public Boolean dup(){
+        String[] copy = copyOfTSDString.split("\n");
+    //    System.out.println(copy.length);
+        if(dataPoints.size() < copy.length){
+            return true;
+        }
+        return false;
     }
 }

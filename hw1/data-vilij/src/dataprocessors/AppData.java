@@ -90,6 +90,9 @@ public class AppData implements DataComponent {
                     ((AppUI) applicationTemplate.getUIComponent()).textAreaVisibility();
                     ((AppUI) applicationTemplate.getUIComponent()).loadDisableButtons();
                     dataFilePath = null;
+
+                    ((AppUI) applicationTemplate.getUIComponent()).clearSelectingAlgorithmsBox();
+                    ((AppUI) applicationTemplate.getUIComponent()).getAlgoTitle().setVisible(true);
                 }
             }
 
@@ -117,9 +120,17 @@ public class AppData implements DataComponent {
             ((AppUI)applicationTemplate.getUIComponent()).getChart().getData().clear();
             processor.clear();
             processor.processString(dataString);
-            validity = true;
-            ((AppUI) applicationTemplate.getUIComponent()).setTextInfo("\n" + processor.getInfo());
-        //    this.displayData();
+            if(!processor.dup()){
+                validity = true;
+                ((AppUI) applicationTemplate.getUIComponent()).setTextInfo("\n" + processor.getInfo());
+            }else{
+                validity = false;
+               throw new TSDProcessor.InvalidDataNameException(dataString);
+
+            }
+
+
+            //    this.displayData();
         } catch (Exception e) {
             //invalid input pop-up dialog box
             validity = false;
@@ -129,6 +140,7 @@ public class AppData implements DataComponent {
 
 //        ((AppUI)applicationTemplate.getUIComponent()).getChart().getData().clear();
 //        this.displayData();
+
     }
 
     @Override
@@ -228,5 +240,10 @@ public class AppData implements DataComponent {
     //data is valid format
     public Boolean getValidity(){
         return validity;
+    }
+
+
+    public void clearlinesleft(){
+        linesLeft.clear();
     }
 }

@@ -53,6 +53,8 @@ public final class AppUI extends UITemplate {
     private RadioButton typeAlgorithm2;
     private ToggleButton doneButton;
     private ToggleButton editButton;
+    private VBox algorithmsBox = new VBox();
+    private Text algoTitle;
 
     public LineChart<Number, Number> getChart() { return chart; }
 
@@ -184,10 +186,14 @@ public final class AppUI extends UITemplate {
         doneButton.setToggleGroup(group);
         editButton.setToggleGroup(group);
 
-        appPane.getChildren().addAll(doneButton, editButton, text2, typeAlgorithm1, typeAlgorithm2);
+        algoTitle = new Text(applicationTemplate.manager.getPropertyValue(ALGO_NAME.name()));
+        algoTitle.setVisible(false);
+
+        appPane.getChildren().addAll(doneButton, editButton, text2, algoTitle, typeAlgorithm1, typeAlgorithm2, algorithmsBox);
 
         doneButton.setVisible(false);
         editButton.setVisible(false);
+
 
     }
 
@@ -264,15 +270,62 @@ public final class AppUI extends UITemplate {
             textArea.setDisable(true);
             clearInfoandButton();
             ((AppData) applicationTemplate.getDataComponent()).loadData(textArea.getText());
+
             if(((AppData) applicationTemplate.getDataComponent()).getValidity()){
                 ((AppData)applicationTemplate.getDataComponent()).getInfoForNew();
                 validTypeOfAlgorithm();
+                typeAlgorithm1.setSelected(false);
+                typeAlgorithm2.setSelected(false);
+                algoTitle.setVisible(true);
                 text2.setVisible(true);
             }
 
         });
 
-        editButton.setOnMouseClicked(event -> textArea.setDisable(false));
+        //if edit button is clicked, text area is typable and clears all info
+        editButton.setOnMouseClicked(event -> {
+            textArea.setDisable(false);
+            clearInfoandButton();
+            algorithmsBox.setVisible(false);
+        });
+
+        typeAlgorithm1.setOnMouseClicked(event -> {
+            algorithmsBox.getChildren().clear();
+            typeAlgorithm1.setVisible(false);
+            typeAlgorithm2.setVisible(false);
+            algoTitle.setVisible(false);
+
+            HBox algorithmWSettingsBox = new HBox();
+            RadioButton randomClassificationButton = new RadioButton(applicationTemplate.manager.getPropertyValue(RANDO_CLASSIF.name()));
+            randomClassificationButton.setSelected(false);
+            Text classification = new Text(applicationTemplate.manager.getPropertyValue(CLASSIFICATION_TITLE.name()));
+            Button settingsButton = new Button(applicationTemplate.manager.getPropertyValue(SETTINGS_TITLE.name()));
+            algorithmWSettingsBox.getChildren().addAll(randomClassificationButton, settingsButton);
+
+        //   algorithmsBox.getChildren().addAll(classification, randomClassificationButton);
+            algorithmsBox.getChildren().addAll(classification, algorithmWSettingsBox);
+            algorithmsBox.setVisible(true);
+
+        });
+
+        typeAlgorithm2.setOnMouseClicked(event -> {
+            algorithmsBox.getChildren().clear();
+            typeAlgorithm1.setVisible(false);
+            typeAlgorithm2.setVisible(false);
+            algoTitle.setVisible(false);
+
+            HBox algorithmWSettingsBox = new HBox();
+            RadioButton randomClusteringButton = new RadioButton(applicationTemplate.manager.getPropertyValue(RANDO_CLUST.name()));
+            Text clustering = new Text(applicationTemplate.manager.getPropertyValue(CLUSTERING_TITLE.name()));
+            randomClusteringButton.setSelected(false);
+            Button settingsButton = new Button(applicationTemplate.manager.getPropertyValue(SETTINGS_TITLE.name()));
+            algorithmWSettingsBox.getChildren().addAll(randomClusteringButton, settingsButton);
+
+        //    algorithmsBox.getChildren().addAll(clustering, randomClusteringButton);
+            algorithmsBox.getChildren().addAll(clustering, algorithmWSettingsBox);
+            algorithmsBox.setVisible(true);
+
+        });
     }
 
 
@@ -357,6 +410,8 @@ public final class AppUI extends UITemplate {
         typeAlgorithm2.setVisible(false);
         textArea.setVisible(true);
         textArea.setDisable(false);
+
+        algoTitle.setVisible(false);
     }
 
     /**
@@ -377,7 +432,6 @@ public final class AppUI extends UITemplate {
         doneButton.setVisible(true);
         editButton.setVisible(true);
         editButton.setSelected(true);
-
     }
 
     /**
@@ -386,5 +440,24 @@ public final class AppUI extends UITemplate {
     public void loadDisableButtons(){
         doneButton.setVisible(false);
         editButton.setVisible(false);
+        typeAlgorithm1.setSelected(false);
+        typeAlgorithm2.setSelected(false);
+    }
+
+    /**
+     * makes selecting algorithms box invisible and clears all the radio buttons in the vbox
+     */
+    public void clearSelectingAlgorithmsBox(){
+        algorithmsBox.setVisible(false);
+        algorithmsBox.getChildren().clear();
+        algoTitle.setVisible(false);
+    }
+
+    /**
+     *
+     * @return title for Algorithm Type
+     */
+    public Text getAlgoTitle(){
+        return algoTitle;
     }
 }

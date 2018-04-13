@@ -65,9 +65,13 @@ public final class AppActions implements ActionComponent {
 
         dataFilePath = null;
         applicationTemplate.getUIComponent().clear();
+        ((AppUI) applicationTemplate.getUIComponent()).setTextArea("");
+        ((AppData) applicationTemplate.getDataComponent()).clearlinesleft();
         ((AppUI) applicationTemplate.getUIComponent()).getChart().getData().clear();
         ((AppUI) applicationTemplate.getUIComponent()).clearInfoandButton();
         ((AppUI) applicationTemplate.getUIComponent()).setToggleButton();
+        ((AppUI) applicationTemplate.getUIComponent()).clearSelectingAlgorithmsBox();
+
     }
 
     @Override
@@ -90,7 +94,7 @@ public final class AppActions implements ActionComponent {
             processor1.processString(input1 + a);
             processor1.checkForDuplicates(input1 + a);
 
-            if(processor1.getDuplicates()){
+            if(processor1.getDuplicates() || processor1.dup()){
                 applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(UNABLE_TO_SAVE_DUPLICATE_TITLE.name()), manager.getPropertyValue(LINE_DUPLICATE.name()) + processor1.getNameOfDuplicate().get(0));
             }
 
