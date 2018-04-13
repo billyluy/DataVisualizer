@@ -57,8 +57,7 @@ public final class AppUI extends UITemplate {
     private VBox algorithmsBox = new VBox();
     private Text algoTitle;
 
-    private RadioButton randomClassificationButton;
-    private RadioButton randomClusteringButton;
+    private  ToggleGroup algoSelectToggleGroup;
 
     public LineChart<Number, Number> getChart() { return chart; }
 
@@ -185,7 +184,11 @@ public final class AppUI extends UITemplate {
 
         typeAlgorithm1 = new RadioButton(applicationTemplate.manager.getPropertyValue(ALGO_TYPE_1.name()));
         typeAlgorithm2 = new RadioButton(applicationTemplate.manager.getPropertyValue(ALGO_TYPE_2.name()));
-
+        ToggleGroup algoGroup = new ToggleGroup();
+        typeAlgorithm1.setToggleGroup(algoGroup);
+        typeAlgorithm2.setToggleGroup(algoGroup);
+        typeAlgorithm1.setSelected(false);
+        typeAlgorithm2.setSelected(false);
         typeAlgorithm1.setVisible(false);
         typeAlgorithm2.setVisible(false);
 
@@ -193,8 +196,10 @@ public final class AppUI extends UITemplate {
         doneButton = new ToggleButton(applicationTemplate.manager.getPropertyValue(DONE_BUTTON_NAME.name()));
         editButton = new ToggleButton(applicationTemplate.manager.getPropertyValue(EDIT_BUTTON_NAME.name()));
         ToggleGroup group = new ToggleGroup();
+
         doneButton.setToggleGroup(group);
         editButton.setToggleGroup(group);
+
 
         algoTitle = new Text(applicationTemplate.manager.getPropertyValue(ALGO_NAME.name()));
         algoTitle.setVisible(false);
@@ -308,8 +313,8 @@ public final class AppUI extends UITemplate {
             algoTitle.setVisible(false);
 
             HBox algorithmWSettingsBox = new HBox();
-            ToggleGroup algoSelectToggleGroup = new ToggleGroup();
-            randomClassificationButton = new RadioButton(applicationTemplate.manager.getPropertyValue(RANDO_CLASSIF.name()));
+            algoSelectToggleGroup = new ToggleGroup();
+            RadioButton randomClassificationButton = new RadioButton(applicationTemplate.manager.getPropertyValue(RANDO_CLASSIF.name()));
             randomClassificationButton.setToggleGroup(algoSelectToggleGroup);
             randomClassificationButton.setSelected(false);
             Text classification = new Text(applicationTemplate.manager.getPropertyValue(CLASSIFICATION_TITLE.name()));
@@ -329,8 +334,8 @@ public final class AppUI extends UITemplate {
             algoTitle.setVisible(false);
 
             HBox algorithmWSettingsBox = new HBox();
-            ToggleGroup algoSelectToggleGroup = new ToggleGroup();
-            randomClusteringButton = new RadioButton(applicationTemplate.manager.getPropertyValue(RANDO_CLUST.name()));
+            algoSelectToggleGroup = new ToggleGroup();
+            RadioButton randomClusteringButton = new RadioButton(applicationTemplate.manager.getPropertyValue(RANDO_CLUST.name()));
             randomClusteringButton.setToggleGroup(algoSelectToggleGroup);
             Text clustering = new Text(applicationTemplate.manager.getPropertyValue(CLUSTERING_TITLE.name()));
             randomClusteringButton.setSelected(false);
@@ -344,9 +349,6 @@ public final class AppUI extends UITemplate {
         });
 
     }
-
-
-
 
     /**
      * if the readOnly box is checked then textArea is disabled and no edits can be done
