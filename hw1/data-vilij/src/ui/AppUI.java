@@ -4,6 +4,7 @@ import actions.AppActions;
 import dataprocessors.AppData;
 
 import dataprocessors.TSDProcessor;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
 import javafx.collections.ListChangeListener;
@@ -55,6 +56,9 @@ public final class AppUI extends UITemplate {
     private ToggleButton editButton;
     private VBox algorithmsBox = new VBox();
     private Text algoTitle;
+
+    private RadioButton randomClassificationButton;
+    private RadioButton randomClusteringButton;
 
     public LineChart<Number, Number> getChart() { return chart; }
 
@@ -144,11 +148,17 @@ public final class AppUI extends UITemplate {
 
 
         textArea = new TextArea();
+        chart.setMaxHeight(400);
+
+        VBox textInfoBox = new VBox();
+
+
+        textInfoBox.getChildren().add(textArea);
 //        displayButton = new Button();
 //        displayButton.setText(manager.getPropertyValue(DISPLAY_BUTTON_NAME.name()));
 
-
-        layoutPane.getChildren().addAll(textArea, chart);
+        layoutPane.getChildren().addAll(textInfoBox, chart);
+      //  layoutPane.getChildren().addAll(textArea, chart);
 
         readOnly = new CheckBox(applicationTemplate.manager.getPropertyValue(READ_ONLY_TITLE.name()));
         readOnly.setSelected(false);
@@ -189,7 +199,7 @@ public final class AppUI extends UITemplate {
         algoTitle = new Text(applicationTemplate.manager.getPropertyValue(ALGO_NAME.name()));
         algoTitle.setVisible(false);
 
-        appPane.getChildren().addAll(doneButton, editButton, text2, algoTitle, typeAlgorithm1, typeAlgorithm2, algorithmsBox);
+        textInfoBox.getChildren().addAll(doneButton, editButton, text2, algoTitle, typeAlgorithm1, typeAlgorithm2, algorithmsBox);
 
         doneButton.setVisible(false);
         editButton.setVisible(false);
@@ -289,6 +299,8 @@ public final class AppUI extends UITemplate {
             algorithmsBox.setVisible(false);
         });
 
+
+
         typeAlgorithm1.setOnMouseClicked(event -> {
             algorithmsBox.getChildren().clear();
             typeAlgorithm1.setVisible(false);
@@ -296,7 +308,9 @@ public final class AppUI extends UITemplate {
             algoTitle.setVisible(false);
 
             HBox algorithmWSettingsBox = new HBox();
-            RadioButton randomClassificationButton = new RadioButton(applicationTemplate.manager.getPropertyValue(RANDO_CLASSIF.name()));
+            ToggleGroup algoSelectToggleGroup = new ToggleGroup();
+            randomClassificationButton = new RadioButton(applicationTemplate.manager.getPropertyValue(RANDO_CLASSIF.name()));
+            randomClassificationButton.setToggleGroup(algoSelectToggleGroup);
             randomClassificationButton.setSelected(false);
             Text classification = new Text(applicationTemplate.manager.getPropertyValue(CLASSIFICATION_TITLE.name()));
             Button settingsButton = new Button(applicationTemplate.manager.getPropertyValue(SETTINGS_TITLE.name()));
@@ -315,7 +329,9 @@ public final class AppUI extends UITemplate {
             algoTitle.setVisible(false);
 
             HBox algorithmWSettingsBox = new HBox();
-            RadioButton randomClusteringButton = new RadioButton(applicationTemplate.manager.getPropertyValue(RANDO_CLUST.name()));
+            ToggleGroup algoSelectToggleGroup = new ToggleGroup();
+            randomClusteringButton = new RadioButton(applicationTemplate.manager.getPropertyValue(RANDO_CLUST.name()));
+            randomClusteringButton.setToggleGroup(algoSelectToggleGroup);
             Text clustering = new Text(applicationTemplate.manager.getPropertyValue(CLUSTERING_TITLE.name()));
             randomClusteringButton.setSelected(false);
             Button settingsButton = new Button(applicationTemplate.manager.getPropertyValue(SETTINGS_TITLE.name()));
@@ -326,7 +342,10 @@ public final class AppUI extends UITemplate {
             algorithmsBox.setVisible(true);
 
         });
+
     }
+
+
 
 
     /**
