@@ -213,7 +213,7 @@ public final class TSDProcessor {
 //                }
 //            }
 //        }
-        System.out.println("unique label count " + uniqueLabelNames.size());
+//        System.out.println("unique label count " + uniqueLabelNames.size());
         info = numOfInstances + " instances with " + numOfLabels + " labels. The labels are " + "\n" + allUniqueLabels;
 
         nonNull = 0;
@@ -222,7 +222,7 @@ public final class TSDProcessor {
                 nonNull++;
             }
         }
-        System.out.println("---------" + nonNull + "------------");
+//        System.out.println("---------" + nonNull + "------------");
 //        numOfNonNullLabels();
         return nonNull;
     }
@@ -238,7 +238,7 @@ public final class TSDProcessor {
 //                numNonNullLabels++;
 //            }
 //        }
-        System.out.println("*********" + nonNull + "*********");
+//        System.out.println("*********" + nonNull + "*********");
         return nonNull;
     }
 
@@ -265,5 +265,9 @@ public final class TSDProcessor {
             return true;
         }
         return false;
+    }
+
+    public void popUpWindow(){
+
     }
 }

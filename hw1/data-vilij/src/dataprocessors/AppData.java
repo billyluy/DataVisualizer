@@ -84,7 +84,7 @@ public class AppData implements DataComponent {
                     ((AppUI) applicationTemplate.getUIComponent()).setTextArea(y);
 
                     labelNum = processor.countingInstances();
-                    System.out.println("label num " + labelNum);
+//                    System.out.println("label num " + labelNum);
 //                    dataPath = dataFilePath;
                     ((AppUI) applicationTemplate.getUIComponent()).setTextInfo(manager.getPropertyValue(SOURCE_NAME.name()) + dataFilePath + "\n" + processor.getInfo());
                     ((AppUI) applicationTemplate.getUIComponent()).getSaveButton().setDisable(true);

@@ -293,7 +293,6 @@ public final class AppUI extends UITemplate {
                 algoTitle.setVisible(true);
                 text2.setVisible(true);
             }
-
         });
 
         //if edit button is clicked, text area is typable and clears all info
@@ -403,7 +402,7 @@ public final class AppUI extends UITemplate {
      * checks to see if numOfLabels == 2 then both algorithms are valid else only clustering algorithm is valid
      */
     public void validTypeOfAlgorithm(){
-        System.out.println("passeed " + ((AppData)applicationTemplate.getDataComponent()).returnNumofLabels());
+   //     System.out.println("passeed " + ((AppData)applicationTemplate.getDataComponent()).returnNumofLabels());
         if(((AppData)applicationTemplate.getDataComponent()).returnNumofLabels() == 2){
             ToggleGroup selectingAlgorithmType = new ToggleGroup();
             typeAlgorithm1.setToggleGroup(selectingAlgorithmType);
@@ -420,6 +419,7 @@ public final class AppUI extends UITemplate {
                         typeAlgorithm2.setVisible(false);
                         algoTitle.setVisible(false);
 
+
                         HBox algorithmWSettingsBox = new HBox();
                          algoSelectToggleGroup = new ToggleGroup();
                         RadioButton randomClassificationButton = new RadioButton(applicationTemplate.manager.getPropertyValue(RANDO_CLASSIF.name()));
@@ -427,6 +427,9 @@ public final class AppUI extends UITemplate {
                         randomClassificationButton.setSelected(false);
                         Text classification = new Text(applicationTemplate.manager.getPropertyValue(CLASSIFICATION_TITLE.name()));
                         Button settingsButton = new Button(applicationTemplate.manager.getPropertyValue(SETTINGS_TITLE.name()));
+                        settingsButton.setOnMouseClicked(event -> popUpWindow("Classification"));
+
+
                         algorithmWSettingsBox.getChildren().addAll(randomClassificationButton, settingsButton);
 
                         //   algorithmsBox.getChildren().addAll(classification, randomClassificationButton);
@@ -468,6 +471,7 @@ public final class AppUI extends UITemplate {
                         Text clustering = new Text(applicationTemplate.manager.getPropertyValue(CLUSTERING_TITLE.name()));
                         randomClusteringButton.setSelected(false);
                         Button settingsButton = new Button(applicationTemplate.manager.getPropertyValue(SETTINGS_TITLE.name()));
+                        settingsButton.setOnMouseClicked(event -> popUpWindow("Clustering"));
                         algorithmWSettingsBox.getChildren().addAll(randomClusteringButton, settingsButton);
 
                         //    algorithmsBox.getChildren().addAll(clustering, randomClusteringButton);
@@ -554,5 +558,12 @@ public final class AppUI extends UITemplate {
      */
     public Text getAlgoTitle(){
         return algoTitle;
+    }
+
+    public void popUpWindow(String type){
+        RunConfiguration runConfig = RunConfiguration.getDialog(type);
+        runConfig.init(primaryStage);
+        runConfig.show();
+
     }
 }
