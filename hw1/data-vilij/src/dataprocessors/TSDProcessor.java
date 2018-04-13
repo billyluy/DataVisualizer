@@ -46,6 +46,7 @@ public final class TSDProcessor {
     private String copyOfTSDString = new String();
 
     private String info = new String();
+    private int nonNull;
 
     public TSDProcessor() {
         dataLabels = new HashMap<>();
@@ -167,7 +168,7 @@ public final class TSDProcessor {
     /**
      * checking for unique label names & count num of instances
      */
-    public void countingInstances(){
+    public int countingInstances(){
         numOfInstances = dataPoints.size();
 
         uniqueLabelNames.clear();
@@ -212,8 +213,18 @@ public final class TSDProcessor {
 //                }
 //            }
 //        }
-
+        System.out.println("unique label count " + uniqueLabelNames.size());
         info = numOfInstances + " instances with " + numOfLabels + " labels. The labels are " + "\n" + allUniqueLabels;
+
+        nonNull = 0;
+        for(int i = 0; i < uniqueLabelNames.size(); i++){
+            if(!uniqueLabelNames.get(i).equals("null")){
+                nonNull++;
+            }
+        }
+        System.out.println("---------" + nonNull + "------------");
+//        numOfNonNullLabels();
+        return nonNull;
     }
 
     /**
@@ -221,13 +232,14 @@ public final class TSDProcessor {
      * @return the number of unique non null labels
      */
     public int numOfNonNullLabels(){
-        int numNonNullLabels = 0;
-        for(int i = 0; i < uniqueLabelNames.size(); i++){
-            if(!uniqueLabelNames.get(i).equals("null")){
-                numNonNullLabels++;
-            }
-        }
-        return numNonNullLabels;
+//        int numNonNullLabels = 0;
+//        for(int i = 0; i < uniqueLabelNames.size(); i++){
+//            if(!uniqueLabelNames.get(i).equals("null")){
+//                numNonNullLabels++;
+//            }
+//        }
+        System.out.println("*********" + nonNull + "*********");
+        return nonNull;
     }
 
     /**

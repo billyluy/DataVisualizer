@@ -31,7 +31,7 @@ public class AppData implements DataComponent {
     public ArrayList<String> linesLeft = new ArrayList<String>();
     private Path dataPath;
     Boolean validity = false;
-
+    private int labelNum;
     public AppData(ApplicationTemplate applicationTemplate) {
         this.processor = new TSDProcessor();
         this.applicationTemplate = applicationTemplate;
@@ -83,7 +83,8 @@ public class AppData implements DataComponent {
                     }
                     ((AppUI) applicationTemplate.getUIComponent()).setTextArea(y);
 
-                    processor.countingInstances();
+                    labelNum = processor.countingInstances();
+                    System.out.println("label num " + labelNum);
 //                    dataPath = dataFilePath;
                     ((AppUI) applicationTemplate.getUIComponent()).setTextInfo(manager.getPropertyValue(SOURCE_NAME.name()) + dataFilePath + "\n" + processor.getInfo());
                     ((AppUI) applicationTemplate.getUIComponent()).getSaveButton().setDisable(true);
@@ -220,8 +221,11 @@ public class AppData implements DataComponent {
 
     //returns num of non null labels
     public int returnNumofLabels(){
-        int nonNullCount = processor.numOfNonNullLabels();
-        return nonNullCount;
+//        int nonNullCount = processor.numOfNonNullLabels();
+//        System.out.println("nonnull count" + nonNullCount);
+//        return nonNullCount;
+
+        return labelNum;
     }
 
     public int returnNullLabel(){
@@ -231,7 +235,7 @@ public class AppData implements DataComponent {
 
     public void getInfoForNew(){
         PropertyManager manager = applicationTemplate.manager;
-        processor.countingInstances();
+        labelNum = processor.countingInstances();
         ((AppUI) applicationTemplate.getUIComponent()).setTextInfo("\n" + processor.getInfo());
         ((AppUI) applicationTemplate.getUIComponent()).getSaveButton().setDisable(true);
         ((AppUI) applicationTemplate.getUIComponent()).textAreaVisibility();

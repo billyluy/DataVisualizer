@@ -41,7 +41,7 @@ public final class AppUI extends UITemplate {
     @SuppressWarnings("FieldCanBeLocal")
     private Button                       scrnshotButton; // toolbar button to take a screenshot of the data
     private LineChart<Number, Number>    chart;          // the chart where data will be displayed
-//    private Button                       displayButton;  // workspace button to display data on the chart
+    //    private Button                       displayButton;  // workspace button to display data on the chart
     private TextArea                     textArea;       // text area for new data input
     private boolean                      hasNewText;     // whether or not the text area has any new data since last display
     private CheckBox                     readOnly;
@@ -57,7 +57,7 @@ public final class AppUI extends UITemplate {
     private VBox algorithmsBox = new VBox();
     private Text algoTitle;
 
-    private  ToggleGroup algoSelectToggleGroup;
+    private ToggleGroup algoSelectToggleGroup;
 
     public LineChart<Number, Number> getChart() { return chart; }
 
@@ -116,7 +116,7 @@ public final class AppUI extends UITemplate {
     public void clear() {
         // TODO for homework 1
         textArea.clear();
-     //   chart.getData().clear();
+        //   chart.getData().clear();
     }
 
     private void layout() {
@@ -157,7 +157,7 @@ public final class AppUI extends UITemplate {
 //        displayButton.setText(manager.getPropertyValue(DISPLAY_BUTTON_NAME.name()));
 
         layoutPane.getChildren().addAll(textInfoBox, chart);
-      //  layoutPane.getChildren().addAll(textArea, chart);
+        //  layoutPane.getChildren().addAll(textArea, chart);
 
         readOnly = new CheckBox(applicationTemplate.manager.getPropertyValue(READ_ONLY_TITLE.name()));
         readOnly.setSelected(false);
@@ -184,9 +184,8 @@ public final class AppUI extends UITemplate {
 
         typeAlgorithm1 = new RadioButton(applicationTemplate.manager.getPropertyValue(ALGO_TYPE_1.name()));
         typeAlgorithm2 = new RadioButton(applicationTemplate.manager.getPropertyValue(ALGO_TYPE_2.name()));
-        ToggleGroup algoGroup = new ToggleGroup();
-        typeAlgorithm1.setToggleGroup(algoGroup);
-        typeAlgorithm2.setToggleGroup(algoGroup);
+
+
         typeAlgorithm1.setSelected(false);
         typeAlgorithm2.setSelected(false);
         typeAlgorithm1.setVisible(false);
@@ -214,7 +213,7 @@ public final class AppUI extends UITemplate {
 
     private void setWorkspaceActions() {
 
- //       displayButton.setOnAction(e -> ((AppData) applicationTemplate.getDataComponent()).loadData(textArea.getText()));
+        //       displayButton.setOnAction(e -> ((AppData) applicationTemplate.getDataComponent()).loadData(textArea.getText()));
 
         String oldText = textArea.getText();
 
@@ -306,47 +305,47 @@ public final class AppUI extends UITemplate {
 
 
 
-        typeAlgorithm1.setOnMouseClicked(event -> {
-            algorithmsBox.getChildren().clear();
-            typeAlgorithm1.setVisible(false);
-            typeAlgorithm2.setVisible(false);
-            algoTitle.setVisible(false);
-
-            HBox algorithmWSettingsBox = new HBox();
-            algoSelectToggleGroup = new ToggleGroup();
-            RadioButton randomClassificationButton = new RadioButton(applicationTemplate.manager.getPropertyValue(RANDO_CLASSIF.name()));
-            randomClassificationButton.setToggleGroup(algoSelectToggleGroup);
-            randomClassificationButton.setSelected(false);
-            Text classification = new Text(applicationTemplate.manager.getPropertyValue(CLASSIFICATION_TITLE.name()));
-            Button settingsButton = new Button(applicationTemplate.manager.getPropertyValue(SETTINGS_TITLE.name()));
-            algorithmWSettingsBox.getChildren().addAll(randomClassificationButton, settingsButton);
-
-        //   algorithmsBox.getChildren().addAll(classification, randomClassificationButton);
-            algorithmsBox.getChildren().addAll(classification, algorithmWSettingsBox);
-            algorithmsBox.setVisible(true);
-
-        });
-
-        typeAlgorithm2.setOnMouseClicked(event -> {
-            algorithmsBox.getChildren().clear();
-            typeAlgorithm1.setVisible(false);
-            typeAlgorithm2.setVisible(false);
-            algoTitle.setVisible(false);
-
-            HBox algorithmWSettingsBox = new HBox();
-            algoSelectToggleGroup = new ToggleGroup();
-            RadioButton randomClusteringButton = new RadioButton(applicationTemplate.manager.getPropertyValue(RANDO_CLUST.name()));
-            randomClusteringButton.setToggleGroup(algoSelectToggleGroup);
-            Text clustering = new Text(applicationTemplate.manager.getPropertyValue(CLUSTERING_TITLE.name()));
-            randomClusteringButton.setSelected(false);
-            Button settingsButton = new Button(applicationTemplate.manager.getPropertyValue(SETTINGS_TITLE.name()));
-            algorithmWSettingsBox.getChildren().addAll(randomClusteringButton, settingsButton);
-
-        //    algorithmsBox.getChildren().addAll(clustering, randomClusteringButton);
-            algorithmsBox.getChildren().addAll(clustering, algorithmWSettingsBox);
-            algorithmsBox.setVisible(true);
-
-        });
+//        typeAlgorithm1.setOnMouseClicked(event -> {
+//            algorithmsBox.getChildren().clear();
+//            typeAlgorithm1.setVisible(false);
+//            typeAlgorithm2.setVisible(false);
+//            algoTitle.setVisible(false);
+//
+//            HBox algorithmWSettingsBox = new HBox();
+//            ToggleGroup algoSelectToggleGroup = new ToggleGroup();
+//            RadioButton randomClassificationButton = new RadioButton(applicationTemplate.manager.getPropertyValue(RANDO_CLASSIF.name()));
+//            randomClassificationButton.setToggleGroup(algoSelectToggleGroup);
+//            randomClassificationButton.setSelected(false);
+//            Text classification = new Text(applicationTemplate.manager.getPropertyValue(CLASSIFICATION_TITLE.name()));
+//            Button settingsButton = new Button(applicationTemplate.manager.getPropertyValue(SETTINGS_TITLE.name()));
+//            algorithmWSettingsBox.getChildren().addAll(randomClassificationButton, settingsButton);
+//
+//        //   algorithmsBox.getChildren().addAll(classification, randomClassificationButton);
+//            algorithmsBox.getChildren().addAll(classification, algorithmWSettingsBox);
+//            algorithmsBox.setVisible(true);
+//
+//        });
+//
+//        typeAlgorithm2.setOnMouseClicked(event -> {
+//            algorithmsBox.getChildren().clear();
+//            typeAlgorithm1.setVisible(false);
+//            typeAlgorithm2.setVisible(false);
+//            algoTitle.setVisible(false);
+//
+//            HBox algorithmWSettingsBox = new HBox();
+//           ToggleGroup algoSelectToggleGroup = new ToggleGroup();
+//            RadioButton randomClusteringButton = new RadioButton(applicationTemplate.manager.getPropertyValue(RANDO_CLUST.name()));
+//            randomClusteringButton.setToggleGroup(algoSelectToggleGroup);
+//            Text clustering = new Text(applicationTemplate.manager.getPropertyValue(CLUSTERING_TITLE.name()));
+//            randomClusteringButton.setSelected(false);
+//            Button settingsButton = new Button(applicationTemplate.manager.getPropertyValue(SETTINGS_TITLE.name()));
+//            algorithmWSettingsBox.getChildren().addAll(randomClusteringButton, settingsButton);
+//
+//        //    algorithmsBox.getChildren().addAll(clustering, randomClusteringButton);
+//            algorithmsBox.getChildren().addAll(clustering, algorithmWSettingsBox);
+//            algorithmsBox.setVisible(true);
+//
+//        });
 
     }
 
@@ -404,17 +403,92 @@ public final class AppUI extends UITemplate {
      * checks to see if numOfLabels == 2 then both algorithms are valid else only clustering algorithm is valid
      */
     public void validTypeOfAlgorithm(){
+        System.out.println("passeed " + ((AppData)applicationTemplate.getDataComponent()).returnNumofLabels());
         if(((AppData)applicationTemplate.getDataComponent()).returnNumofLabels() == 2){
             ToggleGroup selectingAlgorithmType = new ToggleGroup();
             typeAlgorithm1.setToggleGroup(selectingAlgorithmType);
             typeAlgorithm2.setToggleGroup(selectingAlgorithmType);
             typeAlgorithm1.setVisible(true);
             typeAlgorithm2.setVisible(true);
+
+            selectingAlgorithmType.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+                public void changed(ObservableValue<? extends Toggle> ov,
+                                    Toggle old_toggle, Toggle new_toggle) {
+                    if (selectingAlgorithmType.getSelectedToggle() != null) {
+                        algorithmsBox.getChildren().clear();
+                        typeAlgorithm1.setVisible(false);
+                        typeAlgorithm2.setVisible(false);
+                        algoTitle.setVisible(false);
+
+                        HBox algorithmWSettingsBox = new HBox();
+                         algoSelectToggleGroup = new ToggleGroup();
+                        RadioButton randomClassificationButton = new RadioButton(applicationTemplate.manager.getPropertyValue(RANDO_CLASSIF.name()));
+                        randomClassificationButton.setToggleGroup(algoSelectToggleGroup);
+                        randomClassificationButton.setSelected(false);
+                        Text classification = new Text(applicationTemplate.manager.getPropertyValue(CLASSIFICATION_TITLE.name()));
+                        Button settingsButton = new Button(applicationTemplate.manager.getPropertyValue(SETTINGS_TITLE.name()));
+                        algorithmWSettingsBox.getChildren().addAll(randomClassificationButton, settingsButton);
+
+                        //   algorithmsBox.getChildren().addAll(classification, randomClassificationButton);
+                        algorithmsBox.getChildren().addAll(classification, algorithmWSettingsBox);
+                        algorithmsBox.setVisible(true);
+
+                        algoSelectToggleGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+                            public void changed(ObservableValue<? extends Toggle> ov,
+                                                Toggle old_toggle, Toggle new_toggle) {
+                                if (algoSelectToggleGroup.getSelectedToggle() != null){
+                                    Button runButton = new Button("run");
+                                    algorithmsBox.getChildren().add(runButton);
+                                    algorithmsBox.setVisible(true);
+                                }
+                            }
+                        });
+                    }
+                }
+            });
         }else if(((AppData)applicationTemplate.getDataComponent()).returnNumofLabels() == 1 || ((AppData)applicationTemplate.getDataComponent()).returnNumofLabels() > 2 || ((AppData)applicationTemplate.getDataComponent()).returnNullLabel() == 1){
             ToggleGroup selectingAlgorithmType = new ToggleGroup();
             typeAlgorithm2.setToggleGroup(selectingAlgorithmType);
             typeAlgorithm2.setVisible(true);
             typeAlgorithm1.setVisible(false);
+
+            selectingAlgorithmType.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+                public void changed(ObservableValue<? extends Toggle> ov,
+                                    Toggle old_toggle, Toggle new_toggle) {
+                    if (selectingAlgorithmType.getSelectedToggle() != null) {
+                        algorithmsBox.getChildren().clear();
+                        typeAlgorithm1.setVisible(false);
+                        typeAlgorithm2.setVisible(false);
+                        algoTitle.setVisible(false);
+
+                        HBox algorithmWSettingsBox = new HBox();
+                        algoSelectToggleGroup = new ToggleGroup();
+                        RadioButton randomClusteringButton = new RadioButton(applicationTemplate.manager.getPropertyValue(RANDO_CLUST.name()));
+                        randomClusteringButton.setToggleGroup(algoSelectToggleGroup);
+                        Text clustering = new Text(applicationTemplate.manager.getPropertyValue(CLUSTERING_TITLE.name()));
+                        randomClusteringButton.setSelected(false);
+                        Button settingsButton = new Button(applicationTemplate.manager.getPropertyValue(SETTINGS_TITLE.name()));
+                        algorithmWSettingsBox.getChildren().addAll(randomClusteringButton, settingsButton);
+
+                        //    algorithmsBox.getChildren().addAll(clustering, randomClusteringButton);
+
+
+                        algorithmsBox.getChildren().addAll(clustering, algorithmWSettingsBox);
+                        algorithmsBox.setVisible(true);
+
+                        algoSelectToggleGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+                            public void changed(ObservableValue<? extends Toggle> ov,
+                                                Toggle old_toggle, Toggle new_toggle) {
+                                if (algoSelectToggleGroup.getSelectedToggle() != null){
+                                    Button runButton = new Button("run");
+                                    algorithmsBox.getChildren().add(runButton);
+                                    algorithmsBox.setVisible(true);
+                                }
+                            }
+                        });
+                    }
+                }
+            });
         }
     }
 
@@ -442,8 +516,8 @@ public final class AppUI extends UITemplate {
      * assigns # of instance, unique labels, and names to text2
      */
     public void setTextInfo(String infoText){
-       text2.setText(infoText);
-       text2.setVisible(true);
+        text2.setText(infoText);
+        text2.setVisible(true);
     }
 
     /**
