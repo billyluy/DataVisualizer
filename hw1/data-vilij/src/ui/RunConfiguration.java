@@ -14,6 +14,8 @@ import vilij.components.Dialog;
 import vilij.propertymanager.PropertyManager;
 import vilij.settings.PropertyTypes;
 
+import java.util.ArrayList;
+
 public class RunConfiguration extends Stage implements Dialog {
     private int maxIteration;
     private int updateInterval;
@@ -25,6 +27,8 @@ public class RunConfiguration extends Stage implements Dialog {
     private TextField clust1;
     private static String algotype = new String();
 
+    private String[] previousInput = {"1", "1", "1", "0"};
+
 
     private RunConfiguration(){
 //        this.maxIteration = maxIteration;
@@ -32,10 +36,11 @@ public class RunConfiguration extends Stage implements Dialog {
 //        this.continousRun = continousRun;
     }
 
-    public static RunConfiguration getDialog(String algorithmType) {
+    public static RunConfiguration getDialog(String algorithmType, String[] prev1) {
         if (dialog == null)
             algotype = algorithmType;
             dialog = new RunConfiguration();
+            dialog.previousInput = prev1;
         return dialog;
     }
 
@@ -65,6 +70,9 @@ public class RunConfiguration extends Stage implements Dialog {
         intervals1 = new TextField();
         runs1 = new CheckBox();
 
+        iterations1.setText(previousInput[0]);
+        intervals1.setText(previousInput[1]);
+
         labelBox1.getChildren().addAll(maxIt, iterations1);
         labelBox2.getChildren().addAll(upInt, intervals1);
         labelBox3.getChildren().addAll(run, runs1);
@@ -76,12 +84,30 @@ public class RunConfiguration extends Stage implements Dialog {
             HBox labelBox4 = new HBox();
             Label numClusters = new Label("Number of Clusters:");
             clust1 = new TextField();
+
+            clust1.setText(previousInput[2]);
+
             labelBox4.getChildren().addAll(numClusters,clust1);
             messagePane.getChildren().addAll(labelBox4);
+        }
+        if(previousInput[3] == "0"){
+            runs1.setSelected(false);
+        }else{
+            runs1.setSelected(true);
         }
 
         closeButton.setOnAction(e -> {
             if(checkvalInput()){
+                previousInput[0] = iterations1.getText();
+                previousInput[1] = intervals1.getText();
+                if(algotype == "Clustering"){
+                    previousInput[2] = clust1.getText();
+                }
+                if(runs1.isSelected()){
+                    previousInput[3] = "1";
+                }else{
+                    previousInput[3] = "0";
+                }
                 this.close();
             }
         });
@@ -129,5 +155,9 @@ public class RunConfiguration extends Stage implements Dialog {
             return changed;
         }
         return changed;
+    }
+
+    public String[] returnPrevInput(){
+        return previousInput;
     }
 }
