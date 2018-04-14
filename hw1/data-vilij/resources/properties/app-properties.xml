@@ -90,8 +90,12 @@ functionality within the main workspace. -->
         <property name = "RANDO_CLASSIF" value="Random Classification" />
         <property name = "RANDO_CLUST" value="Random Clustering" />
         <property name = "CLASSIFICATION_TITLE" value="Classification" />
-        <property name = "CLUSTERING_TITLE" value="Clustering" />
+        <property name = "CLUSTERING_TITLE" value= "Clustering" />
         <property name = "SETTINGS_TITLE" value="Settings" />
+
+        <property name = "SOME_RAND_CLASS" value = "Some other classification" />
+        <property name = "SOME_RAND_CLUST" value="Some other random cluster" />
+        <property name = "RUN_BUTTON_TITLE" value = "Run" />
 
     </property_list>
     <property_options_list/>

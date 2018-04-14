@@ -14,12 +14,10 @@ import vilij.components.Dialog;
 import vilij.propertymanager.PropertyManager;
 import vilij.settings.PropertyTypes;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 
 public class RunConfiguration extends Stage implements Dialog {
-    private int maxIteration;
-    private int updateInterval;
-    private boolean continousRun;
+
     private static RunConfiguration dialog;
     private TextField iterations1;
     private TextField intervals1;
@@ -27,13 +25,10 @@ public class RunConfiguration extends Stage implements Dialog {
     private TextField clust1;
     private static String algotype = new String();
 
-    private String[] previousInput = {"1", "1", "1", "0"};
-
+    private String[] previousInput = new String[4];
 
     private RunConfiguration(){
-//        this.maxIteration = maxIteration;
-//        this.updateInterval = updateInterval;
-//        this.continousRun = continousRun;
+
     }
 
     public static RunConfiguration getDialog(String algorithmType, String[] prev1) {
@@ -108,6 +103,8 @@ public class RunConfiguration extends Stage implements Dialog {
                 }else{
                     previousInput[3] = "0";
                 }
+         //       System.out.println("prev in runcon" + Arrays.toString(previousInput));
+                dialog.previousInput = previousInput;
                 this.close();
             }
         });
@@ -157,7 +154,12 @@ public class RunConfiguration extends Stage implements Dialog {
         return changed;
     }
 
+    public void setPrev(String[] x){
+        dialog.previousInput = x;
+    }
+
     public String[] returnPrevInput(){
+    //    System.out.println("returning" + Arrays.toString(previousInput));
         return previousInput;
     }
 }

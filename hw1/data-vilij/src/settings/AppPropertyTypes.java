@@ -74,9 +74,6 @@ public enum AppPropertyTypes {
     UNABLE_TO_LOAD_DUPLICATE,
 
     SOURCE_NAME,
-    INSTANCES_NAME,
-    LABELS_NAME,
-    NULL_VALUE,
 
     ALGO_TYPE_1,
     ALGO_TYPE_2,
@@ -89,6 +86,11 @@ public enum AppPropertyTypes {
     RANDO_CLUST,
     CLASSIFICATION_TITLE,
     CLUSTERING_TITLE,
-    SETTINGS_TITLE
+    SETTINGS_TITLE,
+
+    SOME_RAND_CLASS,
+    SOME_RAND_CLUST,
+    RUN_BUTTON_TITLE
+
 
 }

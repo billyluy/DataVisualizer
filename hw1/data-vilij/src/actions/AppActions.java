@@ -250,7 +250,6 @@ public final class AppActions implements ActionComponent {
         return false;
     }
 
-
     public Boolean getCheck(){
         return check;
     }
