@@ -90,7 +90,13 @@ public enum AppPropertyTypes {
 
     SOME_RAND_CLASS,
     SOME_RAND_CLUST,
-    RUN_BUTTON_TITLE
+    RUN_BUTTON_TITLE,
+
+    RUNCONFIG,
+    MAX_IT,
+    UPDATE_INT,
+    CONT_RUN,
+    NUM_CLUST
 
 
 }

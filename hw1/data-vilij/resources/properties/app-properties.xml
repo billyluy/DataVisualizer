@@ -97,6 +97,14 @@ functionality within the main workspace. -->
         <property name = "SOME_RAND_CLUST" value="Some other random cluster" />
         <property name = "RUN_BUTTON_TITLE" value = "Run" />
 
+        <property name = "RUNCONFIG" value = "RunConfiguration" />
+        <property name = "MAX_IT" value = "Max Iterations:" />
+        <property name = "UPDATE_INT" value = "Update Intervals:"/>
+        <property name = "CONT_RUN" value="Continuous Run?" />
+        <property name = "NUM_CLUST" value= "Number of Clusters" />
+
+
+
     </property_list>
     <property_options_list/>
 </properties>

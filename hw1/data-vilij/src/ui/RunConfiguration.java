@@ -13,6 +13,8 @@ import javafx.stage.Stage;
 import vilij.components.Dialog;
 import vilij.propertymanager.PropertyManager;
 import vilij.settings.PropertyTypes;
+import vilij.templates.ApplicationTemplate;
+import static settings.AppPropertyTypes.*;
 
 import java.util.Arrays;
 
@@ -25,23 +27,30 @@ public class RunConfiguration extends Stage implements Dialog {
     private TextField clust1;
     private static String algotype = new String();
 
+    private String type1;
+
+    private ApplicationTemplate appTemp = new ApplicationTemplate();
+
+    private PropertyManager manager = appTemp.manager;
+
     private String[] previousInput = new String[4];
 
-    private RunConfiguration(){
-
+    private RunConfiguration(String type){
+        this.type1 = type;
+//        System.out.println(type);
     }
 
     public static RunConfiguration getDialog(String algorithmType, String[] prev1) {
         if (dialog == null)
             algotype = algorithmType;
-            dialog = new RunConfiguration();
+            dialog = new RunConfiguration(algorithmType);
             dialog.previousInput = prev1;
         return dialog;
     }
 
     @Override
     public void show(String title, String message) {
-        setTitle("RunConfiguration");    // set the title of the dialog
+        setTitle(manager.getPropertyValue(RUNCONFIG.name()));    // set the title of the dialog
         showAndWait();                 // open the dialog and wait for the user to click the close button
     }
 
@@ -57,9 +66,9 @@ public class RunConfiguration extends Stage implements Dialog {
         HBox labelBox2 = new HBox();
         HBox labelBox3 = new HBox();
 
-        Label maxIt = new Label("Max Iterations:");
-        Label upInt = new Label("Update Intervals:");
-        Label run = new Label("Continuous Run?");
+        Label maxIt = new Label(manager.getPropertyValue(MAX_IT.name()));
+        Label upInt = new Label(manager.getPropertyValue(UPDATE_INT.name()));
+        Label run = new Label(manager.getPropertyValue(CONT_RUN.name()));
 
         iterations1 = new TextField();
         intervals1 = new TextField();
@@ -75,9 +84,9 @@ public class RunConfiguration extends Stage implements Dialog {
         messagePane.setAlignment(Pos.CENTER);
         messagePane.getChildren().addAll(labelBox1, labelBox2);
 
-        if(algotype == "Clustering"){
+        if(this.type1.equals(manager.getPropertyValue(CLUSTERING_TITLE.name()))){
             HBox labelBox4 = new HBox();
-            Label numClusters = new Label("Number of Clusters:");
+            Label numClusters = new Label(manager.getPropertyValue(NUM_CLUST.name()));
             clust1 = new TextField();
 
             clust1.setText(previousInput[2]);
@@ -92,10 +101,12 @@ public class RunConfiguration extends Stage implements Dialog {
         }
 
         closeButton.setOnAction(e -> {
+//            System.out.println("--------------------");
             if(checkvalInput()){
+//                System.out.println("here");
                 previousInput[0] = iterations1.getText();
                 previousInput[1] = intervals1.getText();
-                if(algotype == "Clustering"){
+                if(this.type1.equals(manager.getPropertyValue(CLUSTERING_TITLE.name()))){
                     previousInput[2] = clust1.getText();
                 }
                 if(runs1.isSelected()){
@@ -136,7 +147,7 @@ public class RunConfiguration extends Stage implements Dialog {
                 iterations1.setText("1");
                 changed = false;
             }
-            if(algotype == "Clustering"){
+            if(this.type1.equals(manager.getPropertyValue(CLUSTERING_TITLE.name()))){
                 if(!clust1.getText().isEmpty() && Integer.parseInt(clust1.getText()) <= 0){
                     clust1.setText("1");
                     changed = false;
