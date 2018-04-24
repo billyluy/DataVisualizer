@@ -33,18 +33,20 @@ public class RunConfiguration extends Stage implements Dialog {
 
     private PropertyManager manager = appTemp.manager;
 
-    private String[] previousInput = new String[4];
+    //    private String[] previousInput = new String[4];
+    private String[] previousInput;
 
-    private RunConfiguration(String type){
+    private RunConfiguration(String type, String[] previn){
         this.type1 = type;
+        this.previousInput = previn;
 //        System.out.println(type);
     }
 
     public static RunConfiguration getDialog(String algorithmType, String[] prev1) {
         if (dialog == null)
             algotype = algorithmType;
-            dialog = new RunConfiguration(algorithmType);
-            dialog.previousInput = prev1;
+        dialog = new RunConfiguration(algorithmType, prev1);
+        dialog.previousInput = prev1;
         return dialog;
     }
 
@@ -114,8 +116,8 @@ public class RunConfiguration extends Stage implements Dialog {
                 }else{
                     previousInput[3] = "0";
                 }
-         //       System.out.println("prev in runcon" + Arrays.toString(previousInput));
-                dialog.previousInput = previousInput;
+                System.out.println("values changed after close button" + Arrays.toString(previousInput));
+
                 this.close();
             }
         });
@@ -170,7 +172,7 @@ public class RunConfiguration extends Stage implements Dialog {
     }
 
     public String[] returnPrevInput(){
-    //    System.out.println("returning" + Arrays.toString(previousInput));
+        //   System.out.println("returning" + Arrays.toString(previousInput));
         return previousInput;
     }
 }

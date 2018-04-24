@@ -3,7 +3,6 @@ package ui;
 import actions.AppActions;
 import dataprocessors.AppData;
 
-import dataprocessors.TSDProcessor;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
@@ -67,7 +66,9 @@ public final class AppUI extends UITemplate {
     private boolean setConfig = false;
 
 
-    private ArrayList<String[]> allPrevInput = new ArrayList<String[]>();
+    private ArrayList<String[]> allPrevInputClassif = new ArrayList<String[]>();
+    private ArrayList<String[]> allPrevInputClust = new ArrayList<String[]>();
+
     private String[] prevData = {"1", "1", "1", "0"};
 
     public LineChart<Number, Number> getChart() { return chart; }
@@ -219,9 +220,18 @@ public final class AppUI extends UITemplate {
         doneButton.setVisible(false);
         editButton.setVisible(false);
 
-        allPrevInput.clear();
-        allPrevInput.add(prevData);
-        allPrevInput.add(prevData);
+        allPrevInputClassif.clear();
+        allPrevInputClust.clear();
+
+        String[] p = {"1", "1", "1", "0"};
+        allPrevInputClassif.add(prevData);
+        allPrevInputClassif.add(p);
+
+        String[] c1 = {"1", "1", "1", "0"};
+        String[] c2 = {"1", "1", "1", "0"};
+
+        allPrevInputClust.add(c1);
+        allPrevInputClust.add(c2);
 
 
     }
@@ -440,8 +450,8 @@ public final class AppUI extends UITemplate {
                         typeAlgorithm2.setVisible(false);
                         algoTitle.setVisible(false);
 
-                         algorithmWSettingsBox = new HBox();
-                         algorithmWSettingsBox2 = new HBox();
+                        algorithmWSettingsBox = new HBox();
+                        algorithmWSettingsBox2 = new HBox();
                         Button runButton = new Button(applicationTemplate.manager.getPropertyValue(RUN_BUTTON_TITLE.name()));
 
                         algoSelectToggleGroup = new ToggleGroup();
@@ -529,11 +539,7 @@ public final class AppUI extends UITemplate {
 
         algoTitle.setVisible(false);
 
-        String[] e = {"1", "1", "1", "0"};
-        allPrevInput.clear();
-        allPrevInput.add(e);
-        allPrevInput.add(e);
-
+//        resetPrev();
     }
 
     /**
@@ -586,21 +592,43 @@ public final class AppUI extends UITemplate {
     public void popUpWindow(String type, int num){
         setConfig = false;
 
-        System.out.println(num + Arrays.toString(allPrevInput.get(num)));
- //       System.out.println("type: " + type);
-        RunConfiguration runConfig = RunConfiguration.getDialog(type, allPrevInput.get(num));
-        runConfig.init(primaryStage);
+//        System.out.println(Arrays.toString(allPrevInput.get(0)));
+//        System.out.println(Arrays.toString(allPrevInput.get(1)));
+//        System.out.println(num + Arrays.toString(allPrevInput.get(num)));
+        //       System.out.println("type: " + type);
+        if(type == "Classification"){
+            RunConfiguration runConfig = RunConfiguration.getDialog(type, allPrevInputClassif.get(num));
+            runConfig.init(primaryStage);
+            allPrevInputClassif.set(num, runConfig.returnPrevInput());
 
-        runConfig.show();
+            runConfig.showAndWait();
+        }else{
+            RunConfiguration runConfig = RunConfiguration.getDialog(type, allPrevInputClust.get(num));
+            runConfig.init(primaryStage);
+            allPrevInputClust.set(num, runConfig.returnPrevInput());
 
-        prevData = runConfig.returnPrevInput();
+            runConfig.showAndWait();
+        }
 
-        System.out.println("After" + Arrays.toString(prevData));
-        allPrevInput.set(num, prevData);
-        System.out.println("Setting" + Arrays.toString(allPrevInput.get(num)));
+
+
+        //    System.out.println("After" + Arrays.toString(runConfig.returnPrevInput()));
+        //     System.out.println("Setting " + num + " " + Arrays.toString(allPrevInput.get(num)));
 
         setConfig = true;
     }
 
+    public void resetPrev(){
+        String[] b = {"1", "1", "1", "0"};
+        String[] t = {"1", "1", "1", "0"};
+        String[] s = {"1", "1", "1", "0"};
+        String[] p = {"1", "1", "1", "0"};
+        allPrevInputClassif.clear();
+        allPrevInputClassif.add(b);
+        allPrevInputClassif.add(t);
 
+        allPrevInputClust.clear();
+        allPrevInputClust.add(s);
+        allPrevInputClust.add(p);
+    }
 }
