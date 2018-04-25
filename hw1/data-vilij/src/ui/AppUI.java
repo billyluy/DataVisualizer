@@ -396,8 +396,8 @@ public final class AppUI extends UITemplate {
                     if (selectingAlgorithmType.getSelectedToggle() != null) {
 
                         algorithmsBox.getChildren().clear();
-                        typeAlgorithm1.setVisible(false);
-                        typeAlgorithm2.setVisible(false);
+//                        typeAlgorithm1.setVisible(false);
+//                        typeAlgorithm2.setVisible(false);
                         algoTitle.setVisible(false);
                         runButton = new Button(applicationTemplate.manager.getPropertyValue(RUN_BUTTON_TITLE.name()));
 
@@ -446,8 +446,8 @@ public final class AppUI extends UITemplate {
                     if (selectingAlgorithmType.getSelectedToggle() != null) {
 
                         algorithmsBox.getChildren().clear();
-                        typeAlgorithm1.setVisible(false);
-                        typeAlgorithm2.setVisible(false);
+//                        typeAlgorithm1.setVisible(false);
+//                        typeAlgorithm2.setVisible(false);
                         algoTitle.setVisible(false);
 
                         algorithmWSettingsBox = new HBox();
@@ -494,8 +494,14 @@ public final class AppUI extends UITemplate {
 
         Button settingsButton = new Button(applicationTemplate.manager.getPropertyValue(SETTINGS_TITLE.name()));
         Button settingsButton2 = new Button(applicationTemplate.manager.getPropertyValue(SETTINGS_TITLE.name()));
-        settingsButton.setOnMouseClicked(event -> popUpWindow("Clustering", 0));
-        settingsButton2.setOnMouseClicked(event -> popUpWindow("Clustering", 1));
+        settingsButton.setOnMouseClicked(event -> {
+            popUpWindow("Clustering", 0);
+            runButton.setDisable(false);
+        });
+        settingsButton2.setOnMouseClicked(event -> {
+            popUpWindow("Clustering", 1);
+            runButton.setDisable(false);
+        });
 
         algorithmWSettingsBox.getChildren().addAll(randomClusteringButton, settingsButton);
         algorithmWSettingsBox2.getChildren().addAll(someOtherClusterButton, settingsButton2);
@@ -516,8 +522,14 @@ public final class AppUI extends UITemplate {
         Button settingsButton = new Button(applicationTemplate.manager.getPropertyValue(SETTINGS_TITLE.name()));
         Button settingsButton2 = new Button(applicationTemplate.manager.getPropertyValue(SETTINGS_TITLE.name()));
 
-        settingsButton.setOnMouseClicked(event -> popUpWindow("Classification", 0));
-        settingsButton2.setOnMouseClicked(event -> popUpWindow("Classification", 1));
+        settingsButton.setOnMouseClicked(event -> {
+            popUpWindow("Classification", 0);
+            runButton.setDisable(false);
+        });
+        settingsButton2.setOnMouseClicked(event -> {
+            popUpWindow("Classification", 1);
+            runButton.setDisable(false);
+        });
 
         algorithmWSettingsBox.getChildren().addAll(randomClassificationButton, settingsButton);
         algorithmWSettingsBox2.getChildren().addAll(someotherClassButton, settingsButton2);
