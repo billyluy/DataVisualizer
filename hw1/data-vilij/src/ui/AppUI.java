@@ -1,6 +1,8 @@
 package ui;
 
 import actions.AppActions;
+import classification.RandomClassifier;
+import data.DataSet;
 import dataprocessors.AppData;
 
 import javafx.beans.value.ChangeListener;
@@ -27,6 +29,7 @@ import static vilij.settings.PropertyTypes.ICONS_RESOURCE_PATH;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 
 /**
  * This is the application's user interface implementation.
@@ -525,6 +528,8 @@ public final class AppUI extends UITemplate {
         settingsButton.setOnMouseClicked(event -> {
             popUpWindow("Classification", 0);
             runButton.setDisable(false);
+            DataSet l = new DataSet();
+            runButtonAction(runButton, l, "Classification", 0);
         });
         settingsButton2.setOnMouseClicked(event -> {
             popUpWindow("Classification", 1);
@@ -622,8 +627,6 @@ public final class AppUI extends UITemplate {
             runConfig.showAndWait();
         }
 
-
-
         //    System.out.println("After" + Arrays.toString(runConfig.returnPrevInput()));
         //     System.out.println("Setting " + num + " " + Arrays.toString(allPrevInput.get(num)));
 
@@ -642,5 +645,29 @@ public final class AppUI extends UITemplate {
         allPrevInputClust.clear();
         allPrevInputClust.add(s);
         allPrevInputClust.add(p);
+    }
+
+    public void runButtonAction(Button run, DataSet x, String type, int num){
+        if(type.equals("Classification") && num == 0) {
+            int maxInt = Integer.parseInt(allPrevInputClassif.get(num)[0]);
+            int updateInt = Integer.parseInt(allPrevInputClassif.get(num)[1]);
+
+            boolean continuous = false;
+            if(allPrevInputClassif.get(num)[3].equals("0")){
+                continuous = false;
+            }else{
+                continuous = true;
+            }
+            boolean finalContinuous = continuous;
+            runButton.setOnAction(event -> {
+                chart.setVisible(true);
+//                RandomClassifier ranClassifier = new RandomClassifier(x, maxInt, updateInt, finalContinuous);
+//                ranClassifier.run();
+
+                Thread thread1 = new Thread(new RandomClassifier(x, maxInt, updateInt, finalContinuous));
+                thread1.start();
+                System.out.println("hi");
+            });
+        }
     }
 }

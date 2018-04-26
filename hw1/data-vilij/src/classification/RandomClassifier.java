@@ -26,6 +26,11 @@ public class RandomClassifier extends Classifier {
     // currently, this value does not change after instantiation
     private final AtomicBoolean tocontinue;
 
+    private int minX = Integer.MAX_VALUE;
+    private int minY = Integer.MAX_VALUE;
+    private int maxX = Integer.MIN_VALUE;
+    private int maxY = Integer.MIN_VALUE;
+
     @Override
     public int getMaxIterations() {
         return maxIterations;
@@ -78,6 +83,7 @@ public class RandomClassifier extends Classifier {
     // for internal viewing only
     protected void flush() {
         System.out.printf("%d\t%d\t%d%n", output.get(0), output.get(1), output.get(2));
+
     }
 
     /** A placeholder main method to just make sure this code runs smoothly */
