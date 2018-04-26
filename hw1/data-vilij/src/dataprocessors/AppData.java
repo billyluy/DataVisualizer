@@ -1,7 +1,6 @@
 package dataprocessors;
 
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Tooltip;
 import ui.AppUI;
 import vilij.components.DataComponent;
 import vilij.components.Dialog;
@@ -11,6 +10,7 @@ import vilij.templates.ApplicationTemplate;
 import java.io.FileWriter;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -115,7 +115,6 @@ public class AppData implements DataComponent {
     }
 
     public void loadData(String dataString) {
-        // TODO for homework 1
         PropertyManager manager = applicationTemplate.manager;
         try {
             ((AppUI)applicationTemplate.getUIComponent()).getChart().getData().clear();
@@ -146,7 +145,6 @@ public class AppData implements DataComponent {
 
     @Override
     public void saveData(Path dataFilePath) {
-        // TODO: NOT A PART OF HW 1
         PropertyManager manager = applicationTemplate.manager;
         String text = ((AppUI) applicationTemplate.getUIComponent()).getTextArea();
         try(FileWriter x = new FileWriter(dataFilePath.toString())){
@@ -166,24 +164,55 @@ public class AppData implements DataComponent {
         processor.clear();
     }
 
-    public void displayData() {
+//    public void displayData() {
+//        PropertyManager manager = applicationTemplate.manager;
+//
+//        processor.toChartData(((AppUI) applicationTemplate.getUIComponent()).getChart());
+//        if(!((AppUI) applicationTemplate.getUIComponent()).getChart().getData().isEmpty()){
+//            averageYValues();
+//        }
+//
+//        for (XYChart.Series<Number, Number> series : ((AppUI) applicationTemplate.getUIComponent()).getChart().getData()) {
+//            for (Object data1: series.getData()) {
+//                Tooltip tip1 = new Tooltip();
+//                tip1.setText(series.getName());
+//                Tooltip.install(((XYChart.Data)data1).getNode(), tip1);
+//
+//                ((XYChart.Data)data1).getNode().setOnMouseEntered(event -> ((XYChart.Data) data1).getNode().getStyleClass().add(manager.getPropertyValue(HOVER_NAME.name())));
+//                ((XYChart.Data)data1).getNode().setOnMouseExited(event -> ((XYChart.Data) data1).getNode().getStyleClass().remove(manager.getPropertyValue(HOVER_NAME.name())));
+//            }
+//        }
+//
+//    }
+
+    public void displayData(List<Integer> outputList) {
         PropertyManager manager = applicationTemplate.manager;
 
+
         processor.toChartData(((AppUI) applicationTemplate.getUIComponent()).getChart());
-        if(!((AppUI) applicationTemplate.getUIComponent()).getChart().getData().isEmpty()){
-            averageYValues();
+
+
+        double[] xVal = processor.returnXCoords();
+
+        double yMin = (0 - (outputList.get(0) * xVal[0]) - outputList.get(2))/outputList.get(1);
+        double yMax = (0 - (outputList.get(0) * xVal[1]) - outputList.get(2))/outputList.get(1);;
+        System.out.println("yMin = " + yMin);
+        System.out.println("yMax = " + yMax);
+        System.out.println("*********************************");
+
+        XYChart.Series<Number, Number> lineseries = new XYChart.Series<>();
+        lineseries.setName(applicationTemplate.manager.getPropertyValue(AVERAGE_Y_VALUE.name()));
+
+        lineseries.getData().add(new XYChart.Data<>(xVal[0], yMin));
+        lineseries.getData().add(new XYChart.Data<>(xVal[1], yMax));
+
+        ((AppUI) applicationTemplate.getUIComponent()).getChart().getData().add(lineseries);
+
+        for (Object data1: lineseries.getData()) {
+            ((XYChart.Data)data1).getNode().setVisible(false);
         }
 
-        for (XYChart.Series<Number, Number> series : ((AppUI) applicationTemplate.getUIComponent()).getChart().getData()) {
-            for (Object data1: series.getData()) {
-                Tooltip tip1 = new Tooltip();
-                tip1.setText(series.getName());
-                Tooltip.install(((XYChart.Data)data1).getNode(), tip1);
-
-                ((XYChart.Data)data1).getNode().setOnMouseEntered(event -> ((XYChart.Data) data1).getNode().getStyleClass().add(manager.getPropertyValue(HOVER_NAME.name())));
-                ((XYChart.Data)data1).getNode().setOnMouseExited(event -> ((XYChart.Data) data1).getNode().getStyleClass().remove(manager.getPropertyValue(HOVER_NAME.name())));
-            }
-        }
+        lineseries.getNode().setId(applicationTemplate.manager.getPropertyValue(LINE_SERIES.name()));
 
     }
 

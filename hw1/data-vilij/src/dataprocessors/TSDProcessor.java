@@ -1,11 +1,7 @@
 package dataprocessors;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.geometry.Point2D;
 import javafx.scene.chart.XYChart;
-import javafx.scene.text.Text;
-import vilij.propertymanager.PropertyManager;
-import vilij.templates.ApplicationTemplate;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -187,33 +183,7 @@ public final class TSDProcessor {
         for(int i = 0; i < uniqueLabelNames.size(); i++){
             allUniqueLabels += uniqueLabelNames.get(i) + "\n";
         }
-//        int removeOnceCount = 0;
-//        Boolean containsNullEmptySpace = false;
 
-        //if not null and empty, set the object to null else if empty and null and no more than 1 then label -1 and contains nulland space is true
-//        for(int i = 0; i < uniqueLabelNames.size(); i++){
-//            if(uniqueLabelNames.get(i).isEmpty() && !uniqueLabelNames.contains("null")){
-//                uniqueLabelNames.set(i, "null");
-//            }else if(uniqueLabelNames.get(i).isEmpty() && uniqueLabelNames.contains("null") && removeOnceCount < 1){
-//                numOfLabels--;
-//                removeOnceCount++;
-//                containsNullEmptySpace = true;
-//            }
-//            if(!uniqueLabelNames.get(i).isEmpty()) {
-//                allUniqueLabels += uniqueLabelNames.get(i) + "\n";
-//            }
-//        }
-
-       // if contains null and empty space remove the empty space and break
-//        if(containsNullEmptySpace){
-//            for(int i = 0; i < uniqueLabelNames.size(); i++){
-//                if(uniqueLabelNames.get(i).isEmpty()){
-//                    uniqueLabelNames.remove(i);
-//                    break;
-//                }
-//            }
-//        }
-//        System.out.println("unique label count " + uniqueLabelNames.size());
         info = numOfInstances + " instances with " + numOfLabels + " labels. The labels are " + "\n" + allUniqueLabels;
 
         nonNull = 0;
@@ -267,7 +237,25 @@ public final class TSDProcessor {
         return false;
     }
 
-    public void popUpWindow(){
+    public double[] returnXCoords(){
+        double minX = Integer.MAX_VALUE;
+        double maxX = Integer.MIN_VALUE;
 
+        for(Map.Entry<String, Point2D> point1: dataPoints.entrySet()){
+            System.out.println(point1.getValue());
+
+            if(point1.getValue().getX() > maxX){
+                maxX = point1.getValue().getX();
+            }
+            if(point1.getValue().getX() < minX){
+                minX = point1.getValue().getX();
+            }
+        }
+
+        System.out.println("minX = " + minX);
+        System.out.println("maxX = " + maxX);
+
+        double[] minMax = {minX, maxX};
+        return minMax;
     }
 }

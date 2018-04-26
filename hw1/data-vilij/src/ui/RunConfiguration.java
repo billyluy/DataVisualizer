@@ -116,7 +116,7 @@ public class RunConfiguration extends Stage implements Dialog {
                 }else{
                     previousInput[3] = "0";
                 }
-                System.out.println("values changed after close button" + Arrays.toString(previousInput));
+//                System.out.println("values changed after close button" + Arrays.toString(previousInput));
 
                 this.close();
             }

@@ -28,8 +28,6 @@ import static vilij.settings.PropertyTypes.ICONS_RESOURCE_PATH;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Random;
 
 /**
  * This is the application's user interface implementation.
@@ -95,7 +93,6 @@ public final class AppUI extends UITemplate {
 
     @Override
     protected void setToolBar(ApplicationTemplate applicationTemplate) {
-        // TODO for homework 1
         super.setToolBar(applicationTemplate);
         PropertyManager manager = applicationTemplate.manager;
         scrnshotButton = setToolbarButton(screenshotPath, manager.getPropertyValue(SCREENSHOT_TOOLTIP.name()), true);
@@ -129,13 +126,11 @@ public final class AppUI extends UITemplate {
 
     @Override
     public void clear() {
-        // TODO for homework 1
         textArea.clear();
         //   chart.getData().clear();
     }
 
     private void layout() {
-        // TODO for homework 1
 
         newButton.setDisable(false);
 
@@ -392,7 +387,6 @@ public final class AppUI extends UITemplate {
             typeAlgorithm1.setVisible(true);
             typeAlgorithm2.setVisible(true);
 
-
             selectingAlgorithmType.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
                 public void changed(ObservableValue<? extends Toggle> ov,
                                     Toggle old_toggle, Toggle new_toggle) {
@@ -613,7 +607,7 @@ public final class AppUI extends UITemplate {
 //        System.out.println(Arrays.toString(allPrevInput.get(1)));
 //        System.out.println(num + Arrays.toString(allPrevInput.get(num)));
         //       System.out.println("type: " + type);
-        if(type == "Classification"){
+        if(type.equals("Classification")){
             RunConfiguration runConfig = RunConfiguration.getDialog(type, allPrevInputClassif.get(num));
             runConfig.init(primaryStage);
             allPrevInputClassif.set(num, runConfig.returnPrevInput());
@@ -647,6 +641,7 @@ public final class AppUI extends UITemplate {
         allPrevInputClust.add(p);
     }
 
+
     public void runButtonAction(Button run, DataSet x, String type, int num){
         if(type.equals("Classification") && num == 0) {
             int maxInt = Integer.parseInt(allPrevInputClassif.get(num)[0]);
@@ -659,14 +654,16 @@ public final class AppUI extends UITemplate {
                 continuous = true;
             }
             boolean finalContinuous = continuous;
+
+            String coordX = textArea.getText();
             runButton.setOnAction(event -> {
                 chart.setVisible(true);
-//                RandomClassifier ranClassifier = new RandomClassifier(x, maxInt, updateInt, finalContinuous);
-//                ranClassifier.run();
 
-                Thread thread1 = new Thread(new RandomClassifier(x, maxInt, updateInt, finalContinuous));
+                RandomClassifier ranClassifier = new RandomClassifier(x, maxInt, updateInt, finalContinuous, applicationTemplate);
+                Thread thread1 = new Thread(ranClassifier);
                 thread1.start();
-                System.out.println("hi");
+
+
             });
         }
     }
