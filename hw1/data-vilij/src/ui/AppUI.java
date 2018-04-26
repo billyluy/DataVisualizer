@@ -522,9 +522,11 @@ public final class AppUI extends UITemplate {
         settingsButton.setOnMouseClicked(event -> {
             popUpWindow("Classification", 0);
             runButton.setDisable(false);
+
             DataSet l = new DataSet();
             runButtonAction(runButton, l, "Classification", 0);
         });
+
         settingsButton2.setOnMouseClicked(event -> {
             popUpWindow("Classification", 1);
             runButton.setDisable(false);
@@ -663,7 +665,11 @@ public final class AppUI extends UITemplate {
                 Thread thread1 = new Thread(ranClassifier);
                 thread1.start();
 
-
+                runButton.setDisable(true);
+                typeAlgorithm1.setVisible(false);
+                typeAlgorithm2.setVisible(false);
+                
+                //MAKE RUN AND ALOGORITHM TYPE SELECTION VISIBLE AFTER ALGORITHM IS COMPLETE
             });
         }
     }
