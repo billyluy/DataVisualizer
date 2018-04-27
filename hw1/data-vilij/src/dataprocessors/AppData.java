@@ -197,9 +197,9 @@ public class AppData implements DataComponent {
 
         double yMin = (0 - (outputList.get(0) * xVal[0]) - outputList.get(2))/outputList.get(1);
         double yMax = (0 - (outputList.get(0) * xVal[1]) - outputList.get(2))/outputList.get(1);;
-        System.out.println("yMin = " + yMin);
-        System.out.println("yMax = " + yMax);
-        System.out.println("*********************************");
+//        System.out.println("yMin = " + yMin);
+//        System.out.println("yMax = " + yMax);
+//        System.out.println("*********************************");
 
         XYChart.Series<Number, Number> lineseries = new XYChart.Series<>();
         lineseries.setName(applicationTemplate.manager.getPropertyValue(AVERAGE_Y_VALUE.name()));

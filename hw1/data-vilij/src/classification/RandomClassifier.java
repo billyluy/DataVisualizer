@@ -59,7 +59,7 @@ public class RandomClassifier extends Classifier {
 
     @Override
     public void run() {
-        System.out.println(tocontinue());
+//        System.out.println(tocontinue());
         ((AppUI) applicationTemplate.getUIComponent()).setThreadRunningBoolean(true);
         if(tocontinue()) {
             for (int i = 1; i <= maxIterations && tocontinue(); i++) {
@@ -74,16 +74,16 @@ public class RandomClassifier extends Classifier {
                 // everything below is just for internal viewing of how the output is changing
                 // in the final project, such changes will be dynamically visible in the UI
                 if (i % updateInterval == 0) {
-                    System.out.printf("Iteration number %d: ", i); //
+//                    System.out.printf("Iteration number %d: ", i); //
                     flush();
                 }
                 if (i > maxIterations * .6 && RAND.nextDouble() < 0.05) {
-                    System.out.printf("Iteration number %d: ", i);
+//                    System.out.printf("Iteration number %d: ", i);
                     flush();
                     break;
                 }
 
-                System.out.println("----------------------------------");
+//                System.out.println("----------------------------------");
                 double random = RAND.nextDouble();
                 if (i % updateInterval == 0 || (i > maxIterations * .6 && RAND.nextDouble() < 0.05)) {
                     Platform.runLater(() -> {
@@ -113,22 +113,22 @@ public class RandomClassifier extends Classifier {
                 //everything below is just for internal viewing of how the output is changing
                 //in the final project, such changes will be dynamically visible in the UI
                 if (i % updateInterval == 0) {
-                    System.out.printf("Iteration number %d: ", i); //
+//                    System.out.printf("Iteration number %d: ", i); //
                     flush();
                 }
                 if (i > maxIterations * .6 && RAND.nextDouble() < 0.05) {
-                    System.out.printf("Iteration number %d: ", i);
+//                    System.out.printf("Iteration number %d: ", i);
                     flush();
                     break;
                 }
 
-                System.out.println("----------------------------------");
+//                System.out.println("----------------------------------");
                 double random = RAND.nextDouble();
                 if (i % updateInterval == 0 || (i > maxIterations * .6 && random < 0.05)) {
 
-                    System.out.println(i);
+//                    System.out.println(i);
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(100);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -139,7 +139,7 @@ public class RandomClassifier extends Classifier {
                         ((AppUI) applicationTemplate.getUIComponent()).changeTextofRunButton("Continue");
                         ((AppUI) applicationTemplate.getUIComponent()).makeAlgorithmandRunButtonVisibleAgain();
 
-                        System.out.println("draw line");
+//                        System.out.println("draw line");
 
                     });
 

@@ -166,12 +166,15 @@ public final class AppActions implements ActionComponent {
         if(((AppUI) applicationTemplate.getUIComponent()).getThreadRunning()){
             ExitDialog.getDialog().show("Algorithm Running", manager.getPropertyValue(EXIT_WHILE_RUNNING_WARNING.name()));
             if(ExitDialog.getDialog().getSelectedOption() == ExitDialog.Option.YES){
-                Platform.exit();
+                System.exit(0);
             }
         }else if(!((AppUI) applicationTemplate.getUIComponent()).getSaveButton().isDisabled()){
             ExitDialog.getDialog().show("Unsaved Work", "Do you want to save before exiting?");
             if(ExitDialog.getDialog().getSelectedOption() == ExitDialog.Option.YES){
                 handleSaveRequest();
+                Platform.exit();
+            }else{
+                Platform.exit();
             }
         }else{
             Platform.exit();

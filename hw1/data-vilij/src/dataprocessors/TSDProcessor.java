@@ -142,12 +142,12 @@ public final class TSDProcessor {
     }
 
     public void checkForDuplicates(String s){
-        System.out.println("in here");
+//        System.out.println("in here");
         duplicates = false;
         for(int i = 0; i < keysNames.size() -1; i++){
-            System.out.println(keysNames.get(i));
+//            System.out.println(keysNames.get(i));
             for(int j = i+1; j < keysNames.size(); j++){
-                System.out.println(keysNames.get(j));
+//                System.out.println(keysNames.get(j));
                 if(keysNames.get(i).equals(keysNames.get(j))){
                     duplicates = true;
                     nameOfDuplicate.add(keysNames.get(i));
@@ -155,7 +155,7 @@ public final class TSDProcessor {
             }
         }
 
-        System.out.println(Arrays.toString(nameOfDuplicate.toArray()));
+//        System.out.println(Arrays.toString(nameOfDuplicate.toArray()));
     }
 
     public Boolean getDuplicates(){
@@ -257,8 +257,8 @@ public final class TSDProcessor {
             }
         }
 
-        System.out.println("minX = " + minX);
-        System.out.println("maxX = " + maxX);
+//        System.out.println("minX = " + minX);
+//        System.out.println("maxX = " + maxX);
 
         double[] minMax = {minX, maxX};
         return minMax;
