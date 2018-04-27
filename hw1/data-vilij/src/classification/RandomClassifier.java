@@ -59,6 +59,8 @@ public class RandomClassifier extends Classifier {
 
     @Override
     public void run() {
+        System.out.println(tocontinue());
+        if(tocontinue()) {
             for (int i = 1; i <= maxIterations && tocontinue(); i++) {
 
                 int xCoefficient = new Long(-1 * Math.round((2 * RAND.nextDouble() - 1) * 10)).intValue();
@@ -86,6 +88,7 @@ public class RandomClassifier extends Classifier {
                     Platform.runLater(() -> {
                         ((AppUI) applicationTemplate.getUIComponent()).getChart().getData().clear();
                         ((AppData) applicationTemplate.getDataComponent()).displayData(output);
+
                     });
 
                     try {
@@ -95,8 +98,66 @@ public class RandomClassifier extends Classifier {
                     }
                 }
             }
-          ((AppUI) applicationTemplate.getUIComponent()).makeAlgorithmandRunButtonVisibleAgain();
+        }
+        else{
+            for (int i = 1; i <= maxIterations && !tocontinue(); i++) {
 
+                int xCoefficient = new Long(-1 * Math.round((2 * RAND.nextDouble() - 1) * 10)).intValue();
+                int yCoefficient = 10;
+                int constant = RAND.nextInt(11);
+
+                // this is the real output of the classifier
+                output = Arrays.asList(xCoefficient, yCoefficient, constant);
+
+                //everything below is just for internal viewing of how the output is changing
+                //in the final project, such changes will be dynamically visible in the UI
+                if (i % updateInterval == 0) {
+                    System.out.printf("Iteration number %d: ", i); //
+                    flush();
+                }
+                if (i > maxIterations * .6 && RAND.nextDouble() < 0.05) {
+                    System.out.printf("Iteration number %d: ", i);
+                    flush();
+                    break;
+                }
+
+                System.out.println("----------------------------------");
+
+                if (i % updateInterval == 0 || (i == maxIterations && i < updateInterval) || (i == maxIterations && i % updateInterval < updateInterval)) {
+
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    Platform.runLater(() -> {
+                        ((AppUI) applicationTemplate.getUIComponent()).getChart().getData().clear();
+                        ((AppData) applicationTemplate.getDataComponent()).displayData(output);
+                        ((AppUI) applicationTemplate.getUIComponent()).makeAlgorithmandRunButtonVisibleAgain();
+                        System.out.println("draw line");
+
+                    });
+                    synchronized (this){
+                        try {
+                            this.wait();
+
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }
+        ((AppUI) applicationTemplate.getUIComponent()).makeAlgorithmandRunButtonVisibleAgain();
+
+    }
+
+    public synchronized void runagain(){
+        try {
+            this.wait();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     // for internal viewing only

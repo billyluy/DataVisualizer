@@ -294,9 +294,10 @@ public final class AppUI extends UITemplate {
         chart.getData().addListener((ListChangeListener<XYChart.Series<Number, Number>>) c -> {
             if(chart.getData().isEmpty()){
                 scrnshotButton.setDisable(true);
-            }else{
-                scrnshotButton.setDisable(false);
             }
+//            else{
+//                scrnshotButton.setDisable(false);
+//            }
         });
 
         readOnly.setOnMouseClicked(event -> checkingBox());
@@ -634,6 +635,9 @@ public final class AppUI extends UITemplate {
         typeAlgorithm1.setVisible(true);
         typeAlgorithm2.setVisible(true);
         runButton.setDisable(false);
+        scrnshotButton.setDisable(false);
+        doneButton.setDisable(false);
+        editButton.setDisable(false);
     }
 
     public void resetPrev(){
@@ -650,6 +654,9 @@ public final class AppUI extends UITemplate {
         allPrevInputClust.add(p);
     }
 
+    public void disableButton(){
+        runButton.setDisable(true);
+    }
 
     public void runButtonAction(Button run, DataSet x, String type, int num){
         if(type.equals("Classification") && num == 0) {
@@ -664,16 +671,34 @@ public final class AppUI extends UITemplate {
             }
             boolean finalContinuous = continuous;
 
+            RandomClassifier ranClassifier = new RandomClassifier(x, maxInt, updateInt, finalContinuous, applicationTemplate);
+            Thread thread1 = new Thread(ranClassifier);
+
             runButton.setOnAction(event -> {
                 chart.setVisible(true);
 
-                RandomClassifier ranClassifier = new RandomClassifier(x, maxInt, updateInt, finalContinuous, applicationTemplate);
-                Thread thread1 = new Thread(ranClassifier);
-                thread1.start();
+                System.out.println(thread1.isAlive());
 
-               runButton.setDisable(true);
-               typeAlgorithm1.setVisible(false);
-               typeAlgorithm2.setVisible(false);
+                if(!thread1.isAlive()) {
+                    thread1.start();
+
+                    runButton.setDisable(true);
+                    typeAlgorithm1.setVisible(false);
+                    typeAlgorithm2.setVisible(false);
+                    scrnshotButton.setDisable(true);
+                    doneButton.setDisable(true);
+                    editButton.setDisable(true);
+                }else{
+
+                    synchronized (ranClassifier){
+                        runButton.setDisable(true);
+                        ranClassifier.notify();
+                    }
+
+                }
+
+
+
 
                 //MAKE RUN AND ALOGORITHM TYPE SELECTION VISIBLE AFTER ALGORITHM IS COMPLETE
             });

@@ -70,9 +70,10 @@ public class AppData implements DataComponent {
                 }
 
                 String s = y + t;
+
                 processor.processString(s);
-                processor.returnXCoords();
                 processor.checkForDuplicates(s);
+                processor.returnXCoords();
 
                 if(processor.getDuplicates() == true){
                     applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(manager.getPropertyValue(UNABLE_TO_LOAD_DUPLICATE_TITLE.name()), manager.getPropertyValue(UNABLE_TO_LOAD_DUPLICATE.name()) + processor.getNameOfDuplicate().get(0));

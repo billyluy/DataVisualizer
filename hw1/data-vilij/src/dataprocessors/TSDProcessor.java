@@ -142,15 +142,20 @@ public final class TSDProcessor {
     }
 
     public void checkForDuplicates(String s){
-
-        for(int i = 0; i < keysNames.size(); i++){
-            for(int j = i+1; j < keysNames.size() -1; j++){
+        System.out.println("in here");
+        duplicates = false;
+        for(int i = 0; i < keysNames.size() -1; i++){
+            System.out.println(keysNames.get(i));
+            for(int j = i+1; j < keysNames.size(); j++){
+                System.out.println(keysNames.get(j));
                 if(keysNames.get(i).equals(keysNames.get(j))){
                     duplicates = true;
                     nameOfDuplicate.add(keysNames.get(i));
                 }
             }
         }
+
+        System.out.println(Arrays.toString(nameOfDuplicate.toArray()));
     }
 
     public Boolean getDuplicates(){
