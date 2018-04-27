@@ -2,6 +2,7 @@ package ui;
 
 import actions.AppActions;
 import classification.RandomClassifier;
+import components.ExitDialog;
 import data.DataSet;
 import dataprocessors.AppData;
 
@@ -65,6 +66,7 @@ public final class AppUI extends UITemplate {
     private HBox algorithmWSettingsBox2;
 
     private boolean setConfig = false;
+    private boolean threadRunning = false;
 
 
     private ArrayList<String[]> allPrevInputClassif = new ArrayList<String[]>();
@@ -131,6 +133,8 @@ public final class AppUI extends UITemplate {
     }
 
     private void layout() {
+        ExitDialog exit1 = ExitDialog.getDialog();
+        exit1.init(primaryStage);
 
         newButton.setDisable(false);
 
@@ -523,6 +527,7 @@ public final class AppUI extends UITemplate {
         settingsButton.setOnMouseClicked(event -> {
             popUpWindow("Classification", 0);
             runButton.setDisable(false);
+            runButton.setText("Run");
 
             DataSet l = new DataSet();
             runButtonAction(runButton, l, "Classification", 0);
@@ -554,7 +559,6 @@ public final class AppUI extends UITemplate {
 
         algoTitle.setVisible(false);
 
-//        resetPrev();
     }
 
     /**
@@ -658,6 +662,10 @@ public final class AppUI extends UITemplate {
         runButton.setDisable(true);
     }
 
+    public void changeTextofRunButton(String x){
+        runButton.setText(x);
+    }
+
     public void runButtonAction(Button run, DataSet x, String type, int num){
         if(type.equals("Classification") && num == 0) {
             int maxInt = Integer.parseInt(allPrevInputClassif.get(num)[0]);
@@ -672,30 +680,65 @@ public final class AppUI extends UITemplate {
             boolean finalContinuous = continuous;
 
             RandomClassifier ranClassifier = new RandomClassifier(x, maxInt, updateInt, finalContinuous, applicationTemplate);
-            Thread thread1 = new Thread(ranClassifier);
+
+            threadRunning = false;;
 
             runButton.setOnAction(event -> {
                 chart.setVisible(true);
-
-                System.out.println(thread1.isAlive());
-
-                if(!thread1.isAlive()) {
+                if(threadRunning){
+                    synchronized (ranClassifier){
+                        runButton.setDisable(true);
+                        scrnshotButton.setDisable(true);
+                        ranClassifier.notify();
+                    }
+                }else {
+                    Thread thread1 = new Thread(ranClassifier);
                     thread1.start();
-
                     runButton.setDisable(true);
                     typeAlgorithm1.setVisible(false);
                     typeAlgorithm2.setVisible(false);
                     scrnshotButton.setDisable(true);
                     doneButton.setDisable(true);
                     editButton.setDisable(true);
-                }else{
-
-                    synchronized (ranClassifier){
-                        runButton.setDisable(true);
-                        ranClassifier.notify();
-                    }
-
                 }
+
+//                Thread thread1 = new Thread(ranClassifier);
+//                if(!thread1.isAlive()) {
+//
+//                    thread1.start();
+//
+//                    runButton.setDisable(true);
+//                    typeAlgorithm1.setVisible(false);
+//                    typeAlgorithm2.setVisible(false);
+//                    scrnshotButton.setDisable(true);
+//                    doneButton.setDisable(true);
+//                    editButton.setDisable(true);
+//                }else{
+//
+//                    synchronized (ranClassifier){
+//                        runButton.setDisable(true);
+//                        ranClassifier.notify();
+//                    }
+//
+//                }
+
+//                if(threadRunning == false) {
+//                    thread1.start();
+//                    threadRunning = true;
+//
+//                    runButton.setDisable(true);
+//                    typeAlgorithm1.setVisible(false);
+//                    typeAlgorithm2.setVisible(false);
+//                    scrnshotButton.setDisable(true);
+//                    doneButton.setDisable(true);
+//                    editButton.setDisable(true);
+//                }else{
+//                    synchronized (ranClassifier){
+//                        runButton.setDisable(true);
+//                        ranClassifier.notify();
+//                    }
+//
+//                }
 
 
 
@@ -704,6 +747,18 @@ public final class AppUI extends UITemplate {
             });
 
         }
+    }
+
+    public void setThreadRunningBoolean(Boolean b){
+        threadRunning = b;
+    }
+
+    public boolean getThreadRunning(){
+        return threadRunning;
+    }
+
+    public boolean isHasNewText(){
+        return hasNewText;
     }
 
 

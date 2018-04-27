@@ -96,7 +96,9 @@ public enum AppPropertyTypes {
     MAX_IT,
     UPDATE_INT,
     CONT_RUN,
-    NUM_CLUST
+    NUM_CLUST,
+
+    EXIT_WHILE_RUNNING_WARNING
 
 
 }

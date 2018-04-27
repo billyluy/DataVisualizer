@@ -60,6 +60,7 @@ public class RandomClassifier extends Classifier {
     @Override
     public void run() {
         System.out.println(tocontinue());
+        ((AppUI) applicationTemplate.getUIComponent()).setThreadRunningBoolean(true);
         if(tocontinue()) {
             for (int i = 1; i <= maxIterations && tocontinue(); i++) {
 
@@ -83,8 +84,8 @@ public class RandomClassifier extends Classifier {
                 }
 
                 System.out.println("----------------------------------");
-
-                if (i % updateInterval == 0 || (i == maxIterations && i < updateInterval) || (i == maxIterations && i % updateInterval < updateInterval)) {
+                double random = RAND.nextDouble();
+                if (i % updateInterval == 0 || (i > maxIterations * .6 && RAND.nextDouble() < 0.05)) {
                     Platform.runLater(() -> {
                         ((AppUI) applicationTemplate.getUIComponent()).getChart().getData().clear();
                         ((AppData) applicationTemplate.getDataComponent()).displayData(output);
@@ -122,23 +123,31 @@ public class RandomClassifier extends Classifier {
                 }
 
                 System.out.println("----------------------------------");
+                double random = RAND.nextDouble();
+                if (i % updateInterval == 0 || (i > maxIterations * .6 && random < 0.05)) {
 
-                if (i % updateInterval == 0 || (i == maxIterations && i < updateInterval) || (i == maxIterations && i % updateInterval < updateInterval)) {
-
+                    System.out.println(i);
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
+
                     Platform.runLater(() -> {
                         ((AppUI) applicationTemplate.getUIComponent()).getChart().getData().clear();
                         ((AppData) applicationTemplate.getDataComponent()).displayData(output);
+                        ((AppUI) applicationTemplate.getUIComponent()).changeTextofRunButton("Continue");
                         ((AppUI) applicationTemplate.getUIComponent()).makeAlgorithmandRunButtonVisibleAgain();
+
                         System.out.println("draw line");
 
                     });
+
                     synchronized (this){
                         try {
+                            if(i > maxIterations * .6 && random < 0.05 || i > maxIterations){
+                                break;
+                            }
                             this.wait();
 
                         } catch (InterruptedException e) {
@@ -147,7 +156,9 @@ public class RandomClassifier extends Classifier {
                     }
                 }
             }
+            Platform.runLater(() -> ((AppUI) applicationTemplate.getUIComponent()).changeTextofRunButton("Run"));
         }
+        ((AppUI) applicationTemplate.getUIComponent()).setThreadRunningBoolean(false);
         ((AppUI) applicationTemplate.getUIComponent()).makeAlgorithmandRunButtonVisibleAgain();
 
     }

@@ -1,5 +1,7 @@
 package actions;
 
+import com.sun.tools.javah.Util;
+import components.ExitDialog;
 import dataprocessors.AppData;
 import dataprocessors.TSDProcessor;
 import javafx.application.Platform;
@@ -160,7 +162,20 @@ public final class AppActions implements ActionComponent {
     @Override
     public void handleExitRequest() {
         // TODO for homework 1
-        Platform.exit();
+        PropertyManager manager = applicationTemplate.manager;
+        if(((AppUI) applicationTemplate.getUIComponent()).getThreadRunning()){
+            ExitDialog.getDialog().show("Algorithm Running", manager.getPropertyValue(EXIT_WHILE_RUNNING_WARNING.name()));
+            if(ExitDialog.getDialog().getSelectedOption() == ExitDialog.Option.YES){
+                Platform.exit();
+            }
+        }else if(!((AppUI) applicationTemplate.getUIComponent()).getSaveButton().isDisabled()){
+            ExitDialog.getDialog().show("Unsaved Work", "Do you want to save before exiting?");
+            if(ExitDialog.getDialog().getSelectedOption() == ExitDialog.Option.YES){
+                handleSaveRequest();
+            }
+        }else{
+            Platform.exit();
+        }
     }
 
     @Override
