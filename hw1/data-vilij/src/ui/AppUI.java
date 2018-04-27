@@ -529,7 +529,8 @@ public final class AppUI extends UITemplate {
 
         settingsButton2.setOnMouseClicked(event -> {
             popUpWindow("Classification", 1);
-            runButton.setDisable(false);
+            runButton.setDisable(true);
+
         });
 
         algorithmWSettingsBox.getChildren().addAll(randomClassificationButton, settingsButton);
@@ -629,6 +630,12 @@ public final class AppUI extends UITemplate {
         setConfig = true;
     }
 
+    public void makeAlgorithmandRunButtonVisibleAgain(){
+        typeAlgorithm1.setVisible(true);
+        typeAlgorithm2.setVisible(true);
+        runButton.setDisable(false);
+    }
+
     public void resetPrev(){
         String[] b = {"1", "1", "1", "0"};
         String[] t = {"1", "1", "1", "0"};
@@ -657,7 +664,6 @@ public final class AppUI extends UITemplate {
             }
             boolean finalContinuous = continuous;
 
-            String coordX = textArea.getText();
             runButton.setOnAction(event -> {
                 chart.setVisible(true);
 
@@ -665,12 +671,15 @@ public final class AppUI extends UITemplate {
                 Thread thread1 = new Thread(ranClassifier);
                 thread1.start();
 
-                runButton.setDisable(true);
-                typeAlgorithm1.setVisible(false);
-                typeAlgorithm2.setVisible(false);
-                
+               runButton.setDisable(true);
+               typeAlgorithm1.setVisible(false);
+               typeAlgorithm2.setVisible(false);
+
                 //MAKE RUN AND ALOGORITHM TYPE SELECTION VISIBLE AFTER ALGORITHM IS COMPLETE
             });
+
         }
     }
+
+
 }

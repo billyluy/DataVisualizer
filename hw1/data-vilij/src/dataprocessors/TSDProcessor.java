@@ -238,11 +238,11 @@ public final class TSDProcessor {
     }
 
     public double[] returnXCoords(){
+
         double minX = Integer.MAX_VALUE;
         double maxX = Integer.MIN_VALUE;
 
         for(Map.Entry<String, Point2D> point1: dataPoints.entrySet()){
-            System.out.println(point1.getValue());
 
             if(point1.getValue().getX() > maxX){
                 maxX = point1.getValue().getX();

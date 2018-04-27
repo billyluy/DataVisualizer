@@ -41,7 +41,7 @@ public class AppData implements DataComponent {
     public void loadData(Path dataFilePath) {
         // TODO: NOT A PART OF HW 1
         PropertyManager manager = applicationTemplate.manager;
-        TSDProcessor processor = new TSDProcessor();
+        //TSDProcessor processor = new TSDProcessor();
 
         try{
             processor.clear();
@@ -71,6 +71,7 @@ public class AppData implements DataComponent {
 
                 String s = y + t;
                 processor.processString(s);
+                processor.returnXCoords();
                 processor.checkForDuplicates(s);
 
                 if(processor.getDuplicates() == true){
@@ -128,7 +129,6 @@ public class AppData implements DataComponent {
                throw new TSDProcessor.InvalidDataNameException(dataString);
 
             }
-
 
             //    this.displayData();
         } catch (Exception e) {

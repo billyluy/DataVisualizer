@@ -31,12 +31,8 @@ public class RandomClassifier extends Classifier {
     // currently, this value does not change after instantiation
     private final AtomicBoolean tocontinue;
 
-    private double minX;
-    private double minY;
-    private double maxX;
-    private double maxY;
-
     private ApplicationTemplate applicationTemplate;
+    private boolean algoRunning = true;
 
     @Override
     public int getMaxIterations() {
@@ -63,79 +59,44 @@ public class RandomClassifier extends Classifier {
 
     @Override
     public void run() {
-        for (int i = 1; i <= maxIterations && tocontinue(); i++) {
+            for (int i = 1; i <= maxIterations && tocontinue(); i++) {
 
-            int xCoefficient =  new Long(-1 * Math.round((2 * RAND.nextDouble() - 1) * 10)).intValue();
-            int yCoefficient = 10;
-            int constant     = RAND.nextInt(11);
+                int xCoefficient = new Long(-1 * Math.round((2 * RAND.nextDouble() - 1) * 10)).intValue();
+                int yCoefficient = 10;
+                int constant = RAND.nextInt(11);
 
-            // this is the real output of the classifier
-            output = Arrays.asList(xCoefficient, yCoefficient, constant);
+                // this is the real output of the classifier
+                output = Arrays.asList(xCoefficient, yCoefficient, constant);
 
-            // everything below is just for internal viewing of how the output is changing
-            // in the final project, such changes will be dynamically visible in the UI
-            if (i % updateInterval == 0) {
-                System.out.printf("Iteration number %d: ", i); //
-                flush();
-            }
-            if (i > maxIterations * .6 && RAND.nextDouble() < 0.05) {
-                System.out.printf("Iteration number %d: ", i);
-                flush();
-                break;
-            }
+                // everything below is just for internal viewing of how the output is changing
+                // in the final project, such changes will be dynamically visible in the UI
+                if (i % updateInterval == 0) {
+                    System.out.printf("Iteration number %d: ", i); //
+                    flush();
+                }
+                if (i > maxIterations * .6 && RAND.nextDouble() < 0.05) {
+                    System.out.printf("Iteration number %d: ", i);
+                    flush();
+                    break;
+                }
 
-            System.out.println("----------------------------------");
+                System.out.println("----------------------------------");
 
-            if(i % updateInterval == 0 || (i == maxIterations && i < updateInterval) || (i == maxIterations && i % updateInterval < updateInterval)) {
-                Platform.runLater(() -> {
-                    ((AppUI) applicationTemplate.getUIComponent()).getChart().getData().clear();
-                    ((AppData) applicationTemplate.getDataComponent()).displayData(output);
-                });
+                if (i % updateInterval == 0 || (i == maxIterations && i < updateInterval) || (i == maxIterations && i % updateInterval < updateInterval)) {
+                    Platform.runLater(() -> {
+                        ((AppUI) applicationTemplate.getUIComponent()).getChart().getData().clear();
+                        ((AppData) applicationTemplate.getDataComponent()).displayData(output);
+                    });
 
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
-        }
+          ((AppUI) applicationTemplate.getUIComponent()).makeAlgorithmandRunButtonVisibleAgain();
 
-        for (int i = 1; i <= maxIterations && !tocontinue(); i++) {
-
-            int xCoefficient =  new Long(-1 * Math.round((2 * RAND.nextDouble() - 1) * 10)).intValue();
-            int yCoefficient = 10;
-            int constant     = RAND.nextInt(11);
-
-            // this is the real output of the classifier
-            output = Arrays.asList(xCoefficient, yCoefficient, constant);
-
-            // everything below is just for internal viewing of how the output is changing
-            // in the final project, such changes will be dynamically visible in the UI
-            if (i % updateInterval == 0) {
-                System.out.printf("Iteration number %d: ", i); //
-                flush();
-            }
-            if (i > maxIterations * .6 && RAND.nextDouble() < 0.05) {
-                System.out.printf("Iteration number %d: ", i);
-                flush();
-                break;
-            }
-
-            System.out.println("----------------------------------");
-
-            if(i % updateInterval == 0 || (i == maxIterations && i < updateInterval) || (i == maxIterations && i % updateInterval < updateInterval)) {
-                Platform.runLater(() -> {
-                    ((AppUI) applicationTemplate.getUIComponent()).getChart().getData().clear();
-                    ((AppData) applicationTemplate.getDataComponent()).displayData(output);
-                });
-
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
     }
 
     // for internal viewing only
