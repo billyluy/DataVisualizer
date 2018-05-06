@@ -1,5 +1,6 @@
 package dataprocessors;
 
+import javafx.geometry.Point2D;
 import javafx.scene.chart.XYChart;
 import ui.AppUI;
 import vilij.components.DataComponent;
@@ -186,6 +187,12 @@ public class AppData implements DataComponent {
 //
 //    }
 
+    public void displayDatawnewLabel(Map<String, String> newLabels){
+        ((AppUI) applicationTemplate.getUIComponent()).getChart().getData().clear();
+        processor.setNewLabels(newLabels);
+        processor.toChartData(((AppUI) applicationTemplate.getUIComponent()).getChart());
+    }
+
     public void displayData(List<Integer> outputList) {
         PropertyManager manager = applicationTemplate.manager;
 
@@ -279,5 +286,21 @@ public class AppData implements DataComponent {
 
     public void clearlinesleft(){
         linesLeft.clear();
+    }
+
+    public void process(String s){
+        try {
+            processor.processString(s);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Map<String, String> getLabels(){
+        return processor.returnDataLabel();
+    }
+
+    public Map<String, Point2D> getLocationPoint(){
+        return processor.returnDataPoints();
     }
 }

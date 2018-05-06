@@ -5,9 +5,11 @@ import javafx.geometry.Point2D;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.stream.Stream;
 
 /**
  * This class specifies how an algorithm will expect the dataset to be. It is
@@ -79,4 +81,13 @@ public class DataSet {
         });
         return dataset;
     }
+
+    public void setLabels(Map<String, String> lab1){
+        labels = lab1;
+    }
+
+    public void setLocations(Map<String, Point2D> loca){
+        locations = loca;
+    }
+
 }

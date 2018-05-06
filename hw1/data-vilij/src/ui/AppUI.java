@@ -2,6 +2,7 @@ package ui;
 
 import actions.AppActions;
 import classification.RandomClassifier;
+import clustering.RandomClusterer;
 import components.ExitDialog;
 import data.DataSet;
 import dataprocessors.AppData;
@@ -454,7 +455,7 @@ public final class AppUI extends UITemplate {
 
                         algorithmWSettingsBox = new HBox();
                         algorithmWSettingsBox2 = new HBox();
-                        Button runButton = new Button(applicationTemplate.manager.getPropertyValue(RUN_BUTTON_TITLE.name()));
+                        runButton = new Button(applicationTemplate.manager.getPropertyValue(RUN_BUTTON_TITLE.name()));
 
                         algoSelectToggleGroup = new ToggleGroup();
 
@@ -496,9 +497,12 @@ public final class AppUI extends UITemplate {
 
         Button settingsButton = new Button(applicationTemplate.manager.getPropertyValue(SETTINGS_TITLE.name()));
         Button settingsButton2 = new Button(applicationTemplate.manager.getPropertyValue(SETTINGS_TITLE.name()));
+
         settingsButton.setOnMouseClicked(event -> {
             popUpWindow("Clustering", 0);
             runButton.setDisable(false);
+            DataSet l = new DataSet();
+            runButtonAction(runButton, l, "Clustering", 0);
         });
         settingsButton2.setOnMouseClicked(event -> {
             popUpWindow("Clustering", 1);
@@ -522,7 +526,7 @@ public final class AppUI extends UITemplate {
 
         Text classification = new Text(applicationTemplate.manager.getPropertyValue(CLASSIFICATION_TITLE.name()));
         Button settingsButton = new Button(applicationTemplate.manager.getPropertyValue(SETTINGS_TITLE.name()));
-        Button settingsButton2 = new Button(applicationTemplate.manager.getPropertyValue(SETTINGS_TITLE.name()));
+    //    Button settingsButton2 = new Button(applicationTemplate.manager.getPropertyValue(SETTINGS_TITLE.name()));
 
         settingsButton.setOnMouseClicked(event -> {
             popUpWindow("Classification", 0);
@@ -533,14 +537,14 @@ public final class AppUI extends UITemplate {
             runButtonAction(runButton, l, "Classification", 0);
         });
 
-        settingsButton2.setOnMouseClicked(event -> {
-            popUpWindow("Classification", 1);
-            runButton.setDisable(true);
-
-        });
+//        settingsButton2.setOnMouseClicked(event -> {
+//            popUpWindow("Classification", 1);
+//            runButton.setDisable(true);
+//
+//        });
 
         algorithmWSettingsBox.getChildren().addAll(randomClassificationButton, settingsButton);
-        algorithmWSettingsBox2.getChildren().addAll(someotherClassButton, settingsButton2);
+//        algorithmWSettingsBox2.getChildren().addAll(someotherClassButton, settingsButton2);
     }
 
     /**
@@ -701,51 +705,52 @@ public final class AppUI extends UITemplate {
                     doneButton.setDisable(true);
                     editButton.setDisable(true);
                 }
-
-//                Thread thread1 = new Thread(ranClassifier);
-//                if(!thread1.isAlive()) {
-//
-//                    thread1.start();
-//
-//                    runButton.setDisable(true);
-//                    typeAlgorithm1.setVisible(false);
-//                    typeAlgorithm2.setVisible(false);
-//                    scrnshotButton.setDisable(true);
-//                    doneButton.setDisable(true);
-//                    editButton.setDisable(true);
-//                }else{
-//
-//                    synchronized (ranClassifier){
-//                        runButton.setDisable(true);
-//                        ranClassifier.notify();
-//                    }
-//
-//                }
-
-//                if(threadRunning == false) {
-//                    thread1.start();
-//                    threadRunning = true;
-//
-//                    runButton.setDisable(true);
-//                    typeAlgorithm1.setVisible(false);
-//                    typeAlgorithm2.setVisible(false);
-//                    scrnshotButton.setDisable(true);
-//                    doneButton.setDisable(true);
-//                    editButton.setDisable(true);
-//                }else{
-//                    synchronized (ranClassifier){
-//                        runButton.setDisable(true);
-//                        ranClassifier.notify();
-//                    }
-//
-//                }
-
-
-
-
                 //MAKE RUN AND ALOGORITHM TYPE SELECTION VISIBLE AFTER ALGORITHM IS COMPLETE
             });
 
+        }else if(type.equals("Clustering") && num == 0){
+            int maxInt = Integer.parseInt(allPrevInputClust.get(num)[0]);
+            int updateInt = Integer.parseInt(allPrevInputClust.get(num)[1]);
+            int numClusters = Integer.parseInt((allPrevInputClust.get(num)[2]));
+
+            boolean continuous = false;
+            if(allPrevInputClassif.get(num)[3].equals("0")){
+                continuous = false;
+            }else{
+                continuous = true;
+            }
+            boolean finalContinuous = continuous;
+
+
+            DataSet q = new DataSet();
+            System.out.println("there");
+
+            ((AppData) applicationTemplate.getDataComponent()).process(textArea.getText());
+            q.setLabels(((AppData) applicationTemplate.getDataComponent()).getLabels());
+            q.setLocations(((AppData) applicationTemplate.getDataComponent()).getLocationPoint());
+
+            RandomClusterer randomClust = new RandomClusterer(q, maxInt, updateInt, finalContinuous, numClusters, applicationTemplate);
+            threadRunning = false;
+
+            runButton.setOnAction(event -> {
+                if(threadRunning){
+                    synchronized (randomClust){
+                        runButton.setDisable(true);
+                        scrnshotButton.setDisable(true);
+                        randomClust.notify();
+                    }
+                }else {
+                    chart.setVisible(true);
+                    Thread thread1 = new Thread(randomClust);
+                    thread1.start();
+                    runButton.setDisable(true);
+                    typeAlgorithm1.setVisible(false);
+                    typeAlgorithm2.setVisible(false);
+                    scrnshotButton.setDisable(true);
+                    doneButton.setDisable(true);
+                    editButton.setDisable(true);
+                }
+            });
         }
     }
 

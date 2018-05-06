@@ -263,4 +263,16 @@ public final class TSDProcessor {
         double[] minMax = {minX, maxX};
         return minMax;
     }
+
+    public Map<String, String> returnDataLabel(){
+        return dataLabels;
+    }
+
+    public Map<String, Point2D> returnDataPoints(){
+       return dataPoints;
+    }
+
+    public void setNewLabels(Map<String, String> x){
+        dataLabels = x;
+    }
 }
