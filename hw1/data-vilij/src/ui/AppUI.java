@@ -1,9 +1,10 @@
 package ui;
 
 import actions.AppActions;
-import classification.RandomClassifier;
-import clustering.KMeansClusterer;
-import clustering.RandomClusterer;
+import algorithms.Algorithm;
+import allAlgo.RandomClassifier;
+import allAlgo.KMeansClusterer;
+import allAlgo.RandomClusterer;
 import components.ExitDialog;
 import data.DataSet;
 import dataprocessors.AppData;
@@ -30,7 +31,11 @@ import static vilij.settings.PropertyTypes.GUI_RESOURCE_PATH;
 import static vilij.settings.PropertyTypes.ICONS_RESOURCE_PATH;
 
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+
+import java.io.File;
+import java.util.Arrays;
 
 /**
  * This is the application's user interface implementation.
@@ -75,6 +80,7 @@ public final class AppUI extends UITemplate {
     private ArrayList<String[]> allPrevInputClust = new ArrayList<String[]>();
 
     private String[] prevData = {"1", "1", "2", "0"};
+    private String[] allAlgo = new String[3];
 
     public LineChart<Number, Number> getChart() { return chart; }
 
@@ -135,6 +141,8 @@ public final class AppUI extends UITemplate {
     }
 
     private void layout() {
+        reflectionAlgo();
+
         ExitDialog exit1 = ExitDialog.getDialog();
         exit1.init(primaryStage);
 
@@ -237,7 +245,6 @@ public final class AppUI extends UITemplate {
         allPrevInputClust.add(c1);
         allPrevInputClust.add(c2);
 
-
     }
 
     private void setWorkspaceActions() {
@@ -251,12 +258,9 @@ public final class AppUI extends UITemplate {
 
             if(((AppActions) applicationTemplate.getActionComponent()).getCheck()) {
                 String a = "";
-                //       ArrayList<String> notDisplayed = ((AppActions)applicationTemplate.getActionComponent()).getLinesLeft();
                 ArrayList<String> notDisplayed = ((AppData) applicationTemplate.getDataComponent()).getLinesLeft();
 
                 int deletedAmount = 10 - newValue.split("\n").length;
-//            System.out.println("amount = " + deletedAmount);
-//            System.out.println("size of notdisplayed = " + notDisplayed.size());
                 if (deletedAmount > 0 && notDisplayed.size() > 0) {
                     while (deletedAmount > 0) {
                         if (notDisplayed.size() > 0) {
@@ -274,17 +278,9 @@ public final class AppUI extends UITemplate {
                 hasNewText = true;
             }
 
-//            if(!textArea.getText().isEmpty()){
-//                newButton.setDisable(false);
-//            //    saveButton.setDisable(false);
-//            }else{
-//                newButton.setDisable(true);
-//                saveButton.setDisable(true);
-//            }
 
             if(!textArea.getText().isEmpty()){
                 newButton.setDisable(false);
-                //    saveButton.setDisable(false);
             }else{
                 newButton.setDisable(true);
                 saveButton.setDisable(true);
@@ -503,14 +499,22 @@ public final class AppUI extends UITemplate {
             popUpWindow("Clustering", 0);
             runButton.setDisable(false);
             DataSet l = new DataSet();
-            runButtonAction(runButton, l, "Clustering", 0);
+            try {
+                runButtonAction(runButton, l, "Clustering", 0);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
 
         settingsButton2.setOnMouseClicked(event -> {
             popUpWindow("Clustering", 1);
             runButton.setDisable(false);
             DataSet l = new DataSet();
-            runButtonAction(runButton, l, "Clustering", 1);
+            try {
+                runButtonAction(runButton, l, "Clustering", 1);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
 
         algorithmWSettingsBox.getChildren().addAll(randomClusteringButton, settingsButton);
@@ -538,7 +542,11 @@ public final class AppUI extends UITemplate {
             runButton.setText("Run");
 
             DataSet l = new DataSet();
-            runButtonAction(runButton, l, "Classification", 0);
+            try {
+                runButtonAction(runButton, l, "Classification", 0);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
 
 //        settingsButton2.setOnMouseClicked(event -> {
@@ -674,7 +682,7 @@ public final class AppUI extends UITemplate {
         runButton.setText(x);
     }
 
-    public void runButtonAction(Button run, DataSet x, String type, int num){
+    public void runButtonAction(Button run, DataSet x, String type, int num) throws Exception{
         if(type.equals("Classification") && num == 0) {
             int maxInt = Integer.parseInt(allPrevInputClassif.get(num)[0]);
             int updateInt = Integer.parseInt(allPrevInputClassif.get(num)[1]);
@@ -687,20 +695,24 @@ public final class AppUI extends UITemplate {
             }
             boolean finalContinuous = continuous;
 
-            RandomClassifier ranClassifier = new RandomClassifier(x, maxInt, updateInt, finalContinuous, applicationTemplate);
+            Class ranClassifier = Class.forName(allAlgo[1]);
+            Constructor construct1 = ranClassifier.getConstructors()[0];
+            Algorithm alg = (Algorithm) construct1.newInstance(x, maxInt, updateInt, finalContinuous, applicationTemplate);
+
+    //        RandomClassifier ranClassifier = new RandomClassifier(x, maxInt, updateInt, finalContinuous, applicationTemplate);
 
             threadRunning = false;;
 
             runButton.setOnAction(event -> {
                 chart.setVisible(true);
                 if(threadRunning){
-                    synchronized (ranClassifier){
+                    synchronized (alg){
                         runButton.setDisable(true);
                         scrnshotButton.setDisable(true);
                         ranClassifier.notify();
                     }
                 }else {
-                    Thread thread1 = new Thread(ranClassifier);
+                    Thread thread1 = new Thread(alg);
                     thread1.start();
                     runButton.setDisable(true);
                     typeAlgorithm1.setVisible(false);
@@ -724,26 +736,29 @@ public final class AppUI extends UITemplate {
             }
             boolean finalContinuous = continuous;
 
-
             DataSet q = new DataSet();
 
             ((AppData) applicationTemplate.getDataComponent()).process(textArea.getText());
             q.setLabels(((AppData) applicationTemplate.getDataComponent()).getLabels());
             q.setLocations(((AppData) applicationTemplate.getDataComponent()).getLocationPoint());
 
-            RandomClusterer randomClust = new RandomClusterer(q, maxInt, updateInt, finalContinuous, numClusters, applicationTemplate);
+            Class randomClust = Class.forName(allAlgo[2]);
+            Constructor construct1 = randomClust.getConstructors()[0];
+            Algorithm alg = (Algorithm) construct1.newInstance(q, maxInt, updateInt, finalContinuous, numClusters, applicationTemplate);
+
+//            RandomClusterer randomClust = new RandomClusterer(q, maxInt, updateInt, finalContinuous, numClusters, applicationTemplate);
             threadRunning = false;
 
             runButton.setOnAction(event -> {
                 if(threadRunning){
-                    synchronized (randomClust){
+                    synchronized (alg){
                         runButton.setDisable(true);
                         scrnshotButton.setDisable(true);
                         randomClust.notify();
                     }
                 }else {
                     chart.setVisible(true);
-                    Thread thread1 = new Thread(randomClust);
+                    Thread thread1 = new Thread(alg);
                     thread1.start();
                     runButton.setDisable(true);
                     typeAlgorithm1.setVisible(false);
@@ -773,19 +788,23 @@ public final class AppUI extends UITemplate {
             q.setLabels(((AppData) applicationTemplate.getDataComponent()).getLabels());
             q.setLocations(((AppData) applicationTemplate.getDataComponent()).getLocationPoint());
 
-            KMeansClusterer kMeans = new KMeansClusterer(q, maxInt, updateInt, numClusters, finalContinuous, applicationTemplate);
+            Class kMeans = Class.forName(allAlgo[0]);
+            Constructor construct1 = kMeans.getConstructors()[0];
+            Algorithm alg = (Algorithm) construct1.newInstance(q, maxInt, updateInt, numClusters, finalContinuous, applicationTemplate);
+
+ //           KMeansClusterer kMeans = new KMeansClusterer(q, maxInt, updateInt, numClusters, finalContinuous, applicationTemplate);
             threadRunning = false;
 
             runButton.setOnAction(event -> {
                 if(threadRunning){
-                    synchronized (kMeans){
+                    synchronized (alg){
                         runButton.setDisable(true);
                         scrnshotButton.setDisable(true);
                         kMeans.notify();
                     }
                 }else {
                     chart.setVisible(true);
-                    Thread thread1 = new Thread(kMeans);
+                    Thread thread1 = new Thread(alg);
                     thread1.start();
                     runButton.setDisable(true);
                     typeAlgorithm1.setVisible(false);
@@ -810,5 +829,18 @@ public final class AppUI extends UITemplate {
         return hasNewText;
     }
 
+    public void reflectionAlgo(){
+        File folder = new File("hw1/data-vilij/src/allAlgo");
+        File[] listOfFiles = folder.listFiles();
 
+        int i = 0;
+        for (File file : listOfFiles) {
+            allAlgo[i] =  "allAlgo."  + file.getName().replaceAll(".java", "");
+            i++;
+        }
+
+        for(String s: allAlgo){
+            System.out.println(s);
+        }
+    }
 }

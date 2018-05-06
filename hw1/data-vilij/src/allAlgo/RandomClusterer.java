@@ -1,15 +1,12 @@
-package clustering;
+package allAlgo;
 
 import algorithms.Clusterer;
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import data.DataSet;
 import dataprocessors.AppData;
 import javafx.application.Platform;
 import ui.AppUI;
 import vilij.templates.ApplicationTemplate;
 
-import java.awt.*;
-import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 

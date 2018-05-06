@@ -1,15 +1,12 @@
-package classification;
+package allAlgo;
 
 import algorithms.Classifier;
 import data.DataSet;
 import dataprocessors.AppData;
 import javafx.application.Platform;
-import javafx.stage.Stage;
 import ui.AppUI;
 import vilij.templates.ApplicationTemplate;
 
-import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -173,7 +170,8 @@ public class RandomClassifier extends Classifier {
 
     // for internal viewing only
     protected void flush() {
-        System.out.printf("%d\t%d\t%d%n", output.get(0), output.get(1), output.get(2));
+
+        //System.out.printf("%d\t%d\t%d%n", output.get(0), output.get(1), output.get(2));
     }
 
 //    /** A placeholder main method to just make sure this code runs smoothly */
