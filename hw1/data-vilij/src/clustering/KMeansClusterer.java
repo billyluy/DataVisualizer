@@ -2,7 +2,11 @@ package clustering;
 
 import algorithms.Clusterer;
 import data.DataSet;
+import dataprocessors.AppData;
+import javafx.application.Platform;
 import javafx.geometry.Point2D;
+import ui.AppUI;
+import vilij.templates.ApplicationTemplate;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -26,12 +30,18 @@ public class KMeansClusterer extends Clusterer {
     private final AtomicBoolean tocontinue;
 
 
-    public KMeansClusterer(DataSet dataset, int maxIterations, int updateInterval, int numberOfClusters) {
+    private ApplicationTemplate applicationTemplate;
+    private boolean initialchoice;
+
+
+    public KMeansClusterer(DataSet dataset, int maxIterations, int updateInterval, int numberOfClusters, boolean continuous, ApplicationTemplate applicationTemplate) {
         super(numberOfClusters);
         this.dataset = dataset;
         this.maxIterations = maxIterations;
         this.updateInterval = updateInterval;
-        this.tocontinue = new AtomicBoolean(false);
+        this.tocontinue = new AtomicBoolean(continuous);
+        this.applicationTemplate = applicationTemplate;
+        this.initialchoice = continuous;
     }
 
     @Override
@@ -45,12 +55,124 @@ public class KMeansClusterer extends Clusterer {
 
     @Override
     public void run() {
+//         ((AppUI) applicationTemplate.getUIComponent()).setThreadRunningBoolean(true);
+//
+//         initializeCentroids();
+//         int iteration = 0;
+//        System.out.println("reached run");
+//         if(tocontinue.get()) {
+//             System.out.println("reached to non continue");
+//             while (iteration++ < maxIterations & tocontinue.get()) {
+//                 assignLabels();
+//                 recomputeCentroids();
+//                 System.out.println("before chart update");
+//                 if (iteration % updateInterval == 0) {
+//                     Platform.runLater(() -> {
+//                         ((AppData) applicationTemplate.getDataComponent()).displayDatawnewLabel(dataset.getLabels());
+//
+//                     });
+//                     System.out.println("after chart update");
+//                     try {
+//                         Thread.sleep(1000);
+//                     } catch (InterruptedException e) {
+//                         e.printStackTrace();
+//                     }
+//                 }
+//             }
+//         }else{
+//             while (iteration++ < maxIterations & tocontinue.get()) {
+//                 assignLabels();
+//                 recomputeCentroids();
+//
+//                 if(iteration % updateInterval == 0){
+//                     try {
+//                         Thread.sleep(100);
+//                     } catch (InterruptedException e) {
+//                         e.printStackTrace();
+//                     }
+//
+//                     Platform.runLater(() -> {
+//                         ((AppUI) applicationTemplate.getUIComponent()).getChart().getData().clear();
+//                         ((AppData) applicationTemplate.getDataComponent()).displayDatawnewLabel(dataset.getLabels());
+//                         ((AppUI) applicationTemplate.getUIComponent()).changeTextofRunButton("Continue");
+//                         ((AppUI) applicationTemplate.getUIComponent()).makeAlgorithmandRunButtonVisibleAgain();
+//                         ((AppUI) applicationTemplate.getUIComponent()).makeClassificationInvisible();
+//
+//                     });
+//
+//                     synchronized (this){
+//                         try {
+//                             if(iteration > maxIterations){
+//                                 break;
+//                             }
+//                             this.wait();
+//
+//                         } catch (InterruptedException e) {
+//                             e.printStackTrace();
+//                         }
+//                     }
+//                 }
+//             }
+//             Platform.runLater(() -> ((AppUI) applicationTemplate.getUIComponent()).changeTextofRunButton("Run"));
+//         }
+//        System.out.println("kmean");
+//        System.out.println("------------thread is done running------------");
+//        ((AppUI) applicationTemplate.getUIComponent()).setThreadRunningBoolean(false);
+//        ((AppUI) applicationTemplate.getUIComponent()).makeAlgorithmandRunButtonVisibleAgain();
+
+        ((AppUI) applicationTemplate.getUIComponent()).setThreadRunningBoolean(true);
         initializeCentroids();
-        int iteration = 0;
-        while (iteration++ < maxIterations & tocontinue.get()) {
+        int iteration = 1;
+
+        while(iteration++ <= maxIterations && tocontinue()){
             assignLabels();
             recomputeCentroids();
+
+            System.out.println(initialchoice);
+            if(initialchoice && (iteration % updateInterval == 0 || !tocontinue())){
+                Platform.runLater(() -> {
+                    ((AppData) applicationTemplate.getDataComponent()).displayDatawnewLabel(dataset.getLabels());
+                });
+                System.out.println("after chart update");
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }else if(!initialchoice && (iteration % updateInterval == 0 || !tocontinue())){
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                Platform.runLater(() -> {
+                    ((AppUI) applicationTemplate.getUIComponent()).getChart().getData().clear();
+                    ((AppData) applicationTemplate.getDataComponent()).displayDatawnewLabel(dataset.getLabels());
+                    ((AppUI) applicationTemplate.getUIComponent()).changeTextofRunButton("Continue");
+                    ((AppUI) applicationTemplate.getUIComponent()).makeAlgorithmandRunButtonVisibleAgain();
+
+                });
+
+                synchronized (this){
+                    try {
+                        if(iteration > maxIterations){
+                            break;
+                        }
+                        this.wait();
+
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            if(!initialchoice && !tocontinue()){
+                Platform.runLater(() -> ((AppUI) applicationTemplate.getUIComponent()).changeTextofRunButton("Run"));
+            }
         }
+        System.out.println("------------thread is done running------------");
+        ((AppUI) applicationTemplate.getUIComponent()).setThreadRunningBoolean(false);
+        ((AppUI) applicationTemplate.getUIComponent()).makeAlgorithmandRunButtonVisibleAgain();
     }
 
     private void initializeCentroids() {

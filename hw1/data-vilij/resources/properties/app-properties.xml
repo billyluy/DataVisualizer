@@ -94,7 +94,7 @@ functionality within the main workspace. -->
         <property name = "SETTINGS_TITLE" value="Settings" />
 
         <property name = "SOME_RAND_CLASS" value = "Some other classification" />
-        <property name = "SOME_RAND_CLUST" value="Some other random cluster" />
+        <property name = "SOME_RAND_CLUST" value="K Means Clustering" />
         <property name = "RUN_BUTTON_TITLE" value = "Run" />
 
         <property name = "RUNCONFIG" value = "RunConfiguration" />

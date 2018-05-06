@@ -72,7 +72,6 @@ public class RandomClusterer extends Clusterer {
                 }
             }
         }else{
-            System.out.println("not continue");
             for(int i = 1; i <= maxIterations && !tocontinue(); i++){
                 assignLabels();
                 System.out.println("i = " + i);
@@ -103,8 +102,6 @@ public class RandomClusterer extends Clusterer {
                             e.printStackTrace();
                         }
                     }
-
-
                 }
 
             }

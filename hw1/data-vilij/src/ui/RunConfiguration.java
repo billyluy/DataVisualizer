@@ -150,14 +150,15 @@ public class RunConfiguration extends Stage implements Dialog {
                 changed = false;
             }
             if(this.type1.equals(manager.getPropertyValue(CLUSTERING_TITLE.name()))){
-                if(!clust1.getText().isEmpty() && Integer.parseInt(clust1.getText()) <= 0){
-                    clust1.setText("1");
+                if(!clust1.getText().isEmpty() && Integer.parseInt(clust1.getText()) < 2){
+                    clust1.setText("2");
                     changed = false;
                 }
                 if(clust1.getText().isEmpty()) {
-                    clust1.setText("1");
+                    clust1.setText("2");
                     changed = false;
                 }
+
             }
         }
         catch(Exception e){

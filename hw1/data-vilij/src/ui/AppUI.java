@@ -2,6 +2,7 @@ package ui;
 
 import actions.AppActions;
 import classification.RandomClassifier;
+import clustering.KMeansClusterer;
 import clustering.RandomClusterer;
 import components.ExitDialog;
 import data.DataSet;
@@ -73,7 +74,7 @@ public final class AppUI extends UITemplate {
     private ArrayList<String[]> allPrevInputClassif = new ArrayList<String[]>();
     private ArrayList<String[]> allPrevInputClust = new ArrayList<String[]>();
 
-    private String[] prevData = {"1", "1", "1", "0"};
+    private String[] prevData = {"1", "1", "2", "0"};
 
     public LineChart<Number, Number> getChart() { return chart; }
 
@@ -226,12 +227,12 @@ public final class AppUI extends UITemplate {
         allPrevInputClassif.clear();
         allPrevInputClust.clear();
 
-        String[] p = {"1", "1", "1", "0"};
+        String[] p = {"1", "1", "2", "0"};
         allPrevInputClassif.add(prevData);
         allPrevInputClassif.add(p);
 
-        String[] c1 = {"1", "1", "1", "0"};
-        String[] c2 = {"1", "1", "1", "0"};
+        String[] c1 = {"1", "1", "2", "0"};
+        String[] c2 = {"1", "1", "2", "0"};
 
         allPrevInputClust.add(c1);
         allPrevInputClust.add(c2);
@@ -504,9 +505,12 @@ public final class AppUI extends UITemplate {
             DataSet l = new DataSet();
             runButtonAction(runButton, l, "Clustering", 0);
         });
+
         settingsButton2.setOnMouseClicked(event -> {
             popUpWindow("Clustering", 1);
             runButton.setDisable(false);
+            DataSet l = new DataSet();
+            runButtonAction(runButton, l, "Clustering", 1);
         });
 
         algorithmWSettingsBox.getChildren().addAll(randomClusteringButton, settingsButton);
@@ -615,10 +619,6 @@ public final class AppUI extends UITemplate {
     public void popUpWindow(String type, int num){
         setConfig = false;
 
-//        System.out.println(Arrays.toString(allPrevInput.get(0)));
-//        System.out.println(Arrays.toString(allPrevInput.get(1)));
-//        System.out.println(num + Arrays.toString(allPrevInput.get(num)));
-        //       System.out.println("type: " + type);
         if(type.equals("Classification")){
             RunConfiguration runConfig = RunConfiguration.getDialog(type, allPrevInputClassif.get(num));
             runConfig.init(primaryStage);
@@ -648,11 +648,15 @@ public final class AppUI extends UITemplate {
         editButton.setDisable(false);
     }
 
+    public void makeClassificationInvisible(){
+        typeAlgorithm1.setVisible(false);
+    }
+
     public void resetPrev(){
-        String[] b = {"1", "1", "1", "0"};
-        String[] t = {"1", "1", "1", "0"};
-        String[] s = {"1", "1", "1", "0"};
-        String[] p = {"1", "1", "1", "0"};
+        String[] b = {"1", "1", "2", "0"};
+        String[] t = {"1", "1", "2", "0"};
+        String[] s = {"1", "1", "2", "0"};
+        String[] p = {"1", "1", "2", "0"};
         allPrevInputClassif.clear();
         allPrevInputClassif.add(b);
         allPrevInputClassif.add(t);
@@ -705,7 +709,6 @@ public final class AppUI extends UITemplate {
                     doneButton.setDisable(true);
                     editButton.setDisable(true);
                 }
-                //MAKE RUN AND ALOGORITHM TYPE SELECTION VISIBLE AFTER ALGORITHM IS COMPLETE
             });
 
         }else if(type.equals("Clustering") && num == 0){
@@ -714,7 +717,7 @@ public final class AppUI extends UITemplate {
             int numClusters = Integer.parseInt((allPrevInputClust.get(num)[2]));
 
             boolean continuous = false;
-            if(allPrevInputClassif.get(num)[3].equals("0")){
+            if(allPrevInputClust.get(num)[3].equals("0")){
                 continuous = false;
             }else{
                 continuous = true;
@@ -723,7 +726,6 @@ public final class AppUI extends UITemplate {
 
 
             DataSet q = new DataSet();
-            System.out.println("there");
 
             ((AppData) applicationTemplate.getDataComponent()).process(textArea.getText());
             q.setLabels(((AppData) applicationTemplate.getDataComponent()).getLabels());
@@ -742,6 +744,48 @@ public final class AppUI extends UITemplate {
                 }else {
                     chart.setVisible(true);
                     Thread thread1 = new Thread(randomClust);
+                    thread1.start();
+                    runButton.setDisable(true);
+                    typeAlgorithm1.setVisible(false);
+                    typeAlgorithm2.setVisible(false);
+                    scrnshotButton.setDisable(true);
+                    doneButton.setDisable(true);
+                    editButton.setDisable(true);
+                }
+            });
+        }else if(type.equals("Clustering") && num == 1){
+            int maxInt = Integer.parseInt(allPrevInputClust.get(num)[0]);
+            int updateInt = Integer.parseInt(allPrevInputClust.get(num)[1]);
+            int numClusters = Integer.parseInt((allPrevInputClust.get(num)[2]));
+
+            boolean continuous = false;
+            if(allPrevInputClust.get(num)[3].equals("0")){
+                continuous = false;
+            }else{
+                continuous = true;
+            }
+            boolean finalContinuous = continuous;
+
+
+            DataSet q = new DataSet();
+
+            ((AppData) applicationTemplate.getDataComponent()).process(textArea.getText());
+            q.setLabels(((AppData) applicationTemplate.getDataComponent()).getLabels());
+            q.setLocations(((AppData) applicationTemplate.getDataComponent()).getLocationPoint());
+
+            KMeansClusterer kMeans = new KMeansClusterer(q, maxInt, updateInt, numClusters, finalContinuous, applicationTemplate);
+            threadRunning = false;
+
+            runButton.setOnAction(event -> {
+                if(threadRunning){
+                    synchronized (kMeans){
+                        runButton.setDisable(true);
+                        scrnshotButton.setDisable(true);
+                        kMeans.notify();
+                    }
+                }else {
+                    chart.setVisible(true);
+                    Thread thread1 = new Thread(kMeans);
                     thread1.start();
                     runButton.setDisable(true);
                     typeAlgorithm1.setVisible(false);
