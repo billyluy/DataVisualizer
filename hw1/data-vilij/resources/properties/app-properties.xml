@@ -104,6 +104,8 @@ functionality within the main workspace. -->
         <property name = "NUM_CLUST" value= "Number of Clusters" />
 
 
+        <property name = "algo1" value = "Random" />
+        <property name = "algo2" value = "KMeans" />
 
     </property_list>
     <property_options_list/>

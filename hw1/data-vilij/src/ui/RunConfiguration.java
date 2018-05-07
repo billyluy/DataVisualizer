@@ -36,7 +36,7 @@ public class RunConfiguration extends Stage implements Dialog {
     //    private String[] previousInput = new String[4];
     private String[] previousInput;
 
-    private RunConfiguration(String type, String[] previn){
+    public RunConfiguration(String type, String[] previn){
         this.type1 = type;
         this.previousInput = previn;
 //        System.out.println(type);
@@ -152,6 +152,10 @@ public class RunConfiguration extends Stage implements Dialog {
             if(this.type1.equals(manager.getPropertyValue(CLUSTERING_TITLE.name()))){
                 if(!clust1.getText().isEmpty() && Integer.parseInt(clust1.getText()) < 2){
                     clust1.setText("2");
+                    changed = false;
+                }
+                if(!clust1.getText().isEmpty() && Integer.parseInt(clust1.getText()) > 4){
+                    clust1.setText("4");
                     changed = false;
                 }
                 if(clust1.getText().isEmpty()) {

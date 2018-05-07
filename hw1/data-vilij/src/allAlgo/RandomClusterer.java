@@ -71,7 +71,6 @@ public class RandomClusterer extends Clusterer {
         }else{
             for(int i = 1; i <= maxIterations && !tocontinue(); i++){
                 assignLabels();
-                System.out.println("i = " + i);
 
                 if(i % updateInterval == 0){
                     try {
@@ -104,7 +103,6 @@ public class RandomClusterer extends Clusterer {
             }
             Platform.runLater(() -> ((AppUI) applicationTemplate.getUIComponent()).changeTextofRunButton("Run"));
         }
-        System.out.println("------------thread is done running------------");
         ((AppUI) applicationTemplate.getUIComponent()).setThreadRunningBoolean(false);
         ((AppUI) applicationTemplate.getUIComponent()).makeAlgorithmandRunButtonVisibleAgain();
     }
@@ -113,9 +111,7 @@ public class RandomClusterer extends Clusterer {
         dataset.getLocations().forEach((instanceName, location) -> {
             int randomLabelNum = RAND.nextInt(numberOfClusters) + 1;
             String labelx = "Label" + randomLabelNum;
-            System.out.println("rand num " + randomLabelNum);
             dataset.getLabels().put(instanceName, labelx);
         });
-        System.out.println("done");
     }
 }

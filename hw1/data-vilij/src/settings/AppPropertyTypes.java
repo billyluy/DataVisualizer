@@ -98,7 +98,10 @@ public enum AppPropertyTypes {
     CONT_RUN,
     NUM_CLUST,
 
-    EXIT_WHILE_RUNNING_WARNING
+    EXIT_WHILE_RUNNING_WARNING,
+
+    ALGO1,
+    ALGO2
 
 
 }

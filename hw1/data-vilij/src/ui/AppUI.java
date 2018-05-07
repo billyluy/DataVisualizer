@@ -885,9 +885,9 @@ public final class AppUI extends UITemplate {
                 if(Class.forName(allAlgo[i]).getSuperclass() == Classifier.class && type.equals("Classification")){
                     displayClassificationPart();
                 }else if(Class.forName(allAlgo[i]).getSuperclass() == Clusterer.class && type.equals("Clustering")){
-                    System.out.println("here");
-                    System.out.println(allAlgo[i].contains("KMeans"));
-                    System.out.println(allAlgo[i].contains("Random"));
+ //                   System.out.println("here");
+//                    System.out.println(allAlgo[i].contains("KMeans"));
+//                    System.out.println(allAlgo[i].contains("Random"));
                   if(allAlgo[i].contains("KMeans")) {
                       displayClusteringPart("KMeans");
                   }else{
@@ -897,7 +897,6 @@ public final class AppUI extends UITemplate {
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
-
         }
     }
 }
