@@ -2,6 +2,8 @@ package ui;
 
 import actions.AppActions;
 import algorithms.Algorithm;
+import algorithms.Classifier;
+import algorithms.Clusterer;
 import allAlgo.RandomClassifier;
 import allAlgo.KMeansClusterer;
 import allAlgo.RandomClusterer;
@@ -408,12 +410,12 @@ public final class AppUI extends UITemplate {
                         if(selectingAlgorithmType.getSelectedToggle() == typeAlgorithm1) {
                             Text classification = new Text(applicationTemplate.manager.getPropertyValue(CLASSIFICATION_TITLE.name()));
 
-                            displayClassificationPart();
+                            displayAlgorithmforReflection("Classification");
                             algorithmsBox.getChildren().addAll(classification, algorithmWSettingsBox, algorithmWSettingsBox2);
                         }else{
 
                             Text clustering = new Text(applicationTemplate.manager.getPropertyValue(CLUSTERING_TITLE.name()));
-                            displayClusteringPart();
+                            displayAlgorithmforReflection("Clustering");
                             algorithmsBox.getChildren().addAll(clustering, algorithmWSettingsBox, algorithmWSettingsBox2);
                         }
                         algorithmsBox.getChildren().add(runButton);
@@ -458,7 +460,7 @@ public final class AppUI extends UITemplate {
 
                         Text clustering = new Text(applicationTemplate.manager.getPropertyValue(CLUSTERING_TITLE.name()));
 
-                        displayClusteringPart();
+                        displayAlgorithmforReflection("Clustering");
 
                         algorithmsBox.getChildren().addAll(clustering, algorithmWSettingsBox, algorithmWSettingsBox2);
 
@@ -482,43 +484,83 @@ public final class AppUI extends UITemplate {
         }
     }
 
-    public void displayClusteringPart(){
-        RadioButton randomClusteringButton = new RadioButton(applicationTemplate.manager.getPropertyValue(RANDO_CLUST.name()));
-        RadioButton someOtherClusterButton = new RadioButton(applicationTemplate.manager.getPropertyValue(SOME_RAND_CLUST.name()));
-        randomClusteringButton.setToggleGroup(algoSelectToggleGroup);
-        someOtherClusterButton.setToggleGroup(algoSelectToggleGroup);
+    public void displayClusteringPart(String algo1){
+//        RadioButton randomClusteringButton = new RadioButton(applicationTemplate.manager.getPropertyValue(RANDO_CLUST.name()));
+//        RadioButton someOtherClusterButton = new RadioButton(applicationTemplate.manager.getPropertyValue(SOME_RAND_CLUST.name()));
+//        randomClusteringButton.setToggleGroup(algoSelectToggleGroup);
+//        someOtherClusterButton.setToggleGroup(algoSelectToggleGroup);
+//
+//        Text clustering = new Text(applicationTemplate.manager.getPropertyValue(CLUSTERING_TITLE.name()));
+//        randomClusteringButton.setSelected(false);
+//        someOtherClusterButton.setSelected(false);
+//
+//        Button settingsButton = new Button(applicationTemplate.manager.getPropertyValue(SETTINGS_TITLE.name()));
+//        Button settingsButton2 = new Button(applicationTemplate.manager.getPropertyValue(SETTINGS_TITLE.name()));
+//
+//        settingsButton.setOnMouseClicked(event -> {
+//            popUpWindow("Clustering", 0);
+//            runButton.setDisable(false);
+//            DataSet l = new DataSet();
+//            try {
+//                runButtonAction(runButton, l, "Clustering", 0);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        });
+//
+//        settingsButton2.setOnMouseClicked(event -> {
+//            popUpWindow("Clustering", 1);
+//            runButton.setDisable(false);
+//            DataSet l = new DataSet();
+//            try {
+//                runButtonAction(runButton, l, "Clustering", 1);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        });
+//
+//            algorithmWSettingsBox.getChildren().addAll(randomClusteringButton, settingsButton);
+//            algorithmWSettingsBox2.getChildren().addAll(someOtherClusterButton, settingsButton2);
 
-        Text clustering = new Text(applicationTemplate.manager.getPropertyValue(CLUSTERING_TITLE.name()));
-        randomClusteringButton.setSelected(false);
-        someOtherClusterButton.setSelected(false);
+        if(algo1.equals("Random")){
+            RadioButton randomClusteringButton = new RadioButton(applicationTemplate.manager.getPropertyValue(RANDO_CLUST.name()));
+            randomClusteringButton.setToggleGroup(algoSelectToggleGroup);
+            randomClusteringButton.setSelected(false);
+            Button settingsButton = new Button(applicationTemplate.manager.getPropertyValue(SETTINGS_TITLE.name()));
+            settingsButton.setOnMouseClicked(event -> {
+                popUpWindow("Clustering", 0);
+                runButton.setDisable(false);
+                DataSet l = new DataSet();
+                try {
+                    runButtonAction(runButton, l, "Clustering", 0);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
 
-        Button settingsButton = new Button(applicationTemplate.manager.getPropertyValue(SETTINGS_TITLE.name()));
-        Button settingsButton2 = new Button(applicationTemplate.manager.getPropertyValue(SETTINGS_TITLE.name()));
+            algorithmWSettingsBox.getChildren().addAll(randomClusteringButton, settingsButton);
+        }else{
+            RadioButton someOtherClusterButton = new RadioButton(applicationTemplate.manager.getPropertyValue(SOME_RAND_CLUST.name()));
+            someOtherClusterButton.setToggleGroup(algoSelectToggleGroup);
 
-        settingsButton.setOnMouseClicked(event -> {
-            popUpWindow("Clustering", 0);
-            runButton.setDisable(false);
-            DataSet l = new DataSet();
-            try {
-                runButtonAction(runButton, l, "Clustering", 0);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
+            someOtherClusterButton.setSelected(false);
 
-        settingsButton2.setOnMouseClicked(event -> {
-            popUpWindow("Clustering", 1);
-            runButton.setDisable(false);
-            DataSet l = new DataSet();
-            try {
-                runButtonAction(runButton, l, "Clustering", 1);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
+            Button settingsButton2 = new Button(applicationTemplate.manager.getPropertyValue(SETTINGS_TITLE.name()));
 
-        algorithmWSettingsBox.getChildren().addAll(randomClusteringButton, settingsButton);
-        algorithmWSettingsBox2.getChildren().addAll(someOtherClusterButton, settingsButton2);
+
+            settingsButton2.setOnMouseClicked(event -> {
+                popUpWindow("Clustering", 1);
+                runButton.setDisable(false);
+                DataSet l = new DataSet();
+                try {
+                    runButtonAction(runButton, l, "Clustering", 1);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+                algorithmWSettingsBox2.getChildren().addAll(someOtherClusterButton, settingsButton2);
+        }
+
     }
 
     public void displayClassificationPart(){
@@ -563,9 +605,6 @@ public final class AppUI extends UITemplate {
      *  resets the text, textArea, and radio buttons
      */
     public void clearInfoandButton(){
-//        textArea.setVisible(false);
-//        displayButton.setVisible(false);
-//        readOnly.setVisible(false);
         text2.setText("");
         readOnly.setSelected(false);
         typeAlgorithm1.setVisible(false);
@@ -641,8 +680,6 @@ public final class AppUI extends UITemplate {
             runConfig.showAndWait();
         }
 
-        //    System.out.println("After" + Arrays.toString(runConfig.returnPrevInput()));
-        //     System.out.println("Setting " + num + " " + Arrays.toString(allPrevInput.get(num)));
 
         setConfig = true;
     }
@@ -709,7 +746,7 @@ public final class AppUI extends UITemplate {
                     synchronized (alg){
                         runButton.setDisable(true);
                         scrnshotButton.setDisable(true);
-                        ranClassifier.notify();
+                        alg.notify();
                     }
                 }else {
                     Thread thread1 = new Thread(alg);
@@ -754,7 +791,7 @@ public final class AppUI extends UITemplate {
                     synchronized (alg){
                         runButton.setDisable(true);
                         scrnshotButton.setDisable(true);
-                        randomClust.notify();
+                        alg.notify();
                     }
                 }else {
                     chart.setVisible(true);
@@ -800,7 +837,7 @@ public final class AppUI extends UITemplate {
                     synchronized (alg){
                         runButton.setDisable(true);
                         scrnshotButton.setDisable(true);
-                        kMeans.notify();
+                        alg.notify();
                     }
                 }else {
                     chart.setVisible(true);
@@ -838,9 +875,29 @@ public final class AppUI extends UITemplate {
             allAlgo[i] =  "allAlgo."  + file.getName().replaceAll(".java", "");
             i++;
         }
+    }
 
-        for(String s: allAlgo){
-            System.out.println(s);
+    public void displayAlgorithmforReflection(String type){
+        for(int i = 0; i < allAlgo.length; i++){
+            try {
+//                System.out.println(allAlgo[i].toString());
+//                System.out.println(Class.forName(allAlgo[i]).getSuperclass());
+                if(Class.forName(allAlgo[i]).getSuperclass() == Classifier.class && type.equals("Classification")){
+                    displayClassificationPart();
+                }else if(Class.forName(allAlgo[i]).getSuperclass() == Clusterer.class && type.equals("Clustering")){
+                    System.out.println("here");
+                    System.out.println(allAlgo[i].contains("KMeans"));
+                    System.out.println(allAlgo[i].contains("Random"));
+                  if(allAlgo[i].contains("KMeans")) {
+                      displayClusteringPart("KMeans");
+                  }else{
+                      displayClusteringPart("Random");
+                  }
+                }
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 }
